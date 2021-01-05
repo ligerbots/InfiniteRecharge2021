@@ -92,11 +92,11 @@ public class DriveTrain extends SubsystemBase {
 
         // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
+            .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         // Set motors to brake when idle. We don't want the drive train to coast.
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+             .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
         //TODO determine real numbers to use here
         //rightLeader.setOpenLoopRampRate(0.0065);
@@ -106,7 +106,7 @@ public class DriveTrain extends SubsystemBase {
 
         leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
-
+        
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
 
         // turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
@@ -252,7 +252,7 @@ public class DriveTrain extends SubsystemBase {
       // We negate the right side so that positive voltages make the right side
       // move forward.
       drivetrainSimulator.setInputs(-leftMotors.get() * RobotController.getBatteryVoltage(),
-                                    rightMotors.get() * RobotController.getBatteryVoltage());
+        rightMotors.get() * RobotController.getBatteryVoltage());
       drivetrainSimulator.update(0.020);
 
       leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
@@ -310,7 +310,7 @@ public class DriveTrain extends SubsystemBase {
     public void setIdleMode(IdleMode idleMode) {
         if (Robot.isReal()) {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+            .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
         }
     }
 

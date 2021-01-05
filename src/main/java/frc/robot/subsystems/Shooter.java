@@ -53,19 +53,19 @@ public class Shooter extends SubsystemBase {
 
         // Set motors to brake when idle. We don't want the drive train to coast.
         Arrays.asList(motor1, motor2, motor3, flup)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
+            .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
+
         shooterEncoder = new CANEncoder(motor2);
         shooterEncoder.setVelocityConversionFactor(2.666);
+
         pidController = new CANPIDController(motor2);
         pidController.setFeedbackDevice(shooterEncoder);
 
         motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
         motor3.follow(motor2);
-
-        
 
         motor1.setSmartCurrentLimit(40);
         motor2.setSmartCurrentLimit(40);
@@ -109,11 +109,6 @@ public class Shooter extends SubsystemBase {
         turretAngleLookup.put(-2.0, 68.0);
         turretAngleLookup.put(-1.0, 71.5);
 
-
-
-
-
-
     }
 
     @Override
@@ -122,7 +117,6 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
         SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
         SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
-
         SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
     }
 
@@ -146,7 +140,6 @@ public class Shooter extends SubsystemBase {
     }
 
     public void prepareShooter(final double distance) {
-
         pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
         // TODO: The idea was that this would set the shooter speed
@@ -186,7 +179,7 @@ public class Shooter extends SubsystemBase {
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
 
             System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
-                              ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), result);
+                ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), result);
             return result/* + Robot.RPMAdjustment*/;
         }
         else {
@@ -261,10 +254,8 @@ public class Shooter extends SubsystemBase {
         if (adjustedAngle < -5) {
             adjustedAngle = -5;
         }
-        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) :
-                                                               turretAngleLookup.floorEntry(adjustedAngle);
-        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) : 
-                                                                 turretAngleLookup.higherEntry(adjustedAngle);
+        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) : turretAngleLookup.floorEntry(adjustedAngle);
+        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) :  turretAngleLookup.higherEntry(adjustedAngle);
                                                         
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
