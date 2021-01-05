@@ -12,14 +12,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Carousel extends SubsystemBase {
-
-
-
     WPI_TalonSRX spinner;
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
