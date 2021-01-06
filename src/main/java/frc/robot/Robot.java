@@ -46,6 +46,11 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_prevAutoCommand = null;
 
+  //returns the time since initialization in seconds as a double
+  public static double time() {
+    return System.nanoTime() * 1.0e-9;
+  }
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
