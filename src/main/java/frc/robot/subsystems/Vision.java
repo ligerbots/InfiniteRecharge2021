@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.FieldMap;
+import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
     public enum VisionMode {
@@ -73,7 +74,7 @@ public class Vision extends SubsystemBase {
         }
 
         // include the heartbeat signal that Vision puts in
-        targetInfoSim[0] = System.nanoTime() * 1e-9;
+        targetInfoSim[0] = Robot.time();
 
         SmartDashboard.putNumberArray("vision/target_info", targetInfoSim);
     }
