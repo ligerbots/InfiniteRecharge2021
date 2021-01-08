@@ -14,6 +14,7 @@ public class Vision extends SubsystemBase {
     private Relay spike;
     private DriveTrain driveTrain;
     private double[] targetInfoSim = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    
     public Vision(DriveTrain driveTrain) {
         spike = new Relay(0);
         this.driveTrain = driveTrain;

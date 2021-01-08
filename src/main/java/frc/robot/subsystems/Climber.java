@@ -22,12 +22,14 @@ public class Climber extends SubsystemBase {
     double requestedShoulderAngle;
     double tempRequestedShoulderAngle;
     double lastShoulderAngle;
+
     public final CANSparkMax shoulder; // declare new motor
     public final CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
     double shoulderSpeedUp = Constants.SHOULDER_SPEED_UP; // set shoulder movement speed
     double shoulderSpeedHold = Constants.SHOULDER_SPEED_HOLD; //This is not enough to lift the intake, but wll hold it in place
     double shoulderRateDown = Constants.SHOULDER_RATE_DOWN; // a little under 2 seconds to get from max height to min height
+
     boolean deployed = false;
     boolean shoulderMovingDown = false;
     boolean autoLevel = false;
