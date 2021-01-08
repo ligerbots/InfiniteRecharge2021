@@ -132,7 +132,8 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-
+            SmartDashboard.putData("Field", fieldSim);
+            
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
             SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
