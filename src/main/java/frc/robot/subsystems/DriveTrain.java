@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
-import edu.wpi.first.wpilibj.simulation.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 public class DriveTrain extends SubsystemBase {
@@ -119,7 +119,8 @@ public class DriveTrain extends SubsystemBase {
                   Constants.kDriveGearbox,
                   Constants.kDriveGearing,
                   Constants.kTrackwidth,
-                  Constants.kWheelDiameterMeters / 2.0);
+                  Constants.kWheelDiameterMeters / 2.0,
+                  null);
       
             // The encoder and gyro angle sims let us set simulated sensor readings
             leftEncoderSim = new EncoderSim(leftEncoder);
@@ -131,7 +132,8 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-
+            SmartDashboard.putData("Field", fieldSim);
+            
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
             SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
@@ -255,11 +257,11 @@ public class DriveTrain extends SubsystemBase {
                                     rightMotors.get() * RobotController.getBatteryVoltage());
       drivetrainSimulator.update(0.020);
 
-      leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
-      leftEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftVelocity));
+      leftEncoderSim.setDistance(drivetrainSimulator.getLeftPositionMeters());
+      leftEncoderSim.setRate(drivetrainSimulator.getLeftVelocityMetersPerSecond());
   
-      rightEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightPosition));
-      rightEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightVelocity));
+      rightEncoderSim.setDistance(drivetrainSimulator.getRightPositionMeters());
+      rightEncoderSim.setRate(drivetrainSimulator.getRightVelocityMetersPerSecond());
   
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
