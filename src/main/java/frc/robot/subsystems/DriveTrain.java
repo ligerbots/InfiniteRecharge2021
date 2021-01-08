@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
-import edu.wpi.first.wpilibj.simulation.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 public class DriveTrain extends SubsystemBase {
@@ -92,11 +92,11 @@ public class DriveTrain extends SubsystemBase {
 
         // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
+            .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         // Set motors to brake when idle. We don't want the drive train to coast.
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+             .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
         //TODO determine real numbers to use here
         //rightLeader.setOpenLoopRampRate(0.0065);
@@ -106,7 +106,7 @@ public class DriveTrain extends SubsystemBase {
 
         leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
-
+        
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
 
         // turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
@@ -119,7 +119,8 @@ public class DriveTrain extends SubsystemBase {
                   Constants.kDriveGearbox,
                   Constants.kDriveGearing,
                   Constants.kTrackwidth,
-                  Constants.kWheelDiameterMeters / 2.0);
+                  Constants.kWheelDiameterMeters / 2.0,
+                  null);
       
             // The encoder and gyro angle sims let us set simulated sensor readings
             leftEncoderSim = new EncoderSim(leftEncoder);
@@ -131,7 +132,8 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-
+            SmartDashboard.putData("Field", fieldSim);
+            
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
             SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
@@ -252,14 +254,14 @@ public class DriveTrain extends SubsystemBase {
       // We negate the right side so that positive voltages make the right side
       // move forward.
       drivetrainSimulator.setInputs(-leftMotors.get() * RobotController.getBatteryVoltage(),
-                                    rightMotors.get() * RobotController.getBatteryVoltage());
+        rightMotors.get() * RobotController.getBatteryVoltage());
       drivetrainSimulator.update(0.020);
 
-      leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
-      leftEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftVelocity));
+      leftEncoderSim.setDistance(drivetrainSimulator.getLeftPositionMeters());
+      leftEncoderSim.setRate(drivetrainSimulator.getLeftVelocityMetersPerSecond());
   
-      rightEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightPosition));
-      rightEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightVelocity));
+      rightEncoderSim.setDistance(drivetrainSimulator.getRightPositionMeters());
+      rightEncoderSim.setRate(drivetrainSimulator.getRightVelocityMetersPerSecond());
   
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
@@ -310,7 +312,7 @@ public class DriveTrain extends SubsystemBase {
     public void setIdleMode(IdleMode idleMode) {
         if (Robot.isReal()) {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+            .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
         }
     }
 
