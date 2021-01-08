@@ -42,8 +42,8 @@ public class Shooter extends SubsystemBase {
     private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
     public Vision vision;
-    public static int RPMAdjustment;
-    public static int HoodAdjustment;
+    public static int RPMAdjustment = 0;
+    public static int HoodAdjustment = 0;
     public static double angleErrorAfterTurn = 0;
 
     public Shooter(Vision vision) {
@@ -145,8 +145,9 @@ public class Shooter extends SubsystemBase {
     public void prepareShooter(final double distance) {
         pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
-        // TODO: The idea was that this would set the shooter speed
-        // and hoodServo value based on the input distance.
+        /* The idea was that this would set the shooter speed and hoodServo value 
+        based on the input distance. 
+        */
     }
 
     public void setShooterVoltage (double voltage) {
@@ -154,12 +155,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
-            flup.set(-0.5);
-        //}
-        //else {
-        //    flup.set(0);
-        //}
+        /*if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
+            */ flup.set(-0.5); /*
+        } else {
+            flup.set(0);
+        }*/
     }
 
     public void testSpin () {
