@@ -42,6 +42,9 @@ public class Shooter extends SubsystemBase {
     private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
     public Vision vision;
+    public static int RPMAdjustment;
+    public static int HoodAdjustment;
+    public static double angleErrorAfterTurn = 0;
 
     public Shooter(Vision vision) {
         this.vision = vision;
@@ -115,8 +118,8 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Shooter RPM", getSpeed());
         SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
-        SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
-        SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
+        SmartDashboard.putNumber("Hood Adjustment", HoodAdjustment);
+        SmartDashboard.putNumber("RPM Adjustment", RPMAdjustment);
         SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
     }
 
@@ -201,7 +204,7 @@ public class Shooter extends SubsystemBase {
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
 
-            return result + Robot.HoodAdjustment;
+            return result + HoodAdjustment;
         }
         else {
             return 60;

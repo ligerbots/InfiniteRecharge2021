@@ -10,16 +10,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.EntryNotification;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,17 +30,7 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  // private DriveTrain driveTrain;
-  private Carousel carousel;
-  // private Intake intake;
-  // private DriveCommand driveCommand;
-  // private Shooter shooter;
-  // private Climber climber;
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
-
-  public static int RPMAdjustment;
-  public static int HoodAdjustment;
-  public static double angleErrorAfterTurn = 0;
 
   private AutoCommandInterface m_prevAutoCommand = null;
 
@@ -57,9 +45,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
+    /* Instantiate our RobotContainer. This will perform all our button bindings, 
+    and put our autonomous chooser on the dashboard. */
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
@@ -72,8 +59,9 @@ public class Robot extends TimedRobot {
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
 
-    RPMAdjustment = 0;
-    HoodAdjustment = 0;
+    Shooter.RPMAdjustment = 0;
+    Shooter.HoodAdjustment = 0;
+    
     SmartDashboard.getEntry("refreshRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
     SmartDashboard.putNumber("refreshRate", .01); // update interval in seconds
 
