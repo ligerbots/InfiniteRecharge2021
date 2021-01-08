@@ -61,9 +61,9 @@ public class Robot extends TimedRobot {
 
     Shooter.RPMAdjustment = 0;
     Shooter.HoodAdjustment = 0;
-    
-    SmartDashboard.getEntry("refreshRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putNumber("refreshRate", .01); // update interval in seconds
+
+    SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+    SmartDashboard.putNumber("tableUpdateRate", 0.1); // update interval in seconds
 
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
