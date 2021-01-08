@@ -254,8 +254,10 @@ public class Shooter extends SubsystemBase {
         if (adjustedAngle < -5) {
             adjustedAngle = -5;
         }
-        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) : turretAngleLookup.floorEntry(adjustedAngle);
-        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) :  turretAngleLookup.higherEntry(adjustedAngle);
+        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) : 
+                                                                turretAngleLookup.floorEntry(adjustedAngle);
+        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) :  
+                                                                turretAngleLookup.higherEntry(adjustedAngle);
                                                         
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
