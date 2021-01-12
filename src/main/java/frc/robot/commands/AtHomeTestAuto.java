@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -46,7 +45,7 @@ public class AtHomeTestAuto extends SequentialCommandGroup implements AutoComman
                 ) ,
                 new Pose2d(FieldMap.startLineX, FieldMap.startPosition[1].getY(), Rotation2d.fromDegrees(0)),
                 configForward);
-        //System.out.println("DEBUG: " + FieldMap.ballPosition[5] + " " + FieldMap.ballPosition[4]);
+
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -57,15 +56,6 @@ public class AtHomeTestAuto extends SequentialCommandGroup implements AutoComman
                     new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5))
                 ),
                 configBackward);
-        /*
-        OLD Trajectory
-        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                FieldMap.startPosition[1], 
-                List.of(FieldMap.ballPosition[4], 
-                        FieldMap.ballPosition[3]),
-                new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5)),
-                configBackward);*/
 
         for (State state : backTrajectory.getStates()) {
             System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
@@ -103,7 +93,6 @@ public class AtHomeTestAuto extends SequentialCommandGroup implements AutoComman
             robotDrive
         );
         addCommands(
-            //new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
