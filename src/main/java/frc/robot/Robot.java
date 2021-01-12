@@ -55,9 +55,6 @@ public class Robot extends TimedRobot {
 
     //m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
 
-    // Reset Smart Dashboard for shooter test
-    SmartDashboard.putString("Shooting", "Idle");
-
     SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
     SmartDashboard.putNumber("tableUpdateRate", 0.1); // update interval in seconds
 
@@ -191,9 +188,6 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    SmartDashboard.putNumber("Turret Angle", 75);
-    SmartDashboard.putNumber("Target Hood Angle", 60);
-    SmartDashboard.putNumber("TSR", -5500);
     System.out.println("teleopInit");
 
     // Reset the winch encoder

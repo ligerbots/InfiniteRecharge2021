@@ -73,6 +73,13 @@ public class Shooter extends SubsystemBase {
         motor1.setSmartCurrentLimit(40);
         motor2.setSmartCurrentLimit(40);
         motor3.setSmartCurrentLimit(40);
+        
+        // Reset Smart Dashboard for shooter test
+        SmartDashboard.putString("Shooting", "Idle");
+
+        SmartDashboard.putNumber("Turret Angle", 75);
+        SmartDashboard.putNumber("Target Hood Angle", 60);
+        SmartDashboard.putNumber("TSR", -5500);
 
         try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
             String line;
