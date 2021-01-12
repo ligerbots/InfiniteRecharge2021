@@ -74,8 +74,8 @@ public class Robot extends TimedRobot {
 
     RPMAdjustment = 0;
     HoodAdjustment = 0;
-    SmartDashboard.getEntry("refreshRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putNumber("refreshRate", .01); // update interval in seconds
+    //SmartDashboard.getEntry("refreshRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+    //SmartDashboard.putNumber("refreshRate", .01); // update interval in seconds
 
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
@@ -100,7 +100,14 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
     */
-
+    TestPrecisionCommand.initSmartDashboard();
+    chosenAuto.addOption("SimulationTestCommand", new SimulationTestCommand(
+      m_robotContainer.robotDrive
+    ));
+    chosenAuto.addOption("TestPrecisionCommand", new TestPrecisionCommand(
+      m_robotContainer.robotDrive
+    ));
+    
     chosenAuto.setDefaultOption("None", null);
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
@@ -151,7 +158,7 @@ public class Robot extends TimedRobot {
     // Do not use the member variable m_autonomousCommand. Setting that signals
     //  that the command is running, which it is not, yet.
     AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
-    if (autoCommandInterface != null && autoCommandInterface != m_prevAutoCommand) {
+    if (autoCommandInterface != null) {
       m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
       m_prevAutoCommand = autoCommandInterface;
     }
