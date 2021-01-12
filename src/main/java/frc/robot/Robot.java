@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   // private DriveTrain driveTrain;
   private Carousel carousel;
   // private Intake intake;
-  // private DriveCommand driveCommand;
+  private DriveCommand driveCommand;
   // private Shooter shooter;
   // private Climber climber;
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
@@ -102,8 +102,10 @@ public class Robot extends TimedRobot {
     */
 
     chosenAuto.setDefaultOption("None", null);
-
+    chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, driveCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
+    SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
+    SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
   }
 
   /**
