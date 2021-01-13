@@ -56,7 +56,10 @@ public class Robot extends TimedRobot {
     //m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
 
     SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putNumber("tableUpdateRate", 0.1); // update interval in seconds
+    SmartDashboard.putNumber("tableUpdateRate", 0.1); 
+    /*creates a smartdashboard value for the time that it takes the network table to refresh its 
+    values in seconds, which is 100 milliseconds or 0.1 seconds
+    */ 
 
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
