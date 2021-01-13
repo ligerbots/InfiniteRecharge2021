@@ -9,24 +9,19 @@ from matplotlib.ticker import MaxNLocator
 
 import random
 
-
-
-
 def feetToMeter(feet):
     return(0.3048*feet)
 def meterToFeet(meter):
     return(3.28084*meter)
 
-
 field_width=20
 field_height=22
 
-
-COLOR = 'white'
-plt.rcParams['text.color'] = COLOR
-plt.rcParams['axes.labelcolor'] = COLOR
-plt.rcParams['xtick.color'] = COLOR
-plt.rcParams['ytick.color'] = COLOR
+foreground_color = 'white'
+plt.rcParams['text.color'] = foreground_color
+plt.rcParams['axes.labelcolor'] = foreground_color
+plt.rcParams['xtick.color'] = foreground_color
+plt.rcParams['ytick.color'] = foreground_color
 
 plt.rcParams['axes.facecolor'] = 'black'
 plt.rcParams.update({'font.size': 22})
@@ -43,16 +38,14 @@ ax.spines['bottom'].set_color('none')
 ax.xaxis.set_ticks_position('top')
 ax.yaxis.set_ticks_position('right')
 
-
-
 ax.grid(linestyle='-', linewidth='0.5')
 
-plt.axis([0, field_width, 0, field_height])
+plt.axis([0, field_width, 0, field_height]) 
 ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-ax.set_xticks(np.arange(0, field_width, 1))
-ax.set_yticks(np.arange(0, field_height, 1))
+ax.set_xticks(np.arange(1, field_width, 1))# do not draw 0
+ax.set_yticks(np.arange(1, field_height, 1))
 
 def rect(x1,y1,x2,y2,style):
     plt.plot([x1,x2],[y1,y1],style)
@@ -64,8 +57,6 @@ def line(x1,y1,x2,y2):
     plt.plot([x1,x2],[y1,y2],style)
 
 def robotCurve(inner_radius,color):
-    
-
     curve=[]
     start=np.array((10,3))
     curve=[start]
@@ -106,7 +97,7 @@ robotCurve(2,cmap(3))
 
 plt.savefig("fieldmap.png", bbox_inches='tight', pad_inches=0, dpi=80, transparent=True)
 
-print("field width: "+str(feetToMeter(field_width))+" height: "+str(feetToMeter(field_height)))
-plt.show()
+print("Field width: "+str(feetToMeter(field_width))+" height: "+str(feetToMeter(field_height)))
+print("Robot width: "+str(feetToMeter(robot_width))+" height: "+str(feetToMeter(robot_height)))
 
-print("robot width: "+str(feetToMeter(robot_width))+" height: "+str(feetToMeter(robot_height)))
+plt.show()
