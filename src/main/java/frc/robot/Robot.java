@@ -10,16 +10,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.EntryNotification;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Carousel;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,17 +29,7 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  // private DriveTrain driveTrain;
-  private Carousel carousel;
-  // private Intake intake;
-  // private DriveCommand driveCommand;
-  // private Shooter shooter;
-  // private Climber climber;
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
-
-  public static int RPMAdjustment;
-  public static int HoodAdjustment;
-  public static double angleErrorAfterTurn = 0;
 
   private AutoCommandInterface m_prevAutoCommand = null;
 
@@ -57,9 +44,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
+    /* Instantiate our RobotContainer. This will perform all our button bindings, 
+    and put our autonomous chooser on the dashboard. */
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
@@ -69,13 +55,11 @@ public class Robot extends TimedRobot {
 
     //m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
 
-    // Reset Smart Dashboard for shooter test
-    SmartDashboard.putString("Shooting", "Idle");
-
-    RPMAdjustment = 0;
-    HoodAdjustment = 0;
-    SmartDashboard.getEntry("refreshRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putNumber("refreshRate", .01); // update interval in seconds
+    SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+    SmartDashboard.putNumber("tableUpdateRate", 0.1); 
+    /*creates a smartdashboard value for the time that it takes the network table to refresh its 
+    values in seconds, which is 100 milliseconds or 0.1 seconds
+    */ 
 
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
@@ -116,13 +100,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
+    /* Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled commands, 
+    running already-scheduled commands, removing finished or interrupted commands, 
+    and running subsystem periodic() methods. 
+    This must be called from the
+    robot's periodic block in order for anything in the Command-based framework to work.
+    */ 
     CommandScheduler.getInstance().run();
   }
 
@@ -148,8 +131,8 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     //m_robotContainer.carouselCommand.schedule();
 
-    // Do not use the member variable m_autonomousCommand. Setting that signals
-    //  that the command is running, which it is not, yet.
+    /* Do not use the member variable m_autonomousCommand. Setting that signals
+    that the command is running, which it is not, yet. */
     AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
     if (autoCommandInterface != null && autoCommandInterface != m_prevAutoCommand) {
       m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
@@ -193,11 +176,13 @@ public class Robot extends TimedRobot {
       m_robotContainer.robotDrive.setRobotFromFieldPose();
     }
 
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    // Do this immediately before changing any motor settings, etc.
+    /* This makes sure that the autonomous stops running when
+    teleop starts running. If you want the autonomous to
+    continue until interrupted by another command, remove
+    this line or comment it out.
+    Do this immediately before changing any motor settings, etc. 
+    */
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
       m_autonomousCommand = null;
@@ -206,9 +191,6 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    SmartDashboard.putNumber("Turret Angle", 75);
-    SmartDashboard.putNumber("Target Hood Angle", 60);
-    SmartDashboard.putNumber("TSR", -5500);
     System.out.println("teleopInit");
 
     // Reset the winch encoder

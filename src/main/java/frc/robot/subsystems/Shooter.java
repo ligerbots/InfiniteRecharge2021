@@ -42,6 +42,9 @@ public class Shooter extends SubsystemBase {
     private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
     public Vision vision;
+    public static int RPMAdjustment = 0;
+    public static int HoodAdjustment = 0;
+    public static double angleErrorAfterTurn = 0;
 
     public Shooter(Vision vision) {
         this.vision = vision;
@@ -70,6 +73,13 @@ public class Shooter extends SubsystemBase {
         motor1.setSmartCurrentLimit(40);
         motor2.setSmartCurrentLimit(40);
         motor3.setSmartCurrentLimit(40);
+        
+        // Reset Smart Dashboard for shooter test
+        SmartDashboard.putString("Shooting", "Idle");
+
+        SmartDashboard.putNumber("Turret Angle", 75);
+        SmartDashboard.putNumber("Target Hood Angle", 60);
+        SmartDashboard.putNumber("TSR", -5500);
 
         try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
             String line;
@@ -115,8 +125,8 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Shooter RPM", getSpeed());
         SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
-        SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
-        SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
+        SmartDashboard.putNumber("Hood Adjustment", HoodAdjustment);
+        SmartDashboard.putNumber("RPM Adjustment", RPMAdjustment);
         SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
     }
 
@@ -142,8 +152,9 @@ public class Shooter extends SubsystemBase {
     public void prepareShooter(final double distance) {
         pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
-        // TODO: The idea was that this would set the shooter speed
-        // and hoodServo value based on the input distance.
+        /* The idea was that this would set the shooter speed and hoodServo value 
+        based on the input distance. 
+        */
     }
 
     public void setShooterVoltage (double voltage) {
@@ -151,12 +162,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
-            flup.set(-0.5);
-        //}
-        //else {
-        //    flup.set(0);
-        //}
+        /*if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
+            */ flup.set(-0.5); /*
+        } else {
+            flup.set(0);
+        }*/
     }
 
     public void testSpin () {
@@ -201,7 +211,7 @@ public class Shooter extends SubsystemBase {
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
 
-            return result + Robot.HoodAdjustment;
+            return result + HoodAdjustment;
         }
         else {
             return 60;
