@@ -35,16 +35,16 @@ import frc.robot.Robot;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
-    static CANSparkMax flup;
+    CANSparkMax flup;
     CANEncoder shooterEncoder;
     Servo hoodServo, turretServo;
     private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
     public Vision vision;
-    public static int RPMAdjustment = 0;
-    public static int HoodAdjustment = 0;
-    public static double angleErrorAfterTurn = 0;
+    public int RPMAdjustment = 0;
+    public int HoodAdjustment = 0;
+    public double angleErrorAfterTurn = 0;
 
     public Shooter(Vision vision) {
         this.vision = vision;
@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
-        // Set motors to brake when idle. We don't want the drive train to coast.
+        // Set motors to coast when idle. 
         Arrays.asList(motor1, motor2, motor3, flup)
             .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
@@ -67,7 +67,7 @@ public class Shooter extends SubsystemBase {
         pidController = new CANPIDController(motor2);
         pidController.setFeedbackDevice(shooterEncoder);
 
-        motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
+        motor1.follow(motor2, true);  //  We want motor2 to be master and motor1 and 3 follow the speed of motor2
         motor3.follow(motor2);
 
         motor1.setSmartCurrentLimit(40);
@@ -162,11 +162,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        /*if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
-            */ flup.set(-0.5); /*
-        } else {
-            flup.set(0);
-        }*/
+        //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
+            flup.set(-0.5);
+        //} else {
+        //    flup.set(0);
+        //}*/
     }
 
     public void testSpin () {
