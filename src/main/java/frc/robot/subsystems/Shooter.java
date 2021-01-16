@@ -9,11 +9,6 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -24,14 +19,11 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
@@ -81,8 +73,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Target Hood Angle", 60);
         SmartDashboard.putNumber("TSR", -5500);
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv")); 
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))){
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().length() == 0) continue;
