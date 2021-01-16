@@ -81,7 +81,8 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Target Hood Angle", 60);
         SmartDashboard.putNumber("TSR", -5500);
 
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv")); 
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().length() == 0) continue;
@@ -90,8 +91,9 @@ public class Shooter extends SubsystemBase {
                 double values[] = new double[values_str.length];
                 for(int i = 0; i < values.length; i++) {
                     values[i] = Double.parseDouble(values_str[i].trim());
-                    distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
-                  }               
+                }               
+
+                distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
             }
         }
         catch (Exception e) {
