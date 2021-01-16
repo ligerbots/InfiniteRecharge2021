@@ -98,13 +98,13 @@ public class Shooter extends SubsystemBase {
             System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
             System.err.println("Using original hard-coded table instead");
 
-            distanceLookUp.put(new Double(112.6), new Double[] {new Double(5500), new Double(90)});
-            distanceLookUp.put(new Double(137.1), new Double[] {new Double(5500), new Double(80)});
-            distanceLookUp.put(new Double(168.9), new Double[] {new Double(6000), new Double(70)});
-            distanceLookUp.put(new Double(227.0), new Double[] {new Double(7000), new Double(65)});
-            distanceLookUp.put(new Double(318.1), new Double[] {new Double(8000), new Double(60)});
-            distanceLookUp.put(new Double(253.4), new Double[] {new Double(7500), new Double(60)});
-            distanceLookUp.put(new Double(235.2), new Double[] {new Double(7500), new Double(55)});            
+            distanceLookUp.put(112.6, new Double[] {5500.0, 90.0});
+            distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
+            distanceLookUp.put(168.9, new Double[] {6000.0, 70.0});
+            distanceLookUp.put(227.0, new Double[] {7000.0, 65.0});
+            distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
+            distanceLookUp.put(253.4, new Double[] {7500.0, 60.0});
+            distanceLookUp.put(235.2, new Double[] {7500.0, 55.0});            
         }
       
         turretAngleLookup.put(0.0, 79.5);
