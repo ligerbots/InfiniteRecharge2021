@@ -24,15 +24,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+
+// suppress unneeded warnings about serialVerionUID in TreeMap
+@SuppressWarnings("serial")
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
     CANSparkMax flup;
     CANEncoder shooterEncoder;
     Servo hoodServo, turretServo;
-    private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
-    private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
+    TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
+    TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
+
     public Vision vision;
     public int RPMAdjustment = 0;
     public int HoodAdjustment = 0;
@@ -40,9 +44,9 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(Vision vision) {
         this.vision = vision;
-        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID,MotorType.kBrushless);
-        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
-        motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
+        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushless);
+        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushless);
+        motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID, MotorType.kBrushless);
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
@@ -59,7 +63,8 @@ public class Shooter extends SubsystemBase {
         pidController = new CANPIDController(motor2);
         pidController.setFeedbackDevice(shooterEncoder);
 
-        motor1.follow(motor2, true);  //  We want motor2 to be master and motor1 and 3 follow the speed of motor2
+        // We want motor2 to be master and motor1 and 3 follow the speed of motor2
+        motor1.follow(motor2, true);
         motor3.follow(motor2);
 
         motor1.setSmartCurrentLimit(40);
@@ -80,7 +85,7 @@ public class Shooter extends SubsystemBase {
                 String values_str[] = line.split(",");
 
                 double values[] = new double[values_str.length];
-                for(int i = 0; i < values.length; i++) {
+                for (int i = 0; i < values.length; i++) {
                     values[i] = Double.parseDouble(values_str[i].trim());
                 }               
 
@@ -95,23 +100,22 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
             distanceLookUp.put(168.9, new Double[] {6000.0, 70.0});
             distanceLookUp.put(227.0, new Double[] {7000.0, 65.0});
-            distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
-            distanceLookUp.put(253.4, new Double[] {7500.0, 60.0});
             distanceLookUp.put(235.2, new Double[] {7500.0, 55.0});            
+            distanceLookUp.put(253.4, new Double[] {7500.0, 60.0});
+            distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
         }
       
+        turretAngleLookup.put(-5.0, 57.5);
+        turretAngleLookup.put(-4.0, 61.0);
+        turretAngleLookup.put(-3.0, 64.0);
+        turretAngleLookup.put(-2.0, 68.0);
+        turretAngleLookup.put(-1.0, 71.5);
         turretAngleLookup.put(0.0, 79.5);
         turretAngleLookup.put(1.0, 85.0);
         turretAngleLookup.put(2.0, 89.0);
         turretAngleLookup.put(3.0, 93.0);
         turretAngleLookup.put(4.0, 97.0);
         turretAngleLookup.put(5.0, 101.0);
-        turretAngleLookup.put(-5.0, 57.5);
-        turretAngleLookup.put(-4.0, 61.0);
-        turretAngleLookup.put(-3.0, 64.0);
-        turretAngleLookup.put(-2.0, 68.0);
-        turretAngleLookup.put(-1.0, 71.5);
-
     }
 
     @Override
@@ -142,7 +146,7 @@ public class Shooter extends SubsystemBase {
         return shooterEncoder.getVelocity();
     }
 
-    public void prepareShooter(final double distance) {
+    public void prepareShooter(double distance) {
         pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
         /* The idea was that this would set the shooter speed and hoodServo value 
@@ -172,7 +176,7 @@ public class Shooter extends SubsystemBase {
         pidController.setReference(rpm, ControlType.kVelocity, 0, -0.8);
     }
 
-    public double calculateShooterSpeed (final double distance) {
+    public double calculateShooterSpeed(double distance) {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
         if (floorEntry != null && ceilingEntry != null) {
@@ -191,7 +195,7 @@ public class Shooter extends SubsystemBase {
         }
     }
 
-    public double calculateShooterHood (final double distance) {
+    public double calculateShooterHood(double distance) {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
 
