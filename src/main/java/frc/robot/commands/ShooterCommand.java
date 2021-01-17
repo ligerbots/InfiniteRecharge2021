@@ -1,6 +1,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -20,6 +21,7 @@ public class ShooterCommand extends CommandBase {
   Shooter shooter;
   Carousel carousel;
   DriveTrain robotDrive;
+  ShooterPIDTuner pidTuner;
   double shooterTargetSpeed;
 
   boolean startShooting;
@@ -32,7 +34,9 @@ public class ShooterCommand extends CommandBase {
   long stableRPMTime;
   boolean startedTimerFlag;
   boolean foundTarget;
-
+  boolean setPid;
+  double p,i,d,f;
+ 
   public enum ControlMethod {
     SPIN_UP, // PIDF to desired RPM
     HOLD_WHEN_READY, // calculate average kF
@@ -63,13 +67,23 @@ public class ShooterCommand extends CommandBase {
   public void initialize() {
     foundTarget = false;
     shooterTargetSpeed = 0.0;
-    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+    // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
+    // values  in the execute() method.
+    setPid = true;
+    // Get the latest PIDF values from the Smart Dashboard
+    // We only want to get the values once per execution of the command
+    // They won't be set until we get to the HOLD control method
+    pidTuner = new ShooterPIDTuner(shooter, this);
+    pidTuner.getPID();
+
+
     // driveCommand.cancel();
     startTime = System.nanoTime();
     shooter.vision.setMode(VisionMode.GOALFINDER);
     // carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
-
+    //starts spinning up the shooter to hard-coded PID values
+    pidTuner.SpinUpTune();
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // store current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -79,7 +93,7 @@ public class ShooterCommand extends CommandBase {
 
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
-    System.out.println("Initial Angle Offset: " + Robot.angleErrorAfterTurn);
+    System.out.println("Initial Angle Offset: " + angleError);
     shooter.setTurretAdjusted(0/*-Robot.angleErrorAfterTurn*/);
   }
 
@@ -124,8 +138,9 @@ public class ShooterCommand extends CommandBase {
       }
     }
     else if (currentControlMode == ControlMethod.HOLD) {
-      //kFEstimator.addValue(val);
-      shooter.calibratePID(0, 0, 0, 1 / (5700 * 2.6666));
+      if(setPid){
+        pidTuner.HoldTune();
+      }
     }
 
   

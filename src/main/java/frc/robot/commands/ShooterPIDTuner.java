@@ -1,38 +1,31 @@
 package frc.robot.commands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Shooter;
-import com.revrobotics.CANPIDController;
 public class ShooterPIDTuner {
-    private double P,I,D,F;
     private Shooter shooter;
-    CANPIDController pidController;
-    public ShooterPIDTuner(Shooter shooter, double initialP, double initialI, double initialD, double initialF, CANPIDController pidController){
+    private ShooterCommand shooterCommand;
+    public ShooterPIDTuner(Shooter shooter, ShooterCommand shooterCommand){
         this.shooter = shooter;
-        P = initialP; // Setting the inital values for PID
-        I = initialI;
-        D = initialD;
-        F = initialF;
-        this.pidController = pidController;
+        this.shooterCommand = shooterCommand;
     }
 
     public void SpinUpTune(){
-        shooter.calibratePID(P, I, D, F);
+        shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     }
 
     public void HoldTune(){
-        if (!checkPID()){
-            //shooter.calibrate();  Need some clarification on what PID values to set if they change
-        }
+        setPID();
     }
 
-    public boolean checkPID(){
-        return (P == pidController.getP() && I == pidController.getI() && D == pidController.getD());
+    public void getPID(){
+        shooterCommand.p = SmartDashboard.getNumber("shooter/P", 0.000145);
+        shooterCommand.i = SmartDashboard.getNumber("shooter/I",1e-8);
+        shooterCommand.d = SmartDashboard.getNumber("shooter/D", 0);
+        shooterCommand.f = SmartDashboard.getNumber("shooter/F", 6.6774 * 0.00001);
     }
 
-
-    public void setPID(double p, double i, double d, double f){
-        P = p;
-        I = i;
-        D = d;
-        F = f;
+    public void setPID(){
+        shooter.calibratePID(shooterCommand.p, shooterCommand.i, shooterCommand.d, shooterCommand.f);
     }
 }
