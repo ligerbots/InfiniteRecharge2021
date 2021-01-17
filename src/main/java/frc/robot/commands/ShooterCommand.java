@@ -141,6 +141,7 @@ public class ShooterCommand extends CommandBase {
       if(setPid){
         pidTuner.HoldTune();
       }
+      setPid = false;
     }
 
   
