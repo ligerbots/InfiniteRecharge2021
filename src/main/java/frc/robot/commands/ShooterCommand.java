@@ -35,7 +35,6 @@ public class ShooterCommand extends CommandBase {
   boolean startedTimerFlag;
   boolean foundTarget;
   boolean setPid;
-  double p,i,d,f;
  
   public enum ControlMethod {
     SPIN_UP, // PIDF to desired RPM
@@ -55,6 +54,7 @@ public class ShooterCommand extends CommandBase {
     //this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
+    pidTuner = new ShooterPIDTuner(shooter);
   }
 
   public void rapidFire() {
@@ -70,12 +70,6 @@ public class ShooterCommand extends CommandBase {
     // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
     // values  in the execute() method.
     setPid = true;
-    // Get the latest PIDF values from the Smart Dashboard
-    // We only want to get the values once per execution of the command
-    // They won't be set until we get to the HOLD control method
-    pidTuner = new ShooterPIDTuner(shooter, this);
-    pidTuner.getPID();
-
 
     // driveCommand.cancel();
     startTime = System.nanoTime();
@@ -83,7 +77,7 @@ public class ShooterCommand extends CommandBase {
     // carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
     //starts spinning up the shooter to hard-coded PID values
-    pidTuner.SpinUpTune();
+    pidTuner.spinUpTune();
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // store current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -124,7 +118,7 @@ public class ShooterCommand extends CommandBase {
 
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         if (startedTimerFlag) {
-          if (System.nanoTime() - stableRPMTime > 0.2 * 1_000_000_000) {
+          if (Robot.time() - stableRPMTime * 1.0e-9 > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
         }
@@ -145,8 +139,8 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 3.5; //TODO: May need to adjust acceptable error
-    hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime * 1.0e-9 > 3.5; //TODO: May need to adjust acceptable error
+    hoodOnTarget = Robot.time() - startTime * 1.0e-9 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     if (speedOnTarget && hoodOnTarget)
         rapidFire();
@@ -173,7 +167,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime * 1.0e-9 > 2.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;
