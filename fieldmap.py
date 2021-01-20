@@ -57,6 +57,21 @@ generator_points = ((field_length/2 - 116.0, field_width/2 + 43.75),
 # x is offset from initiate line, y is offset from goal
 generator_balls = ((130.25, 19.79), (114.94, 26.13), (107.83, 50.54), (114.17, 65.84), (120.51, 81.14))
 
+# ---------------
+sc_field_length = 30 * 12
+sc_field_width = 15 * 12
+
+
+# return the x coordinate given the location index 1 - 11
+def sc_x_pos(index):
+    return # return the coordinate
+
+
+# return the y coordinate given the location index 'A' through 'E'
+# note: you can use "upper()" method to guarantee it is upper case
+def sc_y_pos(index):
+    return # return the coordinate
+
 
 # there are always matching balls, reflected across the center
 # so draw a pair
@@ -90,6 +105,19 @@ def draw_truss(xg, yg):
 
     field_coord = [generator_to_field(r[0], r[1]) for r in zip(xcorners, ycorners)]
     plt.plot([r[0] for r in field_coord], [t[1] for t in field_coord], 'grey')
+    return
+
+
+# draw the Galactic Search map
+# maybe add a parameter to indicate which ball path?
+def draw_galactic_search():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
     return
 
 
@@ -180,7 +208,7 @@ def draw_competition_map():
     return
 
 
-map_choices = ('competition',)
+map_choices = ('competition', 'galactic_search')
 
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
 parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
@@ -197,6 +225,8 @@ axis1.set_aspect('equal')
 
 if args.map == 'competition':
     draw_competition_map()
+elif args.map == 'galactic_search':
+    draw_galactic_search()
 else:
     logging.error(f"Map '{args.map}' not implemented")
     sys.exit(10)
