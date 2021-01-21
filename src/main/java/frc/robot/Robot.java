@@ -88,10 +88,14 @@ public class Robot extends TimedRobot {
         m_robotContainer.carouselCommand));
     */
     TestPrecisionCommand.initSmartDashboard();
+    TestPrecisionCommandUturn.initSmartDashboard();
     chosenAuto.addOption("SimulationTestCommand", new SimulationTestCommand(
       m_robotContainer.robotDrive
     ));
     chosenAuto.addOption("TestPrecisionCommand", new TestPrecisionCommand(
+      m_robotContainer.robotDrive
+    ));
+    chosenAuto.addOption("TestPrecisionCommandUturn", new TestPrecisionCommandUturn(
       m_robotContainer.robotDrive
     ));
     

@@ -23,7 +23,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
 
-public class TestPrecisionCommand extends CommandBase implements AutoCommandInterface{
+public class TestPrecisionCommandUturn extends CommandBase implements AutoCommandInterface{
     static Pose2d simulationInitialPose=new Pose2d(Units.feetToMeters(10),Units.feetToMeters(3),new Rotation2d(Math.PI/2));
     static double feetRunway=10;
     static double feetRobotWidth=27.f/12.f;
@@ -46,12 +46,12 @@ public class TestPrecisionCommand extends CommandBase implements AutoCommandInte
         double radiusFeet=innerRadiusFeet+feetRobotWidth/2;
         double radius=Units.feetToMeters(radiusFeet);
 
-        for(double theta=.5f;theta<=Math.PI*1.5-.1;theta+=.5){
+        for(double theta=.5f;theta<=Math.PI-.1;theta+=.5){
             Translation2d turnOffset=new Translation2d(radius*Math.cos(theta),radius*Math.sin(theta));
             Translation2d turnPosition=turnCenter.plus(turnOffset);
             path.add(turnPosition);
         }
-        Translation2d turnExit=turnEntryExitTopLeft.plus(new Translation2d(Units.feetToMeters(feetRobotHeight)/2,-Units.feetToMeters(feetRobotWidth)/2));
+        Translation2d turnExit=turnEntry.plus(new Translation2d(-2*radius, 0));
         path.add(turnExit);
         
         return path;
@@ -73,7 +73,7 @@ public class TestPrecisionCommand extends CommandBase implements AutoCommandInte
         SmartDashboard.putNumber("Feet straightforward", feetRunway);
     }
 
-    public TestPrecisionCommand(DriveTrain robotDrive) {
+    public TestPrecisionCommandUturn(DriveTrain robotDrive) {
         this.robotDrive=robotDrive;
     }
     @Override
@@ -93,8 +93,8 @@ public class TestPrecisionCommand extends CommandBase implements AutoCommandInte
                 .addConstraint(autoVoltageConstraint);
             
         ArrayList<Translation2d> path=generatePath(innerRadiusFeet);
-        Pose2d finish=new Pose2d(path.get(path.size()-1).plus(new Translation2d(Units.feetToMeters(2), 0)),new Rotation2d(0));
-
+        Pose2d finish=new Pose2d(path.get(path.size()-1).plus(new Translation2d(0, -Units.feetToMeters(feetRunway))),new Rotation2d(Units.degreesToRadians(-90)));
+        
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             simulationInitialPose,
             path,
