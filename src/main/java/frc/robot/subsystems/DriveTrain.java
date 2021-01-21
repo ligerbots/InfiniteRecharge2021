@@ -243,8 +243,13 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
-        SmartDashboard.putNumber("Heading", getHeading());
-        SmartDashboard.putString("Pose", getPose().toString());
+
+        SmartDashboard.putNumber("driveTrain/heading", getHeading());
+        SmartDashboard.putNumber("driveTrain/x position", getPose().getX());
+        SmartDashboard.putNumber("driveTrain/y position", getPose().getY());
+
+        SmartDashboard.putNumber("driveTrain/left encoder", getLeftEncoderTicks());
+        SmartDashboard.putNumber("driveTrain/right encoder", getRightEncoderTicks());
     }
 
     @Override
