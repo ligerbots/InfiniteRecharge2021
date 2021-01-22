@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.FieldMapHome;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -41,10 +42,14 @@ public class BlueBAuto extends SequentialCommandGroup implements AutoCommandInte
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
+                initialPose,
                 List.of( 
                     //TODO: NEED WAYPOINTS
-                    
-                ),
+                    FieldMapHome.gridPoint('D', 6),
+                    FieldMapHome.gridPoint('B', 8),   
+                    FieldMapHome.gridPoint('D', 10)             
+                ), 
+                new Pose2d(FieldMapHome.gridPoint('D', 11), new Rotation2d(0.0)),
                 configBackward);
 
         for (State state : backTrajectory.getStates()) {
