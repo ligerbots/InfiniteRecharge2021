@@ -13,9 +13,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-// import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-// import edu.wpi.first.wpilibj.PIDBase.Tolerance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -23,6 +21,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.Nat;
@@ -32,11 +31,9 @@ import frc.robot.FieldMap;
 
 // For simulation
 import frc.robot.simulation.SparkMaxWrapper;
-import frc.robot.simulation.AHRSSimWrapper;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -53,26 +50,19 @@ public class DriveTrain extends SubsystemBase {
 
     private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
 
-    // public PIDController turnSpeedController;
+    private DifferentialDrive differentialDrive;
+    private DifferentialDriveOdometry odometry;
 
-    public double turnOutput;
+    private Encoder leftEncoder = new Encoder(Constants.LEFT_ENCODER_PORTS[0], Constants.LEFT_ENCODER_PORTS[1]);
+    private Encoder rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PORTS[0], Constants.RIGHT_ENCODER_PORTS[1]);
 
-    DifferentialDrive robotDrive;
-    DifferentialDriveOdometry odometry;
-
-    Encoder leftEncoder = new Encoder(Constants.LEFT_ENCODER_PORTS[0], Constants.LEFT_ENCODER_PORTS[1]);
-    Encoder rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PORTS[0], Constants.RIGHT_ENCODER_PORTS[1]);
-
-    AHRS navX;
-
-    double limitedThrottle;
+    private AHRS navX;
 
     // Simulation classes
-    public DifferentialDrivetrainSim drivetrainSimulator;
+    private DifferentialDrivetrainSim drivetrainSimulator;
     private EncoderSim leftEncoderSim;
     private EncoderSim rightEncoderSim;
-    // The Field2d class simulates the field in the sim GUI. Note that we can have only one
-    // instance!
+    // The Field2d class simulates the field in the sim GUI. Note that we can have only one instance!
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
 
@@ -80,17 +70,14 @@ public class DriveTrain extends SubsystemBase {
     private int prevStartLocation = 10;
 
     public DriveTrain() {
+        // Note: since we are using the DifferentialDrive class, we don't need to invert any motors.
 
-        // TODO: Verify which motors need to be inverted
-        // Since we're using DifferentialDrive below, we should not need to invert any,
-        // but it doesn't hurt to be explicit.
+        differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+        differentialDrive.setSafetyEnabled(false);
 
-        robotDrive = new DifferentialDrive(leftMotors, rightMotors);
-        robotDrive.setSafetyEnabled(false);
+        navX = new AHRS(Port.kMXP, (byte) 200);
 
-        navX = new AHRSSimWrapper(Port.kMXP, (byte) 200);
-
-        // Set current limiting on drve train to prevent brown outs
+        // Set current limiting on drive train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
             .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
@@ -98,18 +85,12 @@ public class DriveTrain extends SubsystemBase {
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
              .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
-        //TODO determine real numbers to use here
-        //rightLeader.setOpenLoopRampRate(0.0065);
-        //leftLeader.setOpenLoopRampRate(0.0065);
-
         ////////////////////////////ODOMETRY SET UP//////////////////////////////////
 
         leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
-
-        // turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
 
         if (RobotBase.isSimulation()) {
             // If our robot is simulated
@@ -128,7 +109,7 @@ public class DriveTrain extends SubsystemBase {
             
             // get the angle simulation variable
             // SimDevice is found by name and index, like "name[index]"
-            gyroAngleSim = new SimDeviceSim("AHRS[" + SPI.Port.kMXP.value + "]").getDouble("Angle");
+            gyroAngleSim = new SimDeviceSim("navX-Sensor[0]").getDouble("Yaw");
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
@@ -137,9 +118,6 @@ public class DriveTrain extends SubsystemBase {
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
             SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
-
-        // TODO this should not be here
-        SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
 
     public Pose2d getPose () {
@@ -170,7 +148,7 @@ public class DriveTrain extends SubsystemBase {
     public void tankDriveVolts (double leftVolts, double rightVolts) {
         leftMotors.setVoltage(-leftVolts);
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
-        robotDrive.feed();
+        differentialDrive.feed();
     }
     
     public double getAverageEncoderDistance() {
@@ -192,48 +170,6 @@ public class DriveTrain extends SubsystemBase {
     private double getGyroAngle() {
         return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
     }
-
-    // This is the same as setPose() but leave here for compatibility
-    public void resetOdometry (Pose2d pose) {
-        setPose(pose);
-        // old code as in master branch. leave here until tested
-        // resetEncoders();
-        // //resetHeading();
-        // odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
-
-        // if (RobotBase.isSimulation()) {
-        //     fieldSim.setRobotPose(pose);
-        // }
-    }
-
-    // This is not used, but leave it here for future work?
-    //
-    // public void enableTurningControl(double angle, double tolerance) {
-    //     //double angleOffset = angle;
-    //     double startAngle = getHeading();
-    //     double targetAngle = startAngle + angle;
-    
-    //     // We need to keep all angles between -180 and 180. Account for that here
-    //     // wrapCorrection will be used below in turnError to undo what we do here
-    //     double originalTargetAngle = targetAngle;
-    //     if (targetAngle > 180.0) {
-    //         targetAngle -= 360.0;
-    //     }
-    //     else if (targetAngle < -180.0) {
-    //         targetAngle += 360.0;
-    //     }
-        
-    //     turnSpeedController.setSetpoint(targetAngle);
-    //     turnSpeedController.enable();
-    //     turnSpeedController.setInputRange(-180.0, 180.0);
-    //     turnSpeedController.setAbsoluteTolerance(tolerance);
-    //     turnSpeedController.setOutputRange(-1.0, 1.0);
-    //     turnSpeedController.setContinuous(true);
-
-    //     System.out.printf(
-    //         "currentAngle: %5.2f, originalTargetAngle: %5.2f, targetAngle: %5.2f, ",
-    //         startAngle, originalTargetAngle, targetAngle);
-    // }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds () {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
@@ -274,14 +210,13 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {
-        // TODO: We should look into using the deadband settings in DifferentialDrive
         if (squaredInputs) {
             if (Math.abs(throttle) < 0.1)
                 throttle = 0;
             if (Math.abs(rotate) < 0.1) 
                 rotate = 0;
         }
-        robotDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+        differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
     }
 
     public int getLeftEncoderTicks () {
@@ -293,21 +228,25 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double turnSpeedCalc(double angleError) {
-        if (Math.abs(angleError) > 60) {
-            return 0.8 * Math.signum(angleError);
+        double absErr = Math.abs(angleError);
+        double turnSpeed;
+        if (absErr > 60.0) {
+            turnSpeed = 0.8;
         }
-        else if (Math.abs(angleError) > 30) {
-            return 0.4 * Math.signum(angleError);
+        else if (absErr > 30.0) {
+            turnSpeed = 0.4;
         }
-        else if (Math.abs(angleError) > 10) {
-            return 0.13 * Math.signum(angleError);
+        else if (absErr > 10.0) {
+            turnSpeed = 0.13;
         }
-        else if (Math.abs(angleError) > 5) {
-            return 0.07 * Math.signum(angleError);
+        else if (absErr > 5.0) {
+            turnSpeed = 0.07;
         }
         else {
-            return 0.065 * Math.signum(angleError);
+            turnSpeed = 0.065;
         }
+
+        return turnSpeed * Math.signum(angleError);
     }
 
     public double getPitch() {
@@ -343,8 +282,8 @@ public class DriveTrain extends SubsystemBase {
 
         // On every call, output the Pose info to SmartDashboard for debugging convenience
         Pose2d pose = fieldSim.getRobotPose();
-        SmartDashboard.putNumber("moveAroundField/robotX", pose.getX() / Constants.inchToMetersConversionFactor);
-        SmartDashboard.putNumber("moveAroundField/robotY", pose.getY() / Constants.inchToMetersConversionFactor);
+        SmartDashboard.putNumber("moveAroundField/robotX", Units.metersToInches(pose.getX()));
+        SmartDashboard.putNumber("moveAroundField/robotY", Units.metersToInches(pose.getY()));
         SmartDashboard.putNumber("moveAroundField/robotAngle", pose.getRotation().getDegrees());
     }
 
