@@ -30,9 +30,9 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+    // Use squared inputs
+    // Might want to change that for competition
+    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), true);
   }
 
   // Called once the command ends or is interrupted.
