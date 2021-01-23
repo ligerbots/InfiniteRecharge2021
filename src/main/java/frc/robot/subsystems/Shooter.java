@@ -143,7 +143,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed () {
-        return shooterEncoder.getVelocity();
+        return -shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(double distance) {
@@ -154,9 +154,9 @@ public class Shooter extends SubsystemBase {
         */
     }
 
-    public void setShooterVoltage (double voltage) {
-        pidController.setReference(voltage, ControlType.kVoltage);
-    }
+    // public void setShooterVoltage (double voltage) {
+    //     pidController.setReference(voltage, ControlType.kVoltage);
+    // }
 
     public void shoot () {
         //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
@@ -171,9 +171,10 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putString("Shooting", "Shooting");
     }
 
-    public void setShooterRPM (double rpm) {
+    public void setShooterRpm (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        pidController.setReference(rpm, ControlType.kVelocity, 0, -0.8);
+        if (rpm < 0) System.out.println("warning: rpm values should be positive");
+        pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
     }
 
     public double calculateShooterSpeed(double distance) {
@@ -216,7 +217,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void warmUp () {
-        pidController.setReference(Constants.WARM_UP_RPM, ControlType.kVelocity);
+        setShooterRpm(3000);
     }
 
     public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
