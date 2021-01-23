@@ -148,7 +148,7 @@ public class Shooter extends SubsystemBase {
 
     public void prepareShooter(double distance) {
         pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
-        hoodServo.setAngle(calculateShooterHood(distance));
+        setHood(calculateShooterHood(distance));
         /* The idea was that this would set the shooter speed and hoodServo value 
         based on the input distance. 
         */
@@ -243,7 +243,7 @@ public class Shooter extends SubsystemBase {
     public void stopAll () {
         pidController.setReference(0, ControlType.kVoltage);
         flup.set(0);
-        hoodServo.setAngle(160);
+        setHood(160);
     }
 
     public double getTurretAngle () {
