@@ -147,7 +147,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void prepareShooter(double distance) {
-        pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
+        setShooterRpm(calculateShooterSpeed(distance));
         setHood(calculateShooterHood(distance));
         /* The idea was that this would set the shooter speed and hoodServo value 
         based on the input distance. 
@@ -167,7 +167,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void testSpin () {
-        pidController.setReference(-4000, ControlType.kVelocity);
+        setShooterRpm(4000.0);
         SmartDashboard.putString("Shooting", "Shooting");
     }
 
@@ -241,7 +241,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void stopAll () {
-        pidController.setReference(0, ControlType.kVoltage);
+        setShooterRpm(0.0);
         flup.set(0);
         setHood(160);
     }
