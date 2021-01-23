@@ -217,7 +217,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void warmUp () {
-        setShooterRpm(3000);
+        setShooterRpm(Constants.WARM_UP_RPM);
     }
 
     public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
