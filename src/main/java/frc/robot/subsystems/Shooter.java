@@ -250,7 +250,7 @@ public class Shooter extends SubsystemBase {
         return turretServo.get() *  Constants.TURRET_ANGLE_COEFFICIENT;
     }
 
-    public void setTurret (double angle) {
+    private void setTurret (double angle) {
         System.out.println("Moving turret to " + angle);
         turretServo.setAngle(angle);
     }
@@ -275,12 +275,12 @@ public class Shooter extends SubsystemBase {
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
 
-            turretServo.setAngle(result);
+            setTurret(result);
             System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
             System.out.println("Turret Adjustment not successful      " + adjustedAngle);
-            turretServo.setAngle(72);
+            setTurret(72);
         }
     }
 
