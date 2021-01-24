@@ -25,7 +25,7 @@ public class RedBAuto extends SequentialCommandGroup implements AutoCommandInter
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = new Pose2d(30.0 * Constants.inchToMetersConversionFactor, 120.0 * Constants.inchToMetersConversionFactor, new Rotation2d(0.0) );
+    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1), new Rotation2d(135.0));
 
     public RedBAuto(DriveTrain robotDrive, Intake intake, DriveCommand drivecommand, Carousel carousel) {
         //Don't want the Human player to have input to the robot 
@@ -44,12 +44,11 @@ public class RedBAuto extends SequentialCommandGroup implements AutoCommandInter
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
-                    //TODO: NEED WAYPOINTS
                     FieldMapHome.gridPoint('B', 3),
                     FieldMapHome.gridPoint('D', 5),   
                     FieldMapHome.gridPoint('B', 7)             
                 ), 
-                new Pose2d(FieldMapHome.gridPoint('B', 11), new Rotation2d(0.0)),
+                new Pose2d(FieldMapHome.gridPoint('B', 11), new Rotation2d(135.0)),
                 configBackward);
 
         for (State state : backTrajectory.getStates()) {
