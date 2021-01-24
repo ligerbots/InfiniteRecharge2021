@@ -173,7 +173,10 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterRpm (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        if (rpm < 0) System.out.println("warning: rpm values should be positive");
+        //for the shooter to run the right direction, rpm values passed to setReference must be negative
+        //passing the negative absolute value causes the passed value to always be negative, 
+        //while allowing the function argument to be positive or negative  
+        if (rpm < 0) System.out.println("warning: rpm argument should be positive");
         pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
     }
 
