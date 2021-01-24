@@ -87,7 +87,10 @@ public class Robot extends TimedRobot {
 
     chosenAuto.setDefaultOption("None", null);
     chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
-    chosenAuto.addOption("RedAAuto", new RedAAuto(m_robotContainer.robotDrive, m_robotContainer.intake, m_robotContainer.driveCommand, m_robotContainer.carousel));
+    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, "RedA"));
+    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, "RedB"));
+    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, "BlueA"));
+    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, "BlueB"));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);

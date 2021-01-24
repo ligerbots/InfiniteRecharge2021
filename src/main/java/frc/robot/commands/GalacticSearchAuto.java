@@ -18,21 +18,45 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
-public class BlueAAuto extends SequentialCommandGroup implements AutoCommandInterface {
+public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCommandInterface {
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), new Rotation2d(135.0) );
-
-    public BlueAAuto(DriveTrain robotDrive, Intake intake, DriveCommand drivecommand, Carousel carousel) {
+    private Pose2d initialPose, endPose;
+    private Translation2d waypoint1,waypoint2,waypoint3;
+    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, String autoID) {
         //Don't want the Human player to have input to the robot 
         drivecommand.cancel(); 
+        Rotation2d rotation = Rotation2d.fromDegrees(180.0);
         //Run the intake and Carousel for picking up the balls
-        intake.run(0.4);
-        carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+        switch(autoID){
+            case "RedA":
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
+                waypoint1 = FieldMapHome.gridPoint('C', 3);
+                waypoint2 = FieldMapHome.gridPoint('D', 5);
+                waypoint3 = FieldMapHome.gridPoint('A', 6);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+            case "RedB":
+                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1), rotation);
+                waypoint1 = FieldMapHome.gridPoint('B', 3);
+                waypoint2 = FieldMapHome.gridPoint('D', 5);
+                waypoint3 = FieldMapHome.gridPoint('B', 7);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+            case "BlueA":
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
+                waypoint1 = FieldMapHome.gridPoint('E', 6);
+                waypoint2 = FieldMapHome.gridPoint('B', 7);
+                waypoint3 = FieldMapHome.gridPoint('C', 9);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
+            case "BlueB":
+                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
+                waypoint1 = FieldMapHome.gridPoint('D', 6);
+                waypoint2 = FieldMapHome.gridPoint('B', 8);
+                waypoint3 = FieldMapHome.gridPoint('D', 10);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11), rotation);
+        }
+
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
@@ -43,12 +67,8 @@ public class BlueAAuto extends SequentialCommandGroup implements AutoCommandInte
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
-                List.of( 
-                    FieldMapHome.gridPoint('E', 6),
-                    FieldMapHome.gridPoint('B', 7),   
-                    FieldMapHome.gridPoint('C', 9)             
-                ), 
-                new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(135.0)),
+                List.of( waypoint1, waypoint2, waypoint3), 
+                endPose, 
                 configBackward);
 
         for (State state : backTrajectory.getStates()) {
