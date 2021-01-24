@@ -143,20 +143,20 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed () {
-        return shooterEncoder.getVelocity();
+        return -shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(double distance) {
-        pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
-        hoodServo.setAngle(calculateShooterHood(distance));
+        setShooterRpm(calculateShooterSpeed(distance));
+        setHood(calculateShooterHood(distance));
         /* The idea was that this would set the shooter speed and hoodServo value 
         based on the input distance. 
         */
     }
 
-    public void setShooterVoltage (double voltage) {
-        pidController.setReference(voltage, ControlType.kVoltage);
-    }
+    // public void setShooterVoltage (double voltage) {
+    //     pidController.setReference(voltage, ControlType.kVoltage);
+    // }
 
     public void shoot () {
         //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
@@ -167,13 +167,17 @@ public class Shooter extends SubsystemBase {
     }
 
     public void testSpin () {
-        pidController.setReference(-4000, ControlType.kVelocity);
+        setShooterRpm(4000.0);
         SmartDashboard.putString("Shooting", "Shooting");
     }
 
-    public void setShooterRPM (double rpm) {
+    public void setShooterRpm (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        pidController.setReference(rpm, ControlType.kVelocity, 0, -0.8);
+        //for the shooter to run the right direction, rpm values passed to setReference must be negative
+        //passing the negative absolute value causes the passed value to always be negative, 
+        //while allowing the function argument to be positive or negative  
+        if (rpm < 0) System.out.println("warning: rpm argument should be positive");
+        pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
     }
 
     public double calculateShooterSpeed(double distance) {
@@ -216,7 +220,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void warmUp () {
-        pidController.setReference(Constants.WARM_UP_RPM, ControlType.kVelocity);
+        setShooterRpm(Constants.WARM_UP_RPM);
     }
 
     public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
@@ -240,16 +244,16 @@ public class Shooter extends SubsystemBase {
     }
 
     public void stopAll () {
-        pidController.setReference(0, ControlType.kVoltage);
+        setShooterRpm(0.0);
         flup.set(0);
-        hoodServo.setAngle(160);
+        setHood(160);
     }
 
     public double getTurretAngle () {
         return turretServo.get() *  Constants.TURRET_ANGLE_COEFFICIENT;
     }
 
-    public void setTurret (double angle) {
+    private void setTurret (double angle) {
         System.out.println("Moving turret to " + angle);
         turretServo.setAngle(angle);
     }
@@ -274,12 +278,12 @@ public class Shooter extends SubsystemBase {
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
 
-            turretServo.setAngle(result);
+            setTurret(result);
             System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
             System.out.println("Turret Adjustment not successful      " + adjustedAngle);
-            turretServo.setAngle(72);
+            setTurret(72);
         }
     }
 
