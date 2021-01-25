@@ -26,7 +26,6 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
     private Pose2d initialPose, endPose;
     private Translation2d waypoint1,waypoint2,waypoint3;
     public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, String autoID) {
-        //Don't want the Human player to have input to the robot 
         drivecommand.cancel(); 
         Rotation2d rotation = Rotation2d.fromDegrees(180.0);
         //Run the intake and Carousel for picking up the balls
