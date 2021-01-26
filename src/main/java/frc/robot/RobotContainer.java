@@ -39,7 +39,6 @@ public class RobotContainer {
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
   public final DriveTrain robotDrive = new DriveTrain();
-  public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
 
   XboxController xbox = new XboxController(0);
   Joystick farm = new Joystick(1);
@@ -52,6 +51,7 @@ public class RobotContainer {
 
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
+  public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
 
 
 

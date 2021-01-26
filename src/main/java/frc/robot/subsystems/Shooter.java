@@ -105,17 +105,22 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
         }
       
-        turretAngleLookup.put(-5.0, 57.5);
-        turretAngleLookup.put(-4.0, 61.0);
-        turretAngleLookup.put(-3.0, 64.0);
-        turretAngleLookup.put(-2.0, 68.0);
-        turretAngleLookup.put(-1.0, 71.5);
-        turretAngleLookup.put(0.0, 79.5);
-        turretAngleLookup.put(1.0, 85.0);
-        turretAngleLookup.put(2.0, 89.0);
-        turretAngleLookup.put(3.0, 93.0);
-        turretAngleLookup.put(4.0, 97.0);
-        turretAngleLookup.put(5.0, 101.0);
+        turretAngleLookup.put(0.0, 135.0);
+        turretAngleLookup.put(1.0, 139.0);
+        turretAngleLookup.put(2.0, 142.0);
+        turretAngleLookup.put(3.0, 145.5);
+        turretAngleLookup.put(4.0, 149.0);
+        turretAngleLookup.put(5.0, 152.0);
+        turretAngleLookup.put(-5.0, 117.0);
+        turretAngleLookup.put(-4.0, 121.0);
+        turretAngleLookup.put(-3.0, 124.0);
+        turretAngleLookup.put(-2.0, 129.0);
+        turretAngleLookup.put(-1.0, 131.0);
+
+        SmartDashboard.putNumber("shooter/P", 0.000145);
+        SmartDashboard.putNumber("shooter/I",1e-8);
+        SmartDashboard.putNumber("shooter/D", 0);
+        SmartDashboard.putNumber("shooter/F", 6.6774 * 0.00001);
     }
 
     @Override

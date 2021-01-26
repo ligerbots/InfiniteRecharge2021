@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 
+# Create the field maps used by the simulation
+# Implement the 2021 competition map and the ones for the Skills Challenge
+
 # resources:
 # https://firstfrc.blob.core.windows.net/frc2020/Manual/Sections/Section03.pdf
 # https://firstfrc.blob.core.windows.net/frc2020/PlayingField/LayoutandMarkingDiagram.pdf
 
 # Work in inches since the manual and drawings are in inches
 
+import sys
 import logging
 import argparse
 import math
@@ -17,7 +21,7 @@ import matplotlib.pyplot as plt
 # draw the lines in the middle of the tape
 tape_width = 2.0
 
-field_width = 26.0 * 12 + 11.25    # 8.21 m
+field_width = 26.0 * 12 + 11.25      # 8.21 m
 field_length = 52.0 * 12 + 5.25      # 15.98 m
 initiate_line = 10 * 12.0
 ball_rad = 3.5
@@ -52,6 +56,21 @@ generator_points = ((field_length/2 - 116.0, field_width/2 + 43.75),
 # location of the balls, from drawing
 # x is offset from initiate line, y is offset from goal
 generator_balls = ((130.25, 19.79), (114.94, 26.13), (107.83, 50.54), (114.17, 65.84), (120.51, 81.14))
+
+# ---------------
+sc_field_length = 30 * 12
+sc_field_width = 15 * 12
+
+
+# return the x coordinate given the location index 1 - 11
+def sc_x_pos(index):
+    return # return the coordinate
+
+
+# return the y coordinate given the location index 'A' through 'E'
+# note: you can use "upper()" method to guarantee it is upper case
+def sc_y_pos(index):
+    return # return the coordinate
 
 
 # there are always matching balls, reflected across the center
@@ -89,7 +108,110 @@ def draw_truss(xg, yg):
     return
 
 
+# draw the Galactic Search map
+# maybe add a parameter to indicate which ball path?
+def draw_galactic_search():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    return
+
+
+def draw_competition_map():
+    '''Create the map for 2021 competition field'''
+
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, field_length))
+    axis1.set_ylim((0, field_width))
+
+    # general outline. Ignore the angled driver stations for now
+    # initiation lines are white on the fied, but use red/blue for better visibility?
+    plt.plot((0, 0, field_length, field_length, 0), (0, field_width, field_width, 0, 0), 'green')
+    plt.plot((initiate_line + tape_width/2, initiate_line + tape_width/2), (0, field_width), 'blue')
+    plt.plot((field_length - initiate_line - tape_width/2, field_length - initiate_line - tape_width/2),
+             (0, field_width), 'red')
+
+    # target zone
+    # ignore the tape width - kind of messy to do
+    plt.plot((field_length, field_length - target_w, field_length),
+             (target_yc - target_h/2, target_yc, target_yc + target_h/2), 'blue')
+    plt.plot((0, target_w, 0),
+             (field_width - target_yc - target_h/2, field_width - target_yc, field_width - target_yc + target_h/2),
+             'red')
+
+    # draw the trenches
+    x = (field_length - trench_w) / 2
+    x2 = x + trench_w
+    # numbers are for outside edge of tape, so subtract 1/2 the width
+    x += tape_width/2
+    x2 -= tape_width/2
+    y = trench_h - tape_width/2
+    plt.plot((x, x, x2, x2), (0, y, y, 0), 'blue')
+    plt.plot((x, x, x2, x2), (field_width, field_width - y, field_width - y, field_width), 'red')
+
+    # trench balls, first the three in line, and then the pair at the spinner
+    for i in range(3):
+        draw_ball(field_length / 2.0 + trench_ball_space * i, trench_ball_yline)
+    y = 19.054                      # from onshape
+    x = 128.405 + initiate_line     # from onshape
+    draw_ball(trench_pair_x, trench_pair_y1)
+    draw_ball(trench_pair_x, trench_pair_y2)
+
+    # draw the bars between the trusses. note the color changes
+    # TODO: update for 2021
+    xg = (-generator_width + generator_truss - generator_bar) / 2
+    pts = [[xg, (-generator_length + generator_truss) / 2], [xg, 0]]
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
+    pts[0][1] *= -1
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
+
+    xg *= -1
+    pts = [[xg, (-generator_length + generator_truss) / 2], [xg, 0]]
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
+    pts[0][1] *= -1
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
+
+    xg = (generator_width - generator_truss) / 2
+    yg = (-generator_length + generator_truss - generator_bar) / 2
+    pts = ((-xg, yg), (xg, yg))
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
+
+    pts = ((-xg, -yg), (xg, -yg))
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
+
+    # black bar up the center
+    xg = (-generator_width + generator_truss - generator_bar) / 2
+    pts = ((xg, 0), (-xg, 0))
+    fpts = [generator_to_field(*p) for p in pts]
+    plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'gray')
+
+    # draw the truss outlines. Note that the width/length are to the centers
+    for ix in range(-1, 2, 2):
+        for iy in range(-1, 2, 2):
+            draw_truss(ix * generator_width / 2, iy * generator_length / 2)
+
+    # balls on shield generator bars
+    # TODO: update for 2021
+    for point in generator_balls:
+        draw_ball(field_length - initiate_line - point[0], target_yc + point[1])
+
+    return
+
+
+map_choices = ('competition', 'galactic_search')
+
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
+parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
 parser.add_argument('--verbose', '-v', default=0, action='count', help='Verbose')
 
 args = parser.parse_args()
@@ -101,92 +223,14 @@ logging.getLogger().setLevel(logging.WARNING - 10*args.verbose)
 fig1, axis1 = plt.subplots(figsize=(9.6, 7.2))
 axis1.set_aspect('equal')
 
-# set the plot area to be the size of the field
-axis1.set_xlim((0, field_length))
-axis1.set_ylim((0, field_width))
-
-# general outline. Ignore the angled driver stations for now
-plt.plot((0, 0, field_length, field_length, 0), (0, field_width, field_width, 0, 0), 'green')
-plt.plot((initiate_line + tape_width/2, initiate_line + tape_width/2), (0, field_width), 'blue')
-plt.plot((field_length - initiate_line - tape_width/2, field_length - initiate_line - tape_width/2),
-         (0, field_width), 'red')
-
-# target zone
-# ignore the tape width - kind of messy to do
-plt.plot((field_length, field_length - target_w, field_length),
-         (target_yc - target_h/2, target_yc, target_yc + target_h/2), 'blue')
-plt.plot((0, target_w, 0),
-         (field_width - target_yc - target_h/2, field_width - target_yc, field_width - target_yc + target_h/2),
-         'red')
-
-# draw the trenches
-x = (field_length - trench_w) / 2
-x2 = x + trench_w
-# numbers are for outside edge of tape, so subtract 1/2 the width
-x += tape_width/2
-x2 -= tape_width/2
-y = trench_h - tape_width/2
-plt.plot((x, x, x2, x2), (0, y, y, 0), 'blue')
-plt.plot((x, x, x2, x2), (field_width, field_width - y, field_width - y, field_width), 'red')
-
-# trench balls, first the three in line, and then the pair at the spinner
-for i in range(3):
-    draw_ball(field_length / 2.0 + trench_ball_space * i, trench_ball_yline)
-y = 19.054                      # from onshape
-x = 128.405 + initiate_line     # from onshape
-draw_ball(trench_pair_x, trench_pair_y1)
-draw_ball(trench_pair_x, trench_pair_y2)
-
-
-# draw the bars between the trusses. note the color changes
-xg = (-generator_width + generator_truss - generator_bar) / 2
-pts = [[xg, (-generator_length + generator_truss) / 2], [xg, 0]]
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
-pts[0][1] *= -1
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
-
-xg *= -1
-pts = [[xg, (-generator_length + generator_truss) / 2], [xg, 0]]
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
-pts[0][1] *= -1
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
-
-xg = (generator_width - generator_truss) / 2
-yg = (-generator_length + generator_truss - generator_bar) / 2
-pts = ((-xg, yg), (xg, yg))
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'blue')
-
-pts = ((-xg, -yg), (xg, -yg))
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'red')
-
-# black bar up the center
-xg = (-generator_width + generator_truss - generator_bar) / 2
-pts = ((xg, 0), (-xg, 0))
-fpts = [generator_to_field(*p) for p in pts]
-plt.plot([p[0] for p in fpts], [pp[1] for pp in fpts], 'gray')
-
-# draw the truss outlines. Note that the width/length are to the centers
-for ix in range(-1, 2, 2):
-    for iy in range(-1, 2, 2):
-        draw_truss(ix * generator_width / 2, iy * generator_length / 2)
-
-# balls on shield generator bars
-for point in generator_balls:
-    draw_ball(field_length - initiate_line - point[0], target_yc + point[1])
-
-# This is the box around the outside of the truss support pads
-# Not really needed for now.
-# pts = generator_points + \
-#     [(field_length-x, field_width-y) for x, y in shield_generator_points] + \
-#     shield_generator_points[0:1]
-# plt.plot([p[0] for p in pts], [pp[1] for pp in pts], 'grey')
+if args.map == 'competition':
+    draw_competition_map()
+elif args.map == 'galactic_search':
+    draw_galactic_search()
+else:
+    logging.error(f"Map '{args.map}' not implemented")
+    sys.exit(10)
 
 plt.axis('off')
-plt.savefig("fieldmap.png", bbox_inches='tight', pad_inches=0, dpi=200, transparent=True)
+plt.savefig(f"fieldmap_{args.map}.png", bbox_inches='tight', pad_inches=0, dpi=200, transparent=True)
 plt.show()
