@@ -20,8 +20,8 @@ public class CarouselCommand extends CommandBase {
   long lastBackTime;
 
   int currentTicks;
-  int lastCheckpoint;
-  int currentCheckpoint;
+  //int lastCheckpoint;
+  //int currentCheckpoint;
 
   boolean stopForOpenSpace;
   int checkForFullnessCount = 0;
@@ -40,8 +40,8 @@ public class CarouselCommand extends CommandBase {
     timeCheck = System.nanoTime();
     lastTimeCheck = timeCheck;
     currentTicks = 0;
-    lastCheckpoint = 0;
-    currentCheckpoint = 0;
+    //lastCheckpoint = 0;
+    //currentCheckpoint = 0;
     backwards = false;
     stopForOpenSpace = !carousel.isBallInFront();
     checkForFullnessCount = 0;
@@ -55,7 +55,7 @@ public class CarouselCommand extends CommandBase {
     SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
 
     currentTicks = -carousel.getTicks();
-    currentCheckpoint = currentTicks / fifthRotationTicks;
+    Carousel.currentCheckpoint = currentTicks / fifthRotationTicks;
 
     if (carousel.getCurrent() > 10.35) { // First check is to see if the current is spiking
       lastBackTime = System.nanoTime(); // start timer for going backwards
@@ -63,8 +63,8 @@ public class CarouselCommand extends CommandBase {
     }
 
     if (!backwards) { // This is what we do if we aren't going backwards
-      if (currentCheckpoint > lastCheckpoint) { // if we have indexed to the next slot...
-        lastCheckpoint = currentCheckpoint;
+      if (Carousel.currentCheckpoint > Carousel.lastCheckpoint) { // if we have indexed to the next slot...
+        Carousel.lastCheckpoint = Carousel.currentCheckpoint;
         lastTimeCheck = System.nanoTime(); // Start the timer for pausing at a slot
       }
       if (Robot.time() - lastTimeCheck*1.0e-9 > pauseTime && !stopForOpenSpace/* && checkForFullnessCount < 5*/) {

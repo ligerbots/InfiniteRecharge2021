@@ -20,6 +20,8 @@ public class Carousel extends SubsystemBase {
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
+    public static int currentCheckpoint = 0;
+    public static int lastCheckpoint = 0;
 
 
     public Carousel() {
