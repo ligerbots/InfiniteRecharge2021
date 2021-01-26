@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
+  public SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   private AutoCommandInterface m_prevAutoCommand = null;
 
@@ -131,6 +131,9 @@ public class Robot extends TimedRobot {
       m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
       m_robotContainer.climber.coastWinch();
     }
+    if (m_autonomousCommand != null) {
+      m_robotContainer.robotDrive.tankDriveVolts(0, 0);
+    }
   }
 
   @Override
@@ -177,7 +180,14 @@ public class Robot extends TimedRobot {
    * This function is called periodically during autonomous.
    */
   @Override
-  public void autonomousPeriodic() {
+  public void autonomousPeriodic() {// if the selected auto changed, schedule it
+    AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
+    if (autoCommandInterface != null && autoCommandInterface != m_autonomousCommand) {
+      m_autonomousCommand.cancel();
+      m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
+      autoCommandInterface.schedule();
+      m_autonomousCommand = autoCommandInterface;
+    }
   }
 
   @Override

@@ -10,13 +10,16 @@ import frc.robot.Constants;
 import frc.robot.FieldMap;
 import frc.robot.Robot;
 
+
+
 public class Vision extends SubsystemBase {
     public enum VisionMode {
         INTAKE,                 // driver view through Intake camera
         SHOOTER,                // driver view through Shooter camera
         GOALFINDER,
         BALLFINDER,
-        HOPPERFINDER
+        HOPPERFINDER,
+        GALACTIC_SEARCH_PATH_CHOOSER,
     }
 
     private static final double[] EMPTY_TARGET_INFO = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -67,6 +70,18 @@ public class Vision extends SubsystemBase {
                 targetInfoSim[3] = 0;
                 targetInfoSim[4] = 0;
             }
+        } else if(getMode() == VisionMode.GALACTIC_SEARCH_PATH_CHOOSER) {
+            String path_hint=SmartDashboard.getString("vision/galactic_search_path_chooser/path_hint", "");
+            // for now assume always red path
+            if(path_hint.equals("a")){
+                SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");
+                targetInfoSim[1] = 1;
+            }else if(path_hint.equals("b")){
+                SmartDashboard.putString("vision/galactic_search_path_chooser/result", "b-red");
+                targetInfoSim[1] = 1;
+            }else{
+                targetInfoSim[1] = 0;
+            }
         } else {
             targetInfoSim[1] = 1;
             targetInfoSim[3] = 0;
@@ -116,6 +131,34 @@ public class Vision extends SubsystemBase {
     public double getRobotAngle() {
         double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
         return Math.toDegrees(visionData[4]);
+    }
+
+    public enum GalacticSearchChooserPathHint{
+        A,
+        B
+    }
+    public enum GalacticSearchChooserResult{
+        A_RED,
+        A_BLUE,
+        B_RED,
+        B_BLUE,
+        NONE,
+    }
+
+    public void setGalacticSearchChooserPathHint(GalacticSearchChooserPathHint which){
+        SmartDashboard.putString("vision/galactic_search_path_chooser/path_hint", which.name().toLowerCase());
+    }
+    public GalacticSearchChooserResult getGalacticSearchChooserResult(){
+        if(!getStatus())return GalacticSearchChooserResult.NONE;
+
+        String result = SmartDashboard.getString("vision/galactic_search_path_chooser/result", "");
+
+        try {
+            return GalacticSearchChooserResult.valueOf(result.toUpperCase().replace('-', '_'));
+        } catch(Exception e) {
+            System.out.println("unknown result "+result);
+        }
+        return GalacticSearchChooserResult.NONE;
     }
 
     public void setLedRing (boolean on) {
