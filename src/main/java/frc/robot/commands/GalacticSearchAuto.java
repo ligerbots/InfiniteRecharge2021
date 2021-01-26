@@ -42,28 +42,33 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                                        FieldMapHome.gridPoint('D', 5),
                                        FieldMapHome.gridPoint('A', 6));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                break;
             case RedB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('B', 3),
                                        FieldMapHome.gridPoint('D', 5),
                                        FieldMapHome.gridPoint('B', 7));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                break;
             case BlueA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('E', 6),
                                        FieldMapHome.gridPoint('B', 7),
                                        FieldMapHome.gridPoint('C', 9));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
+                break;
             case BlueB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('D', 6),
                                        FieldMapHome.gridPoint('B', 8),
                                        FieldMapHome.gridPoint('D', 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11), rotation);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
+                break;
             default:
                 waypointList = List.of();
                 endPose = new Pose2d();
                 initialPose = new Pose2d();
+                break;
         }
 
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
