@@ -23,37 +23,47 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose, endPose;
-    private Translation2d waypoint1,waypoint2,waypoint3;
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, String autoID) {
+    public enum Path{
+        RedA, RedB, BlueA, BlueB;
+    }
+
+    private Pose2d initialPose;
+
+    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
         drivecommand.cancel(); 
         Rotation2d rotation = Rotation2d.fromDegrees(180.0);
         //Run the intake and Carousel for picking up the balls
+        List<Translation2d> waypointList;
+        Pose2d endPose;
         switch(autoID){
-            case "RedA":
+            case RedA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
-                waypoint1 = FieldMapHome.gridPoint('C', 3);
-                waypoint2 = FieldMapHome.gridPoint('D', 5);
-                waypoint3 = FieldMapHome.gridPoint('A', 6);
+                waypointList = List.of(FieldMapHome.gridPoint('C', 3),
+                                       FieldMapHome.gridPoint('D', 5),
+                                       FieldMapHome.gridPoint('A', 6));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
-            case "RedB":
+            case RedB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1), rotation);
-                waypoint1 = FieldMapHome.gridPoint('B', 3);
-                waypoint2 = FieldMapHome.gridPoint('D', 5);
-                waypoint3 = FieldMapHome.gridPoint('B', 7);
+                waypointList = List.of(FieldMapHome.gridPoint('B', 3),
+                                       FieldMapHome.gridPoint('D', 5),
+                                       FieldMapHome.gridPoint('B', 7));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
-            case "BlueA":
+            case BlueA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
-                waypoint1 = FieldMapHome.gridPoint('E', 6);
-                waypoint2 = FieldMapHome.gridPoint('B', 7);
-                waypoint3 = FieldMapHome.gridPoint('C', 9);
+                waypointList = List.of(FieldMapHome.gridPoint('E', 6),
+                                       FieldMapHome.gridPoint('B', 7),
+                                       FieldMapHome.gridPoint('C', 9));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
-            case "BlueB":
+            case BlueB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
-                waypoint1 = FieldMapHome.gridPoint('D', 6);
-                waypoint2 = FieldMapHome.gridPoint('B', 8);
-                waypoint3 = FieldMapHome.gridPoint('D', 10);
+                waypointList = List.of(FieldMapHome.gridPoint('D', 6),
+                                       FieldMapHome.gridPoint('B', 8),
+                                       FieldMapHome.gridPoint('D', 10));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11), rotation);
+            default:
+                waypointList = List.of();
+                endPose = new Pose2d();
+                initialPose = new Pose2d();
         }
 
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
@@ -66,7 +76,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
-                List.of( waypoint1, waypoint2, waypoint3), 
+                waypointList, 
                 endPose, 
                 configBackward);
 
