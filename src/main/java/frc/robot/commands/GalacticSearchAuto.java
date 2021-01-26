@@ -29,8 +29,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
     private Pose2d initialPose;
 
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
-        drivecommand.cancel(); 
+    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, CarouselCommand carouselCommand, IntakeCommand intakeCommand, Path autoID) {
+
         Rotation2d rotation = Rotation2d.fromDegrees(180.0);
         //Run the intake and Carousel for picking up the balls
         List<Translation2d> waypointList;
@@ -103,6 +103,14 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             robotDrive::tankDriveVolts,
             robotDrive
         );
+
+        // Cancel the DriveCommand so that the joystick can't override this command group
+        drivecommand.cancel(); 
+
+        // Start the caroousel and the intake
+        carouselCommand.schedule();
+        intakeCommand.schedule();
+
         addCommands(
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );

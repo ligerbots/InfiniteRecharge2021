@@ -52,6 +52,8 @@ public class RobotContainer {
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
+  public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
+  public final IntakeCommand intakeCommand = new IntakeCommand(intake, Constants.INTAKE_SPEED);
 
 
 

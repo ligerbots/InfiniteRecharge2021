@@ -88,10 +88,10 @@ public class Robot extends TimedRobot {
 
     chosenAuto.setDefaultOption("None", null);
     chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
-    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedA));
-    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedB));
-    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueA));
-    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueB));
+    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carouselCommand, m_robotContainer.intakeCommand, GalacticSearchAuto.Path.RedA));
+    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carouselCommand, m_robotContainer.intakeCommand, GalacticSearchAuto.Path.RedB));
+    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carouselCommand, m_robotContainer.intakeCommand, GalacticSearchAuto.Path.BlueA));
+    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carouselCommand, m_robotContainer.intakeCommand, GalacticSearchAuto.Path.BlueB));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
@@ -162,6 +162,14 @@ public class Robot extends TimedRobot {
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
     //m_robotContainer.carouselCommand.schedule();
+
+    // Cancel the DriveCommand so that the joystick can't override this command
+    // group
+    m_robotContainer.driveCommand.cancel();
+
+    // Start the caroousel and the intake
+    m_robotContainer.carouselCommand.schedule();
+    m_robotContainer.intakeCommand.schedule();
 
     // schedule the autonomous command
     m_autonomousCommand = chosenAuto.getSelected();
