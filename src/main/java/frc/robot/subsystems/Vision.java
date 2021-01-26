@@ -147,6 +147,7 @@ public class Vision extends SubsystemBase {
 
     public void setGalacticSearchChooserPathHint(GalacticSearchChooserPathHint which){
         SmartDashboard.putString("vision/galactic_search_path_chooser/path_hint", which.name().toLowerCase());
+        SmartDashboard.putString("vision/galactic_search_path_chooser/result", ""); //ensure that old results are not used
     }
     public GalacticSearchChooserResult getGalacticSearchChooserResult(){
         if(!getStatus())return GalacticSearchChooserResult.NONE;

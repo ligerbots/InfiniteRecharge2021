@@ -64,7 +64,7 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
         SmartDashboard.putString("Chosen Auto/selected", "BlueBAuto");
         break;
     }
-    // no i do not like this either
+    vision.setMode(VisionMode.INTAKE);
     
   }
 
