@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.commands.GalacticSearchAuto;
+import frc.robot.subsystems.Vision.GalacticSearchChooserPathHint;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
+  public SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   private AutoCommandInterface m_prevAutoCommand = null;
 
@@ -92,6 +92,11 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedB));
     chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueA));
     chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueB));
+    
+    chosenAuto.addOption("PathAAuto", new GalacticSearchAutoSelector(m_robotContainer.vision,GalacticSearchChooserPathHint.A));
+    chosenAuto.addOption("PathBAuto", new GalacticSearchAutoSelector(m_robotContainer.vision,GalacticSearchChooserPathHint.B));
+    
+    
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
@@ -131,6 +136,9 @@ public class Robot extends TimedRobot {
       // Set motors to coast so it's easier to move the robot.
       m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
       m_robotContainer.climber.coastWinch();
+    }
+    if (m_autonomousCommand != null) {
+      m_robotContainer.robotDrive.tankDriveVolts(0, 0);
     }
   }
 
@@ -174,7 +182,14 @@ public class Robot extends TimedRobot {
    * This function is called periodically during autonomous.
    */
   @Override
-  public void autonomousPeriodic() {
+  public void autonomousPeriodic() {// if the selected auto changed, schedule it
+    AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
+    if (autoCommandInterface != null && autoCommandInterface != m_autonomousCommand) {
+      m_autonomousCommand.cancel();
+      m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
+      autoCommandInterface.schedule();
+      m_autonomousCommand = autoCommandInterface;
+    }
   }
 
   @Override
