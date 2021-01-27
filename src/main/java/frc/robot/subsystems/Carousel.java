@@ -22,6 +22,7 @@ public class Carousel extends SubsystemBase {
     int ballCount = 0;
     public static int currentCheckpoint = 0;
     public static int lastCheckpoint = 0;
+    public static int checkForFullnessCount = 0;
 
 
     public Carousel() {

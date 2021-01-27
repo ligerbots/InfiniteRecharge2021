@@ -24,7 +24,6 @@ public class CarouselCommand extends CommandBase {
   //int currentCheckpoint;
 
   boolean stopForOpenSpace;
-  int checkForFullnessCount = 0;
 
   final int fifthRotationTicks = Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   final double pauseTime = 0.04; // seconds
@@ -44,7 +43,6 @@ public class CarouselCommand extends CommandBase {
     //currentCheckpoint = 0;
     backwards = false;
     stopForOpenSpace = !carousel.isBallInFront();
-    checkForFullnessCount = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,18 +65,18 @@ public class CarouselCommand extends CommandBase {
         Carousel.lastCheckpoint = Carousel.currentCheckpoint;
         lastTimeCheck = Robot.time(); // Start the timer for pausing at a slot
       }
-      if (Robot.time() - lastTimeCheck > pauseTime && !stopForOpenSpace/* && checkForFullnessCount < 5*/) {
+      if (Robot.time() - lastTimeCheck > pauseTime && !stopForOpenSpace/* && Carousel.checkForFullnessCount < 5*/) {
         // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
         carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
       }
       else { // This block runs if 
         if (!carousel.isBallInFront()) { // This block runs if there is not ball up front
           stopForOpenSpace = true; 
-          checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
+          Carousel.checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
         }
         else {
           stopForOpenSpace = false;
-          checkForFullnessCount += 1;
+          Carousel.checkForFullnessCount += 1;
         }
         carousel.spin(0); // We aren't supposed to be spinning here
       }
