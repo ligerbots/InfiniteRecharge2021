@@ -13,11 +13,11 @@ public class CarouselCommand extends CommandBase {
 
   Carousel carousel;
 
-  long lastTimeCheck;
-  long timeCheck;
+  double lastTimeCheck;
+  double timeCheck;
   boolean backwards;
 
-  long lastBackTime;
+  double lastBackTime;
 
   int currentTicks;
   //int lastCheckpoint;
@@ -37,7 +37,7 @@ public class CarouselCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timeCheck = System.nanoTime();
+    timeCheck = Robot.time();
     lastTimeCheck = timeCheck;
     currentTicks = 0;
     //lastCheckpoint = 0;
@@ -58,16 +58,16 @@ public class CarouselCommand extends CommandBase {
     Carousel.currentCheckpoint = currentTicks / fifthRotationTicks;
 
     if (carousel.getCurrent() > 10.35) { // First check is to see if the current is spiking
-      lastBackTime = System.nanoTime(); // start timer for going backwards
+      lastBackTime = Robot.time(); // start timer for going backwards
       backwards = true; // now we goin backwards
     }
 
     if (!backwards) { // This is what we do if we aren't going backwards
       if (Carousel.currentCheckpoint > Carousel.lastCheckpoint) { // if we have indexed to the next slot...
         Carousel.lastCheckpoint = Carousel.currentCheckpoint;
-        lastTimeCheck = System.nanoTime(); // Start the timer for pausing at a slot
+        lastTimeCheck = Robot.time(); // Start the timer for pausing at a slot
       }
-      if (Robot.time() - lastTimeCheck*1.0e-9 > pauseTime && !stopForOpenSpace/* && checkForFullnessCount < 5*/) {
+      if (Robot.time() - lastTimeCheck > pauseTime && !stopForOpenSpace/* && checkForFullnessCount < 5*/) {
         // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
         carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
       }
@@ -85,7 +85,7 @@ public class CarouselCommand extends CommandBase {
     }
     else { // This is decently readable go backwards code that runs on a timer
       carousel.spin(-0.6);
-      if (Robot.time() - lastBackTime*1.0e-9 > 0.5) {
+      if (Robot.time() - lastBackTime > 0.5) {
         backwards = false;
       }
     }
