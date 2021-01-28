@@ -93,6 +93,9 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Barrel", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Barrel));
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
+    
+    chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.vision));
+
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
