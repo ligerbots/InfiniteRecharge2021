@@ -49,14 +49,20 @@ public class CarouselCommand extends CommandBase {
   @Override
   public void execute() {
 
+    //quits if there are 3 or more balls in the carousel (for infinite recharge at home)
+    if (carousel.getBallCount() >= 3) {
+      return;
+    }
+
     currentTicks = -carousel.getTicks();
-    Carousel.currentCheckpoint = currentTicks / fifthRotationTicks;
+    carousel.currentCheckpoint = currentTicks / fifthRotationTicks;
 
     // This is what we do if we aren't going backwards
-    if (Carousel.currentCheckpoint > Carousel.lastCheckpoint) { // if we have indexed to the next slot...
-      Carousel.lastCheckpoint = Carousel.currentCheckpoint;
+    if (carousel.currentCheckpoint > carousel.lastCheckpoint) { // if we have indexed to the next slot...
+      carousel.lastCheckpoint = carousel.currentCheckpoint;
       lastTimeCheck = Robot.time(); // Start the timer for pausing at a slot
     }
+    
     if (Robot.time() - lastTimeCheck > pauseTime && !stopForOpenSpace/* && Carousel.checkForFullnessCount < 5*/) {
       // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
       carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
@@ -64,11 +70,11 @@ public class CarouselCommand extends CommandBase {
     else { // This block runs if 
       if (!carousel.isBallInFront()) { // This block runs if there is not ball up front
         stopForOpenSpace = true; 
-        Carousel.checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
+        carousel.checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
       }
       else {
         stopForOpenSpace = false;
-        Carousel.checkForFullnessCount += 1;
+        carousel.checkForFullnessCount += 1;
       }
       carousel.spin(0); // We aren't supposed to be spinning here
     }

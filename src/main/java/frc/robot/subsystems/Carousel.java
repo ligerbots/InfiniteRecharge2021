@@ -22,9 +22,9 @@ public class Carousel extends SubsystemBase {
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
-    public static int currentCheckpoint = 0;
-    public static int lastCheckpoint = 0;
-    public static int checkForFullnessCount = 0;
+    public int currentCheckpoint = 0;
+    public int lastCheckpoint = 0;
+    public int checkForFullnessCount = 0;
     boolean backwards;
     double lastBackTime;
 
@@ -87,8 +87,8 @@ public class Carousel extends SubsystemBase {
         return colorSensor.getProximity();
     }
 
-    public void setBallCount (int ballCount) {
-        this.ballCount = ballCount;
+    public void incrementBallCount () {
+        ballCount++;
     }
 
     public void resetBallCount () {

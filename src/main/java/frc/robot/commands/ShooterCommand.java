@@ -156,7 +156,7 @@ public class ShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     shooter.vision.setMode(VisionMode.INTAKE);
-    carousel.setBallCount(0);
+    carousel.resetBallCount();
     //carouselCommand.schedule();
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
