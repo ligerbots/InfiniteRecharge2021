@@ -22,19 +22,17 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
    */
 
   Vision vision;
-  Vision.GalacticSearchChooserPathHint pathHint;
   Vision.GalacticSearchChooserResult result = GalacticSearchChooserResult.NONE;
 
-  public GalacticSearchAutoSelector(Vision vision, Vision.GalacticSearchChooserPathHint pathHint) {
+  public GalacticSearchAutoSelector(Vision vision) {
     this.vision = vision;
-    this.pathHint = pathHint;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    vision.setGalacticSearchChooserPathHint(this.pathHint);
+    vision.resetGalacticSearchChooserResult();
     vision.setMode(VisionMode.GALACTIC_SEARCH_PATH_CHOOSER);
   }
 

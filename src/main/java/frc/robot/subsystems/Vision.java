@@ -71,17 +71,10 @@ public class Vision extends SubsystemBase {
                 targetInfoSim[4] = 0;
             }
         } else if(getMode() == VisionMode.GALACTIC_SEARCH_PATH_CHOOSER) {
-            String path_hint=SmartDashboard.getString("vision/galactic_search_path_chooser/path_hint", "");
-            // for now assume always red path
-            if(path_hint.equals("a")){
-                SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");
-                targetInfoSim[1] = 1;
-            }else if(path_hint.equals("b")){
-                SmartDashboard.putString("vision/galactic_search_path_chooser/result", "b-red");
-                targetInfoSim[1] = 1;
-            }else{
-                targetInfoSim[1] = 0;
-            }
+            // for now assume always a-red path
+
+            SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");
+            targetInfoSim[1] = 1;
         } else {
             targetInfoSim[1] = 1;
             targetInfoSim[3] = 0;
@@ -133,10 +126,7 @@ public class Vision extends SubsystemBase {
         return Math.toDegrees(visionData[4]);
     }
 
-    public enum GalacticSearchChooserPathHint{
-        A,
-        B
-    }
+
     public enum GalacticSearchChooserResult{
         A_RED,
         A_BLUE,
@@ -145,8 +135,7 @@ public class Vision extends SubsystemBase {
         NONE,
     }
 
-    public void setGalacticSearchChooserPathHint(GalacticSearchChooserPathHint which){
-        SmartDashboard.putString("vision/galactic_search_path_chooser/path_hint", which.name().toLowerCase());
+    public void resetGalacticSearchChooserResult(){
         SmartDashboard.putString("vision/galactic_search_path_chooser/result", ""); //ensure that old results are not used
     }
     public GalacticSearchChooserResult getGalacticSearchChooserResult(){

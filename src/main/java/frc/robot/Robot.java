@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Vision.GalacticSearchChooserPathHint;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -93,8 +92,7 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueA));
     chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueB));
     
-    chosenAuto.addOption("PathAAuto", new GalacticSearchAutoSelector(m_robotContainer.vision,GalacticSearchChooserPathHint.A));
-    chosenAuto.addOption("PathBAuto", new GalacticSearchAutoSelector(m_robotContainer.vision,GalacticSearchChooserPathHint.B));
+    chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.vision));
     
     
     SmartDashboard.putData("Chosen Auto", chosenAuto);
