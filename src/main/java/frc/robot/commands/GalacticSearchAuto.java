@@ -44,7 +44,9 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
                 break;
             case RedB:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1), rotation);
+                // Test case. Try starting from A1
+                rotation = Rotation2d.fromDegrees(180.0-30.0);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('B', 3),
                                        FieldMapHome.gridPoint('D', 5),
                                        FieldMapHome.gridPoint('B', 7));
@@ -75,7 +77,10 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        // Initial baseline
+        // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",2.0))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
