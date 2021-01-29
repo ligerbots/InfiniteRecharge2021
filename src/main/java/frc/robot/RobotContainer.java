@@ -52,7 +52,7 @@ public class RobotContainer {
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
-
+  public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
 
 
   //public final NewEightBallSim newEightBallSimCommand = new NewEightBallSim(robotDrive, driveCommand, climber);
@@ -96,6 +96,11 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
+    xboxA.whenPressed(()->{
+      System.out.println("BUTTON PRESSED !!!!!!!!!");
+      positionRecorder.setIsRunning(!positionRecorder.isRunning);
+    });
+    
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
@@ -103,7 +108,7 @@ public class RobotContainer {
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
-
+    
     
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
 
