@@ -19,17 +19,17 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.DriveTrain;
-public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCommandInterface {
+public class SkillsChallengeAuto extends SequentialCommandGroup implements AutoCommandInterface {
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     public enum Path{
-        RedA, RedB, BlueA, BlueB;
+        RedA, RedB, BlueA, BlueB, Barrel, Slalom;
     }
 
     private Pose2d initialPose;
 
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
+    public SkillsChallengeAuto(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
         drivecommand.cancel(); 
         Rotation2d rotation = Rotation2d.fromDegrees(180.0);
         //Run the intake and Carousel for picking up the balls
@@ -64,6 +64,24 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                                        FieldMapHome.gridPoint('D', 10));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
                 break;
+            case Barrel:
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('C', 4),
+                                       FieldMapHome.gridPoint('D', 6),
+                                       FieldMapHome.gridPoint('E', 5),
+                                       FieldMapHome.gridPoint('D', 4),
+                                       FieldMapHome.gridPoint('C', 5),
+                                       FieldMapHome.gridPoint('B', 9),
+                                       FieldMapHome.gridPoint('A', 8),
+                                       FieldMapHome.gridPoint('B', 7),
+                                       FieldMapHome.gridPoint('D', 8),
+                                       FieldMapHome.gridPoint('E', 10),
+                                       FieldMapHome.gridPoint('D', 11),
+                                       FieldMapHome.gridPoint('C', 10));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(0.0));
+                break;
+            case Slalom:
+                //break;
             default:
                 waypointList = List.of();
                 endPose = new Pose2d();

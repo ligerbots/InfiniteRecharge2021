@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.commands.GalacticSearchAuto;
+import frc.robot.commands.SkillsChallengeAuto;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -88,10 +88,12 @@ public class Robot extends TimedRobot {
 
     chosenAuto.setDefaultOption("None", null);
     chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
-    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedA));
-    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedB));
-    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueA));
-    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueB));
+    chosenAuto.addOption("RedAAuto", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.RedA));
+    chosenAuto.addOption("RedBAuto", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.RedB));
+    chosenAuto.addOption("BlueAAuto", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.BlueA));
+    chosenAuto.addOption("BlueBAuto", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.BlueB));
+    chosenAuto.addOption("Barrel", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.Barrel));
+    chosenAuto.addOption("Slalom", new SkillsChallengeAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, SkillsChallengeAuto.Path.Slalom));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
