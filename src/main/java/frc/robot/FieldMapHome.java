@@ -38,4 +38,9 @@ public class FieldMapHome {
 
         return new Translation2d(Units.inchesToMeters(x), Units.inchesToMeters(y));
     }
+
+    public static Translation2d gridPoint(char row, int col, double x, double y){
+        Translation2d translation = gridPoint(row,col);
+        return new Translation2d(translation.getX() + Units.inchesToMeters(x), translation.getY() + Units.inchesToMeters(y));
+    }
 }
