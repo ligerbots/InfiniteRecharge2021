@@ -22,9 +22,8 @@ public class Carousel extends SubsystemBase {
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
-    public int currentCheckpoint = 0;
-    public int lastCheckpoint = 0;
-    public int checkForFullnessCount = 0;
+    public double currentCheckpoint = 0;
+    public double lastCheckpoint = 0;
     boolean backwards;
     double lastBackTime;
 
@@ -38,9 +37,9 @@ public class Carousel extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putNumber("Color Sensor distance reading", getColorSensorProximity());
-        SmartDashboard.putNumber("Output current", getCurrent());
-        SmartDashboard.putNumber("Carousel ticks", getTicks());
+        SmartDashboard.putNumber("Carousel/Color Sensor distance", getColorSensorProximity());
+        SmartDashboard.putNumber("Carousel/Output current", getCurrent());
+        SmartDashboard.putNumber("Carousel/Carousel ticks", -getTicks());
 
         // First check is to see if the current is spiking, this would indicate a stuck ball
         if (getCurrent() > 10.35) { 
@@ -69,10 +68,13 @@ public class Carousel extends SubsystemBase {
     public void warmUp() {
         this.spin(Constants.CAROUSEL_SHOOTER_SPEED);
     }
-
-
+    
     public int getTicks() {
         return carouselEncoder.getRaw();
+    }
+
+    public double getSlot() {
+        return -getTicks() / Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
     }
 
     public void resetEncoder () {

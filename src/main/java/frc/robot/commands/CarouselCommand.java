@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -14,35 +13,21 @@ public class CarouselCommand extends CommandBase {
   Carousel carousel;
 
   double lastTimeCheck;
-  double timeCheck;
-  
+  boolean slotFull;
 
-  
-
-  int currentTicks;
-  //int lastCheckpoint;
-  //int currentCheckpoint;
-
-  boolean stopForOpenSpace;
-
-  final int fifthRotationTicks = Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   final double pauseTime = 0.04; // seconds
 
   public CarouselCommand(Carousel carousel) {
     this.carousel = carousel;
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(carousel);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timeCheck = Robot.time();
-    lastTimeCheck = timeCheck;
-    currentTicks = 0;
-    //lastCheckpoint = 0;
-    //currentCheckpoint = 0;
+    lastTimeCheck = Robot.time();
     
-    stopForOpenSpace = !carousel.isBallInFront();
+    slotFull = carousel.isBallInFront();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,8 +39,7 @@ public class CarouselCommand extends CommandBase {
       return;
     }
 
-    currentTicks = -carousel.getTicks();
-    carousel.currentCheckpoint = currentTicks / fifthRotationTicks;
+    carousel.currentCheckpoint = carousel.getSlot();
 
     // This is what we do if we aren't going backwards
     if (carousel.currentCheckpoint > carousel.lastCheckpoint) { // if we have indexed to the next slot...
@@ -63,19 +47,16 @@ public class CarouselCommand extends CommandBase {
       lastTimeCheck = Robot.time(); // Start the timer for pausing at a slot
     }
     
-    if (Robot.time() - lastTimeCheck > pauseTime && !stopForOpenSpace/* && Carousel.checkForFullnessCount < 5*/) {
+    if (Robot.time() - lastTimeCheck > pauseTime && slotFull) {
       // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
       carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
     }
     else { // This block runs if 
-      if (!carousel.isBallInFront()) { // This block runs if there is not ball up front
-        stopForOpenSpace = true; 
-        carousel.checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
+      slotFull = carousel.isBallInFront();
+      if (slotFull) { // This block runs if there is not ball up front
+        carousel.incrementBallCount();
       }
-      else {
-        stopForOpenSpace = false;
-        carousel.checkForFullnessCount += 1;
-      }
+      
       carousel.spin(0); // We aren't supposed to be spinning here
     }
     // This is decently readable go backwards code that runs on a timer 
