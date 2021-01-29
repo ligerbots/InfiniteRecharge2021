@@ -83,7 +83,7 @@ public class SkillsChallengeAuto extends SequentialCommandGroup implements AutoC
                 break;
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('E', 2),
+                waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
                                        FieldMapHome.gridPoint('C', 8),
                                        FieldMapHome.gridPoint('D', 9),
