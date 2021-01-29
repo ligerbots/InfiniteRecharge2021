@@ -32,6 +32,7 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    result=GalacticSearchChooserResult.NONE;
     vision.resetGalacticSearchChooserResult();
     vision.setMode(VisionMode.GALACTIC_SEARCH_PATH_CHOOSER);
   }
