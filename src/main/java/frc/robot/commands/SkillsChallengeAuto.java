@@ -66,7 +66,7 @@ public class SkillsChallengeAuto extends SequentialCommandGroup implements AutoC
                 endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
                 break;
             case Barrel:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1,200,5), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 4),
                                        FieldMapHome.gridPoint('D', 6),
                                        FieldMapHome.gridPoint('E', 5),

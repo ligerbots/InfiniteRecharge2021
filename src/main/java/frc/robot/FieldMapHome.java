@@ -38,7 +38,7 @@ public class FieldMapHome {
 
         return new Translation2d(Units.inchesToMeters(x), Units.inchesToMeters(y));
     }
-
+    // This returns a x and y value based on gridpoints but with x and y offsets.
     public static Translation2d gridPoint(char row, int col, double x, double y){
         Translation2d translation = gridPoint(row,col);
         return new Translation2d(translation.getX() + Units.inchesToMeters(x), translation.getY() + Units.inchesToMeters(y));
