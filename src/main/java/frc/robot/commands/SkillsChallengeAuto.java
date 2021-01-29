@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -65,7 +66,7 @@ public class SkillsChallengeAuto extends SequentialCommandGroup implements AutoC
                 endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
                 break;
             case Barrel:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 4),
                                        FieldMapHome.gridPoint('D', 6),
                                        FieldMapHome.gridPoint('E', 5),
@@ -81,7 +82,18 @@ public class SkillsChallengeAuto extends SequentialCommandGroup implements AutoC
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(0.0));
                 break;
             case Slalom:
-                //break;
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('E', 2),
+                                       FieldMapHome.gridPoint('C', 4),
+                                       FieldMapHome.gridPoint('C', 8),
+                                       FieldMapHome.gridPoint('D', 9),
+                                       FieldMapHome.gridPoint('E', 10),
+                                       FieldMapHome.gridPoint('D', 11),
+                                       FieldMapHome.gridPoint('C', 10),
+                                       FieldMapHome.gridPoint('E', 8),
+                                       FieldMapHome.gridPoint('E', 4));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Units.degreesToRadians(-45.0)));
+                break;
             default:
                 waypointList = List.of();
                 endPose = new Pose2d();
