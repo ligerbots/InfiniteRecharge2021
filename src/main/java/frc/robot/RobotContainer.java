@@ -108,6 +108,8 @@ public class RobotContainer {
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
 
+    bumperRight.whileHeld(new IntakeCommand(intake, Constants.INTAKE_SPEED));
+    bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
 
