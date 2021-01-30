@@ -216,7 +216,8 @@ public class DriveTrain extends SubsystemBase {
             if (Math.abs(rotate) < 0.1) 
                 rotate = 0;
         }
-        differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+       // differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+       differentialDrive.curvatureDrive(throttle, -rotate, false);
     }
 
     public int getLeftEncoderTicks () {

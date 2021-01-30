@@ -77,7 +77,8 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return xbox.getY(Hand.kLeft);
+      //return xbox.getY(Hand.kLeft);
+      return xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);// use trigger for throttle
     }
   }
 
@@ -85,14 +86,15 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kRight);
+      return xbox.getX(Hand.kLeft);
     }
   }
   public class Shoulder implements DoubleSupplier{
 
     @Override
     public double getAsDouble() {
-      return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+      //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+      return 0.0;
     }
   }
 
