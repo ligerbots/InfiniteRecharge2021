@@ -218,6 +218,9 @@ public class Robot extends TimedRobot {
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
     m_robotContainer.carouselCommand.schedule();
+
+    // Cancel the IntakeCommand so it only runs on the bumper buttons
+    m_robotContainer.intakeCommand.cancel();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
