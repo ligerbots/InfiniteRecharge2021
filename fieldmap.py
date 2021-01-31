@@ -98,6 +98,7 @@ def draw_one_ball(x, y):
     plt.gcf().gca().add_artist(c)
     return
 
+
 # there are always matching balls, reflected across the center
 # so draw a pair
 def draw_ball(x, y):
@@ -209,9 +210,9 @@ def draw_bounce():
     draw_marker(sc_x_pos(10), sc_y_pos("D"))
     draw_marker(sc_x_pos(11), sc_y_pos("D"))
     draw_marker(sc_x_pos(3), sc_y_pos("E"))
-    draw_one_ball(sc_x_pos(3), sc_y_pos("A"))
-    draw_one_ball(sc_x_pos(6), sc_y_pos("A"))
-    draw_one_ball(sc_x_pos(9), sc_y_pos("A"))
+    draw_marker(sc_x_pos(3), sc_y_pos("A"), "green")
+    draw_marker(sc_x_pos(6), sc_y_pos("A"), "green")
+    draw_marker(sc_x_pos(9), sc_y_pos("A"), "green")
     return
 
 def draw_lightspeed():
