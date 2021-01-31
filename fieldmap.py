@@ -82,6 +82,14 @@ def sc_y_pos(index):
         v = 30
     return v
 
+def draw_marker(x, y, color="orange"):
+    logging.info(f'Marker: ({x:.3f}, {y:.3f})')
+
+    # zorder pulls the balls to the front, so they are on top of the lines
+    c = plt.Circle((x, y), 2.5, fill=True, color=color, zorder=100)
+    plt.gcf().gca().add_artist(c)
+    return
+
 def draw_one_ball(x, y):
     logging.info(f'Ball: ({x:.3f}, {y:.3f})')
 
@@ -152,6 +160,27 @@ def draw_galactic_search(map_name):
         draw_one_ball(sc_x_pos(8), sc_y_pos("B"))
         draw_one_ball(sc_x_pos(6), sc_y_pos("D"))
         draw_one_ball(sc_x_pos(10), sc_y_pos("D"))
+    return
+
+def draw_slalom():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the ball
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(4), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(6), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
     return
 
 
@@ -242,7 +271,7 @@ def draw_competition_map():
     return
 
 
-map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB')
+map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB', "slalom")
 
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
 parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
@@ -261,6 +290,8 @@ if args.map == 'competition':
     draw_competition_map()
 elif args.map in ('redA', 'redB', 'blueA', 'blueB'):
     draw_galactic_search(args.map)
+elif args.map == "slalom":
+    draw_slalom()
 else:
     logging.error(f"Map '{args.map}' not implemented")
     sys.exit(10)
