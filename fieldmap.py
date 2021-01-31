@@ -183,6 +183,82 @@ def draw_slalom():
     draw_marker(sc_x_pos(10), sc_y_pos("D"))
     return
 
+def draw_bounce():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(4), sc_y_pos("B"))
+    draw_marker(sc_x_pos(5), sc_y_pos("B"))
+    draw_marker(sc_x_pos(7), sc_y_pos("B"))
+    draw_marker(sc_x_pos(8), sc_y_pos("B"))
+    draw_marker(sc_x_pos(10), sc_y_pos("B"))
+    draw_marker(sc_x_pos(11), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    draw_marker(sc_x_pos(11), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("E"))
+    draw_one_ball(sc_x_pos(3), sc_y_pos("A"))
+    draw_one_ball(sc_x_pos(6), sc_y_pos("A"))
+    draw_one_ball(sc_x_pos(9), sc_y_pos("A"))
+    return
+
+def draw_lightspeed():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(3), sc_y_pos("B"))
+    draw_marker(sc_x_pos(4), sc_y_pos("B"))
+    draw_marker(sc_x_pos(6), sc_y_pos("B"))
+    draw_marker(sc_x_pos(7), sc_y_pos("B"))
+    draw_marker(sc_x_pos(9), sc_y_pos("B"))
+    draw_marker(sc_x_pos(11), sc_y_pos("B"))
+    draw_marker(sc_x_pos(6), sc_y_pos("A"))
+    draw_marker(sc_x_pos(9), sc_y_pos("C"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("D"))
+    draw_marker(sc_x_pos(4), sc_y_pos("D"))
+    draw_marker(sc_x_pos(6), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(9), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    return
+
+def draw_barrel():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(8), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    return
 
 def draw_competition_map():
     '''Create the map for 2021 competition field'''
@@ -271,7 +347,7 @@ def draw_competition_map():
     return
 
 
-map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB', "slalom")
+map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB', "slalom", "bounce", "barrel", "lightspeed")
 
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
 parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
@@ -292,6 +368,12 @@ elif args.map in ('redA', 'redB', 'blueA', 'blueB'):
     draw_galactic_search(args.map)
 elif args.map == "slalom":
     draw_slalom()
+elif args.map == "bounce":
+    draw_bounce()
+elif args.map == "barrel":
+    draw_barrel()
+elif args.map == "lightspeed":
+    draw_lightspeed()
 else:
     logging.error(f"Map '{args.map}' not implemented")
     sys.exit(10)
