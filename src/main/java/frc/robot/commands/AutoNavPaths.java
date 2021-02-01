@@ -12,23 +12,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
+// import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
+
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
 
-    // Define the initial pose to be used by this command. This will be used in the initial trajectory
-    // and will allow the system to query for it
     public enum Path{
         Barrel, Slalom;
     }
 
+    // Define the initial pose to be used by this command. This will be used in the initial trajectory
+    // and will allow the system to query for it
     private Pose2d initialPose;
 
     public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
@@ -64,7 +64,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('C', 10),
                                        FieldMapHome.gridPoint('E', 8),
                                        FieldMapHome.gridPoint('E', 4));
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Units.degreesToRadians(-45.0)));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(-45.0));
                 break;
             default:
                 waypointList = List.of();
@@ -90,9 +90,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose, 
                 configBackward);
 
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
+        System.out.println("DEBUG: AutoNav path " + autoID.name());
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        System.out.println("DEBUG: AutoNav path time = " + backTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
