@@ -27,7 +27,7 @@ public class NewCarouselCommand extends CommandBase {
 
   } 
 
-  State state;
+  private State state;
 
   public NewCarouselCommand(Carousel carousel) {
     this.carousel = carousel;
