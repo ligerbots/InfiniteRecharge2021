@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class PositionRecorder extends CommandBase {
@@ -29,7 +30,7 @@ public class PositionRecorder extends CommandBase {
 
   DriveTrain drivetrain;
   PrintWriter writer;
-  long start;
+  double start;
 
   String directoryName="position-recordings";
 
@@ -81,7 +82,7 @@ public class PositionRecorder extends CommandBase {
       writer = new PrintWriter(f); // PrintWriter is buffered
       writer.println("Elapsed milliseconds,x,y,rotation");
 
-      start=System.currentTimeMillis();
+      start=Robot.time();
 
       System.out.println("Writing to: "+f.getAbsolutePath());
 
@@ -96,7 +97,13 @@ public class PositionRecorder extends CommandBase {
   public void execute() {
     if(writer==null)return;
     Pose2d currentPosition=drivetrain.getPose();
-    writer.println((System.currentTimeMillis()-start)+","+currentPosition.getX()+","+currentPosition.getY()+","+currentPosition.getRotation().getRadians());
+    try{
+      writer.println((System.currentTimeMillis()-start)+","+currentPosition.getX()+","+currentPosition.getY()+","+currentPosition.getRotation().getRadians());
+    }catch(Exception e){
+      e.printStackTrace();
+      writer.close();
+      writer=null;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -108,6 +115,7 @@ public class PositionRecorder extends CommandBase {
 
     if(writer==null)return;
     writer.close();
+    writer=null;
   }
 
 
