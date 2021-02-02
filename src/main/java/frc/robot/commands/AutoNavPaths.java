@@ -19,59 +19,52 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
 
-public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCommandInterface {
+public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
 
     public enum Path{
-        RedA, RedB, BlueA, BlueB;
+        Barrel, Slalom;
     }
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Path autoID) {
+    public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
         Rotation2d rotation = Rotation2d.fromDegrees(180.0);
-        //Need to run the intake and Carousel for picking up the balls
-        // Construct them here for inclusion into the command group below.
-        CarouselCommand carouselCommand = new CarouselCommand(carousel);
-        IntakeCommand intakeCommand = new IntakeCommand(intake, Constants.INTAKE_SPEED);
-
+        
         List<Translation2d> waypointList;
         Pose2d endPose;
         switch(autoID){
-            case RedA:
+            case Barrel:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('A', 6));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
-                break;
-            case RedB:
-                // Test case. Try starting from A1
-                rotation = Rotation2d.fromDegrees(180.0-30.0);
-                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('B', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('B', 7));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
-                break;
-            case BlueA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('E', 6),
+                waypointList = List.of(FieldMapHome.gridPoint('C', 4),
+                                       FieldMapHome.gridPoint('D', 6),
+                                       FieldMapHome.gridPoint('E', 5),
+                                       FieldMapHome.gridPoint('D', 4),
+                                       FieldMapHome.gridPoint('C', 5),
+                                       FieldMapHome.gridPoint('B', 9),
+                                       FieldMapHome.gridPoint('A', 8),
                                        FieldMapHome.gridPoint('B', 7),
-                                       FieldMapHome.gridPoint('C', 9));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
+                                       FieldMapHome.gridPoint('D', 8),
+                                       FieldMapHome.gridPoint('E', 10),
+                                       FieldMapHome.gridPoint('D', 11),
+                                       FieldMapHome.gridPoint('C', 10));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(0.0));
                 break;
-            case BlueB:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('D', 6),
-                                       FieldMapHome.gridPoint('B', 8),
-                                       FieldMapHome.gridPoint('D', 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
+            case Slalom:
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
+                waypointList = List.of(
+                                       FieldMapHome.gridPoint('C', 4),
+                                       FieldMapHome.gridPoint('C', 8),
+                                       FieldMapHome.gridPoint('D', 9),
+                                       FieldMapHome.gridPoint('E', 10),
+                                       FieldMapHome.gridPoint('D', 11),
+                                       FieldMapHome.gridPoint('C', 10),
+                                       FieldMapHome.gridPoint('E', 8),
+                                       FieldMapHome.gridPoint('E', 4));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(-45.0));
                 break;
             default:
                 waypointList = List.of();
@@ -97,11 +90,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 endPose, 
                 configBackward);
 
-        System.out.println("DEBUG: Galactic Search path " + autoID.name());
+        System.out.println("DEBUG: AutoNav path " + autoID.name());
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
+        System.out.println("DEBUG: AutoNav path time = " + backTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
@@ -119,11 +112,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         );
 
         addCommands(
-            // We need to start both the carousel command and the intake command in parallel
-            // with the ramseteBackward command.
-            carouselCommand.alongWith(intakeCommand, 
-                                      // At the end of the remsete trajectory, stop the motors.
-                                      ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)))
+            // Run the backward trajectory and then stop when we get to the end
+            ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 

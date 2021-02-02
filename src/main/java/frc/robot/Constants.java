@@ -50,8 +50,7 @@ public final class Constants {
 
     // SPARKMAX for the intake motor (Intake)
     public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
-    public static final double INTAKE_SPEED = 0.4;
-
+    public static final double INTAKE_SPEED = 0.5;
     // Intake Color Sensor
 
     public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor

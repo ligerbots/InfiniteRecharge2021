@@ -88,10 +88,12 @@ public class Robot extends TimedRobot {
 
     chosenAuto.setDefaultOption("None", null);
     chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
-    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedA));
-    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.RedB));
-    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueA));
-    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, GalacticSearchAuto.Path.BlueB));
+    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedA));
+    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedB));
+    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueA));
+    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueB));
+    chosenAuto.addOption("Barrel", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Barrel));
+    chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
@@ -163,6 +165,10 @@ public class Robot extends TimedRobot {
 
     //m_robotContainer.carouselCommand.schedule();
 
+    // Cancel the DriveCommand so that the joystick can't override this command
+    // group
+    m_robotContainer.driveCommand.cancel();
+
     // schedule the autonomous command
     m_autonomousCommand = chosenAuto.getSelected();
     if (m_autonomousCommand != null) {
@@ -209,7 +215,10 @@ public class Robot extends TimedRobot {
     m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
-    //m_robotContainer.carouselCommand.schedule();
+    m_robotContainer.carouselCommand.schedule();
+
+    // Cancel the IntakeCommand so it only runs on the bumper buttons
+    m_robotContainer.intakeCommand.cancel();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);

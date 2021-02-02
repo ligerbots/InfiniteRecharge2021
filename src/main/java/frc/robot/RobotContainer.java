@@ -53,6 +53,9 @@ public class RobotContainer {
   public final Climber climber = new Climber(robotDrive);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
   public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
+  public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
+  public final IntakeCommand intakeCommand = new IntakeCommand(intake, Constants.INTAKE_SPEED);
+
 
 
   //public final NewEightBallSim newEightBallSimCommand = new NewEightBallSim(robotDrive, driveCommand, climber);
@@ -75,7 +78,8 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return xbox.getY(Hand.kLeft);
+      //return xbox.getY(Hand.kLeft);
+      return xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);// use trigger for throttle
     }
   }
 
@@ -83,21 +87,21 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kRight);
+      return xbox.getX(Hand.kLeft);
     }
   }
   public class Shoulder implements DoubleSupplier{
 
     @Override
     public double getAsDouble() {
-      return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+      //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+      return 0.0;
     }
   }
 
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     xboxA.whenPressed(()->{
-      System.out.println("BUTTON PRESSED !!!!!!!!!");
       positionRecorder.setIsRunning(!positionRecorder.isRunning);
     });
     
@@ -109,6 +113,9 @@ public class RobotContainer {
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     
+
+    bumperRight.whileHeld(new IntakeCommand(intake, Constants.INTAKE_SPEED));
+    bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
 
