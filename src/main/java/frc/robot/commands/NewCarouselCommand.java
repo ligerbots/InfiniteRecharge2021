@@ -14,17 +14,15 @@ public class NewCarouselCommand extends CommandBase {
 
   double lastTimeCheck;
   boolean slotFull;
-
-  final double sensorWaitTime = 0.04; // seconds
-
   double targetSlot;
-
   double sensorStartTime;
-
+  
+  final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
   final double earlySlotStopDelta = 0.04;
   
   private static enum State {
+    // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
     Rotating,  WaitingForBall, Full, WaitingForSensor;
 
   } 
@@ -40,6 +38,7 @@ public class NewCarouselCommand extends CommandBase {
   @Override
   public void initialize() {
     lastTimeCheck = Robot.time();
+    // every time the command is remade, the robot
     state = State.WaitingForBall;
     slotFull = carousel.isBallInFront();
   }
@@ -47,30 +46,31 @@ public class NewCarouselCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //     State: Rotating,  WaitingForBall, Full, WaitForSensor
-
+  
     if (state == State.Full) {
+      // if we have a full carousel, we do nothing and wait for a shooting command
       return;
     } 
-    // start in WaitingForBall
-    // if WaitForSensor:
+
     if (state == State.WaitingForSensor) {
+      // checks if we have waited at least .04 seconds since the carousel stopped
+      // this allows the sensor to settle and get an accurate reading when used
       if (Robot.time() - sensorStartTime >= sensorWaitTime) {
+        // stes the state to WaitingForBall
         state = State.WaitingForBall;
       }
     }
-    //     wait for PauseTime (for sensor to settle)
-    //     goto WaitingForBall
-    // if WaitingForBall:
-    //     carousel stopped
     
     if (state == State.WaitingForBall) {
-      // check for ball, if YES:
+      // checks if there is a ball in the front slot
       if (carousel.isBallInFront()) {
+        // increases the ball count by 1
         carousel.incrementBallCount();
+        // if there are 3 or more balls in the carousel
         if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
           state = State.Full;
         } else {
+          // remembers the position of the next slot we are aiming for
           targetSlot = Math.round(carousel.getSlot()) + 1.0;
           carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
           state = State.Rotating;
@@ -78,29 +78,16 @@ public class NewCarouselCommand extends CommandBase {
       }
     }
     
-    //         incrementCount of balls
-    //         if ball count >= MAX:
-    //             goto Full
-    //         change to Rotating
-    //         remember slot number (or remember target slot)
     if (state == State.Rotating) {
+      // checks if we have rotated to a position just before the next slot
+      // this allows the carousel to coast to a stop and still land at the right spot
       if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
+        // remembers the time we last started to stop
         sensorStartTime = Robot.time();
         carousel.spin(0.0);
         state = State.WaitingForSensor;
-
       }
-    }
-    // if Rotating:
-    //     check if at next slot:
-    //         look at encoder, close to the next whole number (slot). If at next slot:
-    //             stop carousel
-    //             change to WaitForSensor
-    
-    // if Full:
-    //     stop spinning
-    //     do nothing
-        
+    }   
   }
 
   // Called once the command ends or is interrupted.
