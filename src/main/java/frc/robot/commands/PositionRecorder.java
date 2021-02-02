@@ -13,7 +13,10 @@ import java.util.Date;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.EntryNotification;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
@@ -22,8 +25,6 @@ public class PositionRecorder extends CommandBase {
   /**
    * Creates a new PositionRecorder.
    */
-  static final String NETWORKTABLES_NAME="Position Recorder";
-  static final String NETWORKTABLES_DIRECTORY_NAME="Position Recorder Directory";
   public boolean isRunning = false;
 
   DriveTrain drivetrain;
@@ -32,17 +33,23 @@ public class PositionRecorder extends CommandBase {
 
   String directoryName="position-recordings";
 
+  NetworkTableEntry directoryNameEntry;
+  NetworkTableEntry isRunningEntry;
+  
   public PositionRecorder(DriveTrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     initSmartDashboard();
     this.drivetrain = drivetrain;
   }
   public void initSmartDashboard(){
-    SmartDashboard.getEntry(NETWORKTABLES_NAME).addListener((EntryNotification e)-> setIsRunning(e.value.getBoolean()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putBoolean(NETWORKTABLES_NAME, isRunning);
+    ShuffleboardTab tab =Shuffleboard.getTab("Position Recorder");
+    isRunningEntry=tab.add("Is running", isRunning).withWidget("Toggle Button").getEntry();
+    directoryNameEntry=tab.add("Directory Name", directoryName).getEntry();
 
-    SmartDashboard.getEntry(NETWORKTABLES_DIRECTORY_NAME).addListener((EntryNotification e)-> directoryName=e.value.getString(), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putString(NETWORKTABLES_DIRECTORY_NAME, directoryName);
+
+    isRunningEntry.addListener((EntryNotification e)-> setIsRunning(e.value.getBoolean()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+
+    directoryNameEntry.addListener((EntryNotification e)-> directoryName=e.value.getString(), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
   }
 
   public void setIsRunning(boolean running){
@@ -54,8 +61,8 @@ public class PositionRecorder extends CommandBase {
         this.cancel();
       }
     }
-    if(SmartDashboard.getBoolean(NETWORKTABLES_NAME, false)!=running){
-      SmartDashboard.putBoolean(NETWORKTABLES_NAME, running);
+    if(isRunningEntry.getBoolean(false)!=running){
+      isRunningEntry.setBoolean(running);
     }
   }
   // Called when the command is initially scheduled.
