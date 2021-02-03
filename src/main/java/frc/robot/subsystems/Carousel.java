@@ -22,6 +22,7 @@ public class Carousel extends SubsystemBase {
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
+    // TODO: Move currentCheckpoint and lastCheckpoint to the CarouselCommand (where they should be private)
     public double currentCheckpoint = 0;
     public double lastCheckpoint = 0;
     boolean backwards;
