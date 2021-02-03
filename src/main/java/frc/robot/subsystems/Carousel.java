@@ -50,6 +50,8 @@ public class Carousel extends SubsystemBase {
         }
         
         if (backwards) {
+            // set the spinner going backwards to unjam the ball
+            // do NOT use the public spin() method, since we do not want this speed remembered
             spinner.set(ControlMode.PercentOutput, -0.6);
             if (Robot.time() - lastBackTime > 0.5) {
                 // sets carousel to operate normally again if the carousel has been running 
