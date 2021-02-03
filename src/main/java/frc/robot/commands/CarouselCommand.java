@@ -12,10 +12,20 @@ public class CarouselCommand extends CommandBase {
 
   Carousel carousel;
 
-  double lastTimeCheck;
-  boolean slotFull;
+  double targetSlot;
+  double sensorStartTime;
+  
+  final double sensorWaitTime = 0.04; // seconds
+  //TODO find a better value
+  final double earlySlotStopDelta = 0.04;
+  
+  private static enum State {
+    // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
+    Rotating,  WaitingForBall, Full, WaitingForSensor;
 
-  final double pauseTime = 0.04; // seconds
+  } 
+
+  private State state;
 
   public CarouselCommand(Carousel carousel) {
     this.carousel = carousel;
@@ -25,50 +35,55 @@ public class CarouselCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lastTimeCheck = Robot.time();
-    
-    slotFull = carousel.isBallInFront();
+    // every time the command is remade, the robot sets its state to waiting for ball
+    state = State.WaitingForBall;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    //quits if there are 3 or more balls in the carousel (for infinite recharge at home)
-    // TODO: The "3" below should be a Constant definedin Constants.java so if we ever use this code
-    // in competition, all the things that might need to be changed are all in the file.
-    if (carousel.getBallCount() >= 3) {
+  
+    if (state == State.Full) {
+      // if we have a full carousel, we do nothing and wait for a shooting command
       return;
-    }
+    } 
 
-    // TODO: currentCheckpoint should be a local variable in this class since the Carousel doesn't use it
-    carousel.currentCheckpoint = carousel.getSlot();
-
-    // This is what we do if we aren't going backwards
-    if (carousel.currentCheckpoint > carousel.lastCheckpoint) { // if we have indexed to the next slot...
-      // TODO: lastCheckpoint (on both the previuos and next lines) should be a local variable in this class
-      carousel.lastCheckpoint = carousel.currentCheckpoint;
-      lastTimeCheck = Robot.time(); // Start the timer for pausing at a slot
+    if (state == State.WaitingForSensor) {
+      // checks if we have waited at least .04 seconds since the carousel stopped
+      // this allows the sensor to settle and get an accurate reading when used
+      if (Robot.time() - sensorStartTime >= sensorWaitTime) {
+        // sets the state to WaitingForBall
+        state = State.WaitingForBall;
+      }
     }
     
-    // TODO: slotFull should be initialized. The first tim ethrough this method, it is uninitialized.
-    // It turns out that it doesn't really matter here because the first time through, the time check will return false,
-    // so it doesn't matter what the value of slotFull is, but it is bad coding practice to have an unitialized variable.
-    // If the logic were to change a bit, it might introduce a problem that would not be easily recognized.
-    if (Robot.time() - lastTimeCheck > pauseTime && slotFull) {
-      // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
-      carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
-    }
-    // TODO: See if you can fix the logic here. First you have to tell me what's wrong with the else block logic.
-    else { // This block runs if 
-      slotFull = carousel.isBallInFront();
-      if (slotFull) { // This block runs if there is not ball up front
+    if (state == State.WaitingForBall) {
+      // checks if there is a ball in the front slot
+      if (carousel.isBallInFront()) {
+        // increases the ball count by 1
         carousel.incrementBallCount();
+        // if there are 3 or more balls in the carousel
+        if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
+          state = State.Full;
+        } else {
+          // remembers the position of the next slot we are aiming for
+          targetSlot = Math.round(carousel.getSlot()) + 1.0;
+          carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+          state = State.Rotating;
+        }
       }
-      
-      carousel.spin(0); // We aren't supposed to be spinning here
     }
-    // This is decently readable go backwards code that runs on a timer 
+    
+    if (state == State.Rotating) {
+      // checks if we have rotated to a position just ahead of the next slot
+      // this allows the carousel to coast to a stop and still land at the right spot
+      if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
+        // remembers the time that we started to stop
+        sensorStartTime = Robot.time();
+        carousel.spin(0.0);
+        state = State.WaitingForSensor;
+      }
+    }   
   }
 
   // Called once the command ends or is interrupted.
