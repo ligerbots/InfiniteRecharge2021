@@ -80,7 +80,7 @@ public class PositionRecorder extends CommandBase {
       File f = new File(directoryName,filename);
       f.createNewFile();
       writer = new PrintWriter(f); // PrintWriter is buffered
-      writer.println("Elapsed milliseconds,x,y,rotation");
+      writer.println("elapsed seconds,x,y,rotation");
 
       start=Robot.time();
 
@@ -113,9 +113,10 @@ public class PositionRecorder extends CommandBase {
 
     isRunning=false;
 
-    if(writer==null)return;
-    writer.close();
-    writer=null;
+    if(writer!=null){
+      writer.close();
+      writer=null;
+    }
   }
 
 
