@@ -12,8 +12,6 @@ public class NewCarouselCommand extends CommandBase {
 
   Carousel carousel;
 
-  double lastTimeCheck;
-  boolean slotFull;
   double targetSlot;
   double sensorStartTime;
   
@@ -37,10 +35,8 @@ public class NewCarouselCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lastTimeCheck = Robot.time();
-    // every time the command is remade, the robot
+    // every time the command is remade, the robot sets its state to waiting for ball
     state = State.WaitingForBall;
-    slotFull = carousel.isBallInFront();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -56,7 +52,7 @@ public class NewCarouselCommand extends CommandBase {
       // checks if we have waited at least .04 seconds since the carousel stopped
       // this allows the sensor to settle and get an accurate reading when used
       if (Robot.time() - sensorStartTime >= sensorWaitTime) {
-        // stes the state to WaitingForBall
+        // sets the state to WaitingForBall
         state = State.WaitingForBall;
       }
     }
@@ -79,10 +75,10 @@ public class NewCarouselCommand extends CommandBase {
     }
     
     if (state == State.Rotating) {
-      // checks if we have rotated to a position just before the next slot
+      // checks if we have rotated to a position just ahead of the next slot
       // this allows the carousel to coast to a stop and still land at the right spot
       if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
-        // remembers the time we last started to stop
+        // remembers the time that we started to stop
         sensorStartTime = Robot.time();
         carousel.spin(0.0);
         state = State.WaitingForSensor;

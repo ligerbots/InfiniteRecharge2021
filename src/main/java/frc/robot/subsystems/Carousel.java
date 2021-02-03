@@ -22,9 +22,10 @@ public class Carousel extends SubsystemBase {
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
-    // TODO: Move currentCheckpoint and lastCheckpoint to the CarouselCommand (where they should be private)
+    // TODO: remove when removing old carousel command
     public double currentCheckpoint = 0;
     public double lastCheckpoint = 0;
+    double lastSpinSpeed;
     boolean backwards;
     double lastBackTime;
 
@@ -49,17 +50,19 @@ public class Carousel extends SubsystemBase {
         }
         
         if (backwards) {
-            spin(-0.6);
+            spinner.set(ControlMode.PercentOutput, -0.6);
             if (Robot.time() - lastBackTime > 0.5) {
-                backwards = false; 
                 // sets carousel to operate normally again if the carousel has been running 
                 // in reverse for half a second
+                backwards = false;
+                spin(lastSpinSpeed); 
             }
         }
     }
 
     public void spin(double speed) {
         spinner.set(ControlMode.PercentOutput, speed);
+        lastSpinSpeed = speed;
     }
 
     public double getCurrent () {
