@@ -98,7 +98,7 @@ public class PositionRecorder extends CommandBase {
     if(writer==null)return;
     Pose2d currentPosition=drivetrain.getPose();
     try{
-      writer.println((System.currentTimeMillis()-start)+","+currentPosition.getX()+","+currentPosition.getY()+","+currentPosition.getRotation().getRadians());
+      writer.println((Robot.time()-start)+","+currentPosition.getX()+","+currentPosition.getY()+","+currentPosition.getRotation().getRadians());
     }catch(Exception e){
       e.printStackTrace();
       writer.close();
