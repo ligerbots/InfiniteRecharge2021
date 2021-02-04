@@ -82,6 +82,11 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
           new Pose2d(FieldMapHome.gridPoint('A', 9), rotation2),
           configBackward);
 
+        System.out.println("DEBUG: Bounce path");
+        double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
+            + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
+        System.out.println("DEBUG: Bounce path time = " + pathTime);
+
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
             robotDrive::getPose,
