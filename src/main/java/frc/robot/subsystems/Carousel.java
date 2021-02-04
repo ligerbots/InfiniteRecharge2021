@@ -26,7 +26,7 @@ public class Carousel extends SubsystemBase {
     public double currentCheckpoint = 0;
     public double lastCheckpoint = 0;
     double lastSpinSpeed;
-    boolean backwards;
+    public boolean backwards;
     double lastBackTime;
 
     public Carousel() {
