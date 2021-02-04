@@ -44,11 +44,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         Pose2d endPose;
         switch(autoID){
             case RedA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 0.0, 2.7), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 3),
                                        FieldMapHome.gridPoint('D', 5),
                                        FieldMapHome.gridPoint('A', 6));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11, -20, 0.0), rotation);
                 break;
             case RedB:
                 // Test case. Try starting from A1
