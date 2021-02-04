@@ -57,12 +57,12 @@ public class AtHomeTestAuto extends SequentialCommandGroup implements AutoComman
                 ),
                 configBackward);
 
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
-        for (State state : forwardTrajectory.getStates()) {
-            System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
-        }
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        // for (State state : forwardTrajectory.getStates()) {
+        //     System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
