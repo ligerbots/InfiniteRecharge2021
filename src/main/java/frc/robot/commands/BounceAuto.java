@@ -38,49 +38,47 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
 
-        //forward Trajectory 1 and 2        
-        Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
-
-                new Pose2d(FieldMapHome.gridPoint('A', 3), rotation2),
-                List.of(
-                    FieldMapHome.gridPoint('C', 4, -15, 0),
-                    FieldMapHome.gridPoint('E', 5)
-                ) ,
-                new Pose2d(FieldMapHome.gridPoint('A', 6), rotation3),
-                configForward);
-
-        Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
-
-          new Pose2d(FieldMapHome.gridPoint('A', 9), rotation2),
-          List.of(
-              FieldMapHome.gridPoint('B', 10, -20, -20)
-          ) ,
-          new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
-          configForward);       
-                
-
-        // Backward Trajectory 1 and 2
+      
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
-                    FieldMapHome.gridPoint('C', 2),
                     FieldMapHome.gridPoint('B', 3)
                 ),
-                new Pose2d(FieldMapHome.gridPoint('A', 3), rotation2),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -37.5/2), rotation2),
                 configBackward);
 
+        Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
+
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -37.5/2), rotation2),
+                List.of(
+                    FieldMapHome.gridPoint('C', 4, -15, 0),
+                    FieldMapHome.gridPoint('E', 5)
+                ) ,
+                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -37.5/2), rotation3),
+                configForward);
+
         Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
-          // Start at the origin facing the +X direction
-          new Pose2d(FieldMapHome.gridPoint('A', 6), rotation3),
+
+          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -37.5/2), rotation3),
           List.of( 
               FieldMapHome.gridPoint('D', 7, -20, 0),
               FieldMapHome.gridPoint('E', 7, 0, 10),
               FieldMapHome.gridPoint('E', 8, 0, 10),
               FieldMapHome.gridPoint('D', 9, -10, 0)         
           ),
-          new Pose2d(FieldMapHome.gridPoint('A', 9), rotation2),
+          new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -37.5/2), rotation2),
           configBackward);
+
+        Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
+
+        new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -37.5/2), rotation2),
+        List.of(
+            FieldMapHome.gridPoint('B', 10, -20, -20)
+        ) ,
+        new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
+        configForward);       
+                  
 
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
