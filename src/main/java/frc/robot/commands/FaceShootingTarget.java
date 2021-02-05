@@ -97,6 +97,7 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(robotDrive.getHeading() - (startingAngle - initialAngleOffset)) < acceptableError && check) || (initialAngleOffset == 0.0 && (double)(Robot.time() - startTime) / 1_000_000_000.0 > 0.5);
+    return (Math.abs(robotDrive.getHeading() - (startingAngle - initialAngleOffset)) < acceptableError && check) 
+        || (initialAngleOffset == 0.0 && (Robot.time() - startTime) > 0.5);
   }
 }
