@@ -41,19 +41,20 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 5),
                                        FieldMapHome.gridPoint('D', 6),
-                                       FieldMapHome.gridPoint('E', 5),
-                                       FieldMapHome.gridPoint('D', 4),
-                                       FieldMapHome.gridPoint('C', 5),
+                                       FieldMapHome.gridPoint('E', 5, 0, 5),
+                                       FieldMapHome.gridPoint('D', 4, -5, 0),
+                                       FieldMapHome.gridPoint('C', 5, -10, 0),
                                        FieldMapHome.gridPoint('C', 8),
-                                       FieldMapHome.gridPoint('B', 9),
-                                       FieldMapHome.gridPoint('A', 8),
+                                       FieldMapHome.gridPoint('B', 9, 0, 0),
+                                       FieldMapHome.gridPoint('A', 8, 0, -5),
                                        FieldMapHome.gridPoint('B', 7),
-                                       FieldMapHome.gridPoint('D', 8),
-                                       FieldMapHome.gridPoint('E', 10),
-                                       FieldMapHome.gridPoint('D', 11),
-                                       FieldMapHome.gridPoint('C', 10)
+                                       FieldMapHome.gridPoint('D', 8, 0, -10),
+                                       FieldMapHome.gridPoint('E', 10, 0, 3),
+                                       FieldMapHome.gridPoint('D', 11, -1, 0),
+                                       //FieldMapHome.gridPoint('C', 11, -7, 0),
+                                       FieldMapHome.gridPoint('C', 9, 10, 1)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(0.0));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
                 break;
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
@@ -82,7 +83,9 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // Initial baseline
         // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
         //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",0.5), SmartDashboard.getNumber("AutoMaxAcceleration",0.5))
+        TrajectoryConfig configForward = new TrajectoryConfig(
+                                                    SmartDashboard.getNumber("AutoMaxSpeed",2.0),
+                                                    SmartDashboard.getNumber("AutoMaxAcceleration",2.0))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(false);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
