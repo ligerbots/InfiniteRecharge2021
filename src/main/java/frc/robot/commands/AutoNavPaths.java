@@ -32,25 +32,27 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     private Pose2d initialPose;
 
     public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
-        Rotation2d rotation = Rotation2d.fromDegrees(180.0);
+        Rotation2d rotation = Rotation2d.fromDegrees(0.0);
         
         List<Translation2d> waypointList;
         Pose2d endPose;
         switch(autoID){
             case Barrel:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 4),
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('C', 5),
                                        FieldMapHome.gridPoint('D', 6),
                                        FieldMapHome.gridPoint('E', 5),
                                        FieldMapHome.gridPoint('D', 4),
                                        FieldMapHome.gridPoint('C', 5),
+                                       FieldMapHome.gridPoint('C', 8),
                                        FieldMapHome.gridPoint('B', 9),
                                        FieldMapHome.gridPoint('A', 8),
                                        FieldMapHome.gridPoint('B', 7),
                                        FieldMapHome.gridPoint('D', 8),
                                        FieldMapHome.gridPoint('E', 10),
                                        FieldMapHome.gridPoint('D', 11),
-                                       FieldMapHome.gridPoint('C', 10));
+                                       FieldMapHome.gridPoint('C', 10)
+                                       );
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(0.0));
                 break;
             case Slalom:
@@ -63,7 +65,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('D', 11),
                                        FieldMapHome.gridPoint('C', 10),
                                        FieldMapHome.gridPoint('E', 8),
-                                       FieldMapHome.gridPoint('E', 4));
+                                       FieldMapHome.gridPoint('C', 4));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(-45.0));
                 break;
             default:
@@ -80,15 +82,15 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // Initial baseline
         // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
         //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",2.0))
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",0.5), SmartDashboard.getNumber("AutoMaxAcceleration",0.5))
+                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(false);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypointList, 
                 endPose, 
-                configBackward);
+                configForward);
 
         System.out.println("DEBUG: AutoNav path " + autoID.name());
         // for (State state : backTrajectory.getStates()) {
@@ -96,7 +98,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // }
         System.out.println("DEBUG: AutoNav path time = " + backTrajectory.getTotalTimeSeconds());
 
-        RamseteCommand ramseteBackward = new RamseteCommand(
+        RamseteCommand ramseteForward = new RamseteCommand(
             backTrajectory,
             robotDrive::getPose,
             new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
@@ -113,7 +115,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
         addCommands(
             // Run the backward trajectory and then stop when we get to the end
-            ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 
