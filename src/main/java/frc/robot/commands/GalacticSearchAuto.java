@@ -12,30 +12,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
+// import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.RobotContainer;
 
 public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCommandInterface {
 
-    // Define the initial pose to be used by this command. This will be used in the initial trajectory
-    // and will allow the system to query for it
     public enum Path{
-        RedA, RedB, BlueA, BlueB, Barrel, Slalom;
+        RedA, RedB, BlueA, BlueB;
     }
 
+    // Define the initial pose to be used by this command. This will be used in the initial trajectory
+    // and will allow the system to query for it
     private Pose2d initialPose;
 
     public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Path autoID) {
-        Rotation2d rotation = Rotation2d.fromDegrees(180.0);
+        Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
         //Need to run the intake and Carousel for picking up the balls
         // Construct them here for inclusion into the command group below.
         CarouselCommand carouselCommand = new CarouselCommand(carousel);
@@ -45,34 +44,31 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         Pose2d endPose;
         switch(autoID){
             case RedA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('A', 6));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45/2,  -15), Rotation2d.fromDegrees(153.0));
+                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 15),
+                                       FieldMapHome.gridPoint('A', 6 , 0 , -15));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('A', 11), rotation180);
                 break;
             case RedB:
                 // Test case. Try starting from A1
-                rotation = Rotation2d.fromDegrees(180.0-30.0);
-                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('B', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('B', 7));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1, 45/2, 0), Rotation2d.fromDegrees(135));
+                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 15),
+                                       FieldMapHome.gridPoint('B', 7, 0 , -15));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation180);
                 break;
             case BlueA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('E', 6),
-                                       FieldMapHome.gridPoint('B', 7),
-                                       FieldMapHome.gridPoint('C', 9));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 45/2, 0), rotation180);
+                waypointList = List.of(FieldMapHome.gridPoint('E', 6, -15,0),
+                                       FieldMapHome.gridPoint('B', 7, 0, -15),
+                                       FieldMapHome.gridPoint('C', 9, 0 , 10));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
                 break;
             case BlueB:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('D', 6),
-                                       FieldMapHome.gridPoint('B', 8),
-                                       FieldMapHome.gridPoint('D', 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 45/2, 0), rotation180);
+                waypointList = List.of(FieldMapHome.gridPoint('D', 6, 0, 10),
+                                       FieldMapHome.gridPoint('B', 8 ,0 ,-10),
+                                       FieldMapHome.gridPoint('D', 10, 0, 10));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), Rotation2d.fromDegrees(135));
                 break;
             default:
                 waypointList = List.of();
@@ -98,9 +94,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 endPose, 
                 configBackward);
 
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
+        System.out.println("DEBUG: Galactic Search path " + autoID.name());
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

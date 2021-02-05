@@ -64,13 +64,39 @@ sc_field_width = 15 * 12
 
 # return the x coordinate given the location index 1 - 11
 def sc_x_pos(index):
-    return # return the coordinate
+    return index * 30
 
 
 # return the y coordinate given the location index 'A' through 'E'
 # note: you can use "upper()" method to guarantee it is upper case
 def sc_y_pos(index):
-    return # return the coordinate
+    if index == "A":
+        v = 150
+    elif index == "B":
+        v = 120
+    elif index == "C":
+        v = 90
+    elif index == "D":
+        v = 60
+    elif index == "E":
+        v = 30
+    return v
+
+def draw_marker(x, y, color="orange"):
+    logging.info(f'Marker: ({x:.3f}, {y:.3f})')
+
+    # zorder pulls the balls to the front, so they are on top of the lines
+    c = plt.Circle((x, y), 2.5, fill=True, color=color, zorder=100)
+    plt.gcf().gca().add_artist(c)
+    return
+
+def draw_one_ball(x, y):
+    logging.info(f'Ball: ({x:.3f}, {y:.3f})')
+
+    # zorder pulls the balls to the front, so they are on top of the lines
+    c = plt.Circle((x, y), ball_rad, fill=True, color='yellow', zorder=100)
+    plt.gcf().gca().add_artist(c)
+    return
 
 
 # there are always matching balls, reflected across the center
@@ -110,7 +136,7 @@ def draw_truss(xg, yg):
 
 # draw the Galactic Search map
 # maybe add a parameter to indicate which ball path?
-def draw_galactic_search():
+def draw_galactic_search(map_name):
     # set the plot area to be the size of the field
     axis1.set_xlim((0, sc_field_length))
     axis1.set_ylim((0, sc_field_width))
@@ -118,8 +144,122 @@ def draw_galactic_search():
     # outer outline
     plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
 
+    # Draw the ball
+    if map_name == "redA":
+        draw_one_ball(sc_x_pos(6), sc_y_pos("A"))
+        draw_one_ball(sc_x_pos(3), sc_y_pos("C"))
+        draw_one_ball(sc_x_pos(5), sc_y_pos("D"))
+    elif map_name == "redB":
+        draw_one_ball(sc_x_pos(3), sc_y_pos("B"))
+        draw_one_ball(sc_x_pos(7), sc_y_pos("B"))
+        draw_one_ball(sc_x_pos(5), sc_y_pos("D"))
+    elif map_name == "blueA":
+        draw_one_ball(sc_x_pos(7), sc_y_pos("B"))
+        draw_one_ball(sc_x_pos(9), sc_y_pos("C"))
+        draw_one_ball(sc_x_pos(6), sc_y_pos("E"))
+    elif map_name == "blueB":
+        draw_one_ball(sc_x_pos(8), sc_y_pos("B"))
+        draw_one_ball(sc_x_pos(6), sc_y_pos("D"))
+        draw_one_ball(sc_x_pos(10), sc_y_pos("D"))
     return
 
+def draw_slalom():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the ball
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(4), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(6), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    return
+
+def draw_bounce():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(4), sc_y_pos("B"))
+    draw_marker(sc_x_pos(5), sc_y_pos("B"))
+    draw_marker(sc_x_pos(7), sc_y_pos("B"))
+    draw_marker(sc_x_pos(8), sc_y_pos("B"))
+    draw_marker(sc_x_pos(10), sc_y_pos("B"))
+    draw_marker(sc_x_pos(11), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    draw_marker(sc_x_pos(11), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("E"))
+    draw_marker(sc_x_pos(3), sc_y_pos("A"), "green")
+    draw_marker(sc_x_pos(6), sc_y_pos("A"), "green")
+    draw_marker(sc_x_pos(9), sc_y_pos("A"), "green")
+    return
+
+def draw_lightspeed():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(3), sc_y_pos("B"))
+    draw_marker(sc_x_pos(4), sc_y_pos("B"))
+    draw_marker(sc_x_pos(6), sc_y_pos("B"))
+    draw_marker(sc_x_pos(7), sc_y_pos("B"))
+    draw_marker(sc_x_pos(9), sc_y_pos("B"))
+    draw_marker(sc_x_pos(11), sc_y_pos("B"))
+    draw_marker(sc_x_pos(6), sc_y_pos("A"))
+    draw_marker(sc_x_pos(9), sc_y_pos("C"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(3), sc_y_pos("D"))
+    draw_marker(sc_x_pos(4), sc_y_pos("D"))
+    draw_marker(sc_x_pos(6), sc_y_pos("D"))
+    draw_marker(sc_x_pos(7), sc_y_pos("D"))
+    draw_marker(sc_x_pos(8), sc_y_pos("D"))
+    draw_marker(sc_x_pos(9), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    return
+
+def draw_barrel():
+    # set the plot area to be the size of the field
+    axis1.set_xlim((0, sc_field_length))
+    axis1.set_ylim((0, sc_field_width))
+
+    # outer outline
+    plt.plot((0, 0, sc_field_length, sc_field_length, 0), (0, sc_field_width, sc_field_width, 0, 0), 'green')
+
+    # Draw the marker
+    draw_marker(sc_x_pos(1), sc_y_pos("B"))
+    draw_marker(sc_x_pos(2), sc_y_pos("B"))
+    draw_marker(sc_x_pos(8), sc_y_pos("B"))
+    draw_marker(sc_x_pos(1), sc_y_pos("D"))
+    draw_marker(sc_x_pos(2), sc_y_pos("D"))
+    draw_marker(sc_x_pos(5), sc_y_pos("D"))
+    draw_marker(sc_x_pos(10), sc_y_pos("D"))
+    return
 
 def draw_competition_map():
     '''Create the map for 2021 competition field'''
@@ -208,7 +348,7 @@ def draw_competition_map():
     return
 
 
-map_choices = ('competition', 'galactic_search')
+map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB', "slalom", "bounce", "barrel", "lightspeed")
 
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
 parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
@@ -225,8 +365,16 @@ axis1.set_aspect('equal')
 
 if args.map == 'competition':
     draw_competition_map()
-elif args.map == 'galactic_search':
-    draw_galactic_search()
+elif args.map in ('redA', 'redB', 'blueA', 'blueB'):
+    draw_galactic_search(args.map)
+elif args.map == "slalom":
+    draw_slalom()
+elif args.map == "bounce":
+    draw_bounce()
+elif args.map == "barrel":
+    draw_barrel()
+elif args.map == "lightspeed":
+    draw_lightspeed()
 else:
     logging.error(f"Map '{args.map}' not implemented")
     sys.exit(10)
