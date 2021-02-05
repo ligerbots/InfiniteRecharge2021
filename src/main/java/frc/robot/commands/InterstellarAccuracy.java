@@ -23,7 +23,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
   Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
+    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
 
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand) {
         drivecommand.cancel();
@@ -38,120 +38,129 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
 
-      
-        Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
+
+        Trajectory trajectory1Forward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
-                    FieldMapHome.gridPoint('C', 2,20,15)
                 ),
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
                 configBackward);
 
-        Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
+        Trajectory trajectory1Backward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
+                List.of( 
+                ),
+                initialPose,
+                configBackward);       
+                
+        Trajectory trajectory2Forward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                initialPose,
+                List.of( 
+                ),
+                new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180),
+                configBackward);
 
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
-                List.of(
-                    FieldMapHome.gridPoint('C', 4, -20, 0),
-                    FieldMapHome.gridPoint('E', 5, 5, 0)
-                ) ,
-                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
-                configForward);
-
-        Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
-
-          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
-          List.of( 
-              FieldMapHome.gridPoint('D', 7, -27, 0),
-              FieldMapHome.gridPoint('E', 7, 0, 5),
-              FieldMapHome.gridPoint('E', 8, 0, 5),
-              FieldMapHome.gridPoint('D', 9, -3, 0)         
-          ),
-          new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
-          configBackward);
-
-        Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
-
-        new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
-        List.of(
-            FieldMapHome.gridPoint('B', 10, -20, -20)
-        ) ,
-        new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
-        configForward);       
+        Trajectory trajectory2Backward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180),
+                List.of( 
+                ),
+                initialPose,
+                configBackward);      
                   
-        System.out.println("DEBUG: Bounce path");
-        double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
-            + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
-        System.out.println("DEBUG: Bounce path time = " + pathTime);
+        Trajectory trajectory3Forward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                initialPose,
+                List.of( 
+                ),
+                new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180),
+                configBackward);
+    
+        Trajectory trajectory3Backward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180),
+                List.of( 
+                ),
+                initialPose,
+                configBackward);      
+
+        Trajectory trajectory4Forward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                initialPose,
+                List.of( 
+                ),
+                new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180),
+                configBackward);
         
-        RamseteCommand ramseteBackward1 = new RamseteCommand(
-            backTrajectory1,
-            robotDrive::getPose,
-            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-            new SimpleMotorFeedforward(Constants.ksVolts,
-                                    Constants.kvVoltSecondsPerMeter,
-                                    Constants.kaVoltSecondsSquaredPerMeter),
-            Constants.kDriveKinematics,
-            robotDrive::getWheelSpeeds,
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            robotDrive::tankDriveVolts,
-            robotDrive
-        );
-
-        RamseteCommand ramseteBackward2 = new RamseteCommand(
-            backTrajectory2,
-            robotDrive::getPose,
-            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-            new SimpleMotorFeedforward(Constants.ksVolts,
-                                    Constants.kvVoltSecondsPerMeter,
-                                    Constants.kaVoltSecondsSquaredPerMeter),
-            Constants.kDriveKinematics,
-            robotDrive::getWheelSpeeds,
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            robotDrive::tankDriveVolts,
-            robotDrive
-        );
-
-        RamseteCommand ramseteForward1 = new RamseteCommand(
-            forwardTrajectory1,
-            robotDrive::getPose,
-            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-            new SimpleMotorFeedforward(Constants.ksVolts,
-                                    Constants.kvVoltSecondsPerMeter,
-                                    Constants.kaVoltSecondsSquaredPerMeter),
-            Constants.kDriveKinematics,
-            robotDrive::getWheelSpeeds,
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            robotDrive::tankDriveVolts,
-            robotDrive
-        );
-
-        RamseteCommand ramseteForward2 = new RamseteCommand(
-            forwardTrajectory2,
-            robotDrive::getPose,
-            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-            new SimpleMotorFeedforward(Constants.ksVolts,
-                                    Constants.kvVoltSecondsPerMeter,
-                                    Constants.kaVoltSecondsSquaredPerMeter),
-            Constants.kDriveKinematics,
-            robotDrive::getWheelSpeeds,
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            robotDrive::tankDriveVolts,
-            robotDrive
-        );
+        Trajectory trajectory4Backward = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180),
+                List.of( 
+                ),
+                initialPose,
+                configBackward);      
+        Trajectory trajectory1Forward2 = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                initialPose,
+                List.of( 
+                ),
+                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
+                configBackward);
+        Trajectory trajectory1Backward2 = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
+                List.of( 
+                ),
+                initialPose,
+                configBackward);
+    
+        RamseteCommand ramsete1forward = createRamsetteCommand(trajectory1Forward, robotDrive);
+        RamseteCommand ramsete1backward = createRamsetteCommand(trajectory1Backward, robotDrive);
+        RamseteCommand ramsete2forward = createRamsetteCommand(trajectory2Forward, robotDrive);
+        RamseteCommand ramsete2backward = createRamsetteCommand(trajectory2Backward, robotDrive);
+        RamseteCommand ramsete3forward = createRamsetteCommand(trajectory3Forward, robotDrive);
+        RamseteCommand ramsete3backward = createRamsetteCommand(trajectory3Backward, robotDrive);
+        RamseteCommand ramsete4forward = createRamsetteCommand(trajectory4Forward, robotDrive);
+        RamseteCommand ramsete4backward = createRamsetteCommand(trajectory4Backward, robotDrive);
+        RamseteCommand ramsete1forward2 = createRamsetteCommand(trajectory1Forward2, robotDrive);
+        RamseteCommand ramsete1backward2 = createRamsetteCommand(trajectory1Backward2, robotDrive);
+        // System.out.println("DEBUG: Bounce path");
+        // double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
+        //     + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
+        // System.out.println("DEBUG: Bounce path time = " + pathTime);
         
         addCommands(
-            ramseteBackward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteBackward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete1backward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
-
+    RamseteCommand createRamsetteCommand(Trajectory trajectory, DriveTrain robotDrive) {
+        return new RamseteCommand(
+            trajectory, 
+            robotDrive::getPose,
+            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                    Constants.kvVoltSecondsPerMeter,
+                                    Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.kDriveKinematics,
+            robotDrive::getWheelSpeeds,
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            robotDrive::tankDriveVolts,
+            robotDrive
+        );
+    }
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
