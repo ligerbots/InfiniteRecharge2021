@@ -57,7 +57,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
                 break;
             case Slalom:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1,5,0), rotation);
                 waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
                                        FieldMapHome.gridPoint('C', 8),
@@ -66,8 +66,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('D', 11),
                                        FieldMapHome.gridPoint('C', 10),
                                        FieldMapHome.gridPoint('E', 8),
-                                       FieldMapHome.gridPoint('C', 4));
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(-45.0));
+                                       FieldMapHome.gridPoint('E', 4, 7,0));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
             default:
                 waypointList = List.of();
