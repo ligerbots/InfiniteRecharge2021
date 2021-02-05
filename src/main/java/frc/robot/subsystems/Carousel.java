@@ -24,6 +24,7 @@ public class Carousel extends SubsystemBase {
     int ballCount = 0;
     double lastSpinSpeed;
     public boolean backwards;
+    // public until shooter is updated
     double lastBackTime;
 
     public Carousel() {
@@ -44,19 +45,17 @@ public class Carousel extends SubsystemBase {
         if (getCurrent() > 10.35) { 
             lastBackTime = Robot.time(); // start timer for going backwards
             backwards = true; // now we goin backwards
-        }
-        
-        if (backwards) {
             // set the spinner going backwards to unjam the ball
             // do NOT use the public spin() method, since we do not want this speed remembered
             spinner.set(ControlMode.PercentOutput, -0.6);
-            if (Robot.time() - lastBackTime > 0.5) {
-                // sets carousel to operate normally again if the carousel has been running 
-                // in reverse for half a second
-                backwards = false;
-                spin(lastSpinSpeed); 
-            }
         }
+        
+        if (backwards && Robot.time() - lastBackTime > 0.5) {
+            // sets carousel to operate normally again if the carousel has been running 
+            // in reverse for half a second
+            backwards = false;
+            spin(lastSpinSpeed);
+        } 
     }
 
     public void spin(double speed) {
