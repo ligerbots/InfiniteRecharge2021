@@ -18,12 +18,12 @@ import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.DriveTrain;
 public class BounceAuto extends SequentialCommandGroup implements AutoCommandInterface {
-  Rotation2d rotation1 = Rotation2d.fromDegrees(180.0);
-  Rotation2d rotation2 = Rotation2d.fromDegrees(270.0);
-  Rotation2d rotation3 = Rotation2d.fromDegrees(90.0);
+  Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
+  Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
+  Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation1);
+    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
 
     public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand) {
         drivecommand.cancel();
@@ -43,36 +43,36 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
-                    FieldMapHome.gridPoint('B', 3)
+                    FieldMapHome.gridPoint('C', 2,20,15)
                 ),
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -37.5/2), rotation2),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
                 configBackward);
 
         Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
 
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -37.5/2), rotation2),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
                 List.of(
-                    FieldMapHome.gridPoint('C', 4, -15, 0),
-                    FieldMapHome.gridPoint('E', 5)
+                    FieldMapHome.gridPoint('C', 4, -20, 0),
+                    FieldMapHome.gridPoint('E', 5, 5, 0)
                 ) ,
-                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -37.5/2), rotation3),
+                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
                 configForward);
 
         Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
 
-          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -37.5/2), rotation3),
+          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
           List.of( 
-              FieldMapHome.gridPoint('D', 7, -20, 0),
-              FieldMapHome.gridPoint('E', 7, 0, 10),
-              FieldMapHome.gridPoint('E', 8, 0, 10),
-              FieldMapHome.gridPoint('D', 9, -10, 0)         
+              FieldMapHome.gridPoint('D', 7, -27, 0),
+              FieldMapHome.gridPoint('E', 7, 0, 5),
+              FieldMapHome.gridPoint('E', 8, 0, 5),
+              FieldMapHome.gridPoint('D', 9, -3, 0)         
           ),
-          new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -37.5/2), rotation2),
+          new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
           configBackward);
 
         Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
 
-        new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -37.5/2), rotation2),
+        new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
         List.of(
             FieldMapHome.gridPoint('B', 10, -20, -20)
         ) ,
