@@ -17,10 +17,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.DriveTrain;
+
 public class BounceAuto extends SequentialCommandGroup implements AutoCommandInterface {
-  Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
-  Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
-  Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
+
+    final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
+    final Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
+    final Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
+    
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
@@ -36,8 +39,6 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
         TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-
-
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
