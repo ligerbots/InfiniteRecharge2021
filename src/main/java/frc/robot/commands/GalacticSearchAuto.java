@@ -44,34 +44,31 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         Pose2d endPose;
         switch(autoID){
             case RedA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('A', 6));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45/2,  -15), Rotation2d.fromDegrees(153.0));
+                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 15),
+                                       FieldMapHome.gridPoint('A', 6 , 0 , -15));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('A', 11), rotation);
                 break;
             case RedB:
                 // Test case. Try starting from A1
-                rotation = Rotation2d.fromDegrees(180.0-30.0);
-                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('B', 3),
-                                       FieldMapHome.gridPoint('D', 5),
-                                       FieldMapHome.gridPoint('B', 7));
+                initialPose = new Pose2d(FieldMapHome.gridPoint('A', 1, 45/2, 0), Rotation2d.fromDegrees(135));
+                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 15),
+                                       FieldMapHome.gridPoint('B', 7, 0 , -15));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('B', 11), rotation);
                 break;
             case BlueA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('E', 6),
-                                       FieldMapHome.gridPoint('B', 7),
-                                       FieldMapHome.gridPoint('C', 9));
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 45/2, 0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('E', 6, -15,0),
+                                       FieldMapHome.gridPoint('B', 7, 0, -15),
+                                       FieldMapHome.gridPoint('C', 9, 0 , 10));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation);
                 break;
             case BlueB:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('D', 6),
-                                       FieldMapHome.gridPoint('B', 8),
-                                       FieldMapHome.gridPoint('D', 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 45/2, 0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('D', 6, 0, 10),
+                                       FieldMapHome.gridPoint('B', 8 ,0 ,-10),
+                                       FieldMapHome.gridPoint('D', 10, 0, 10));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), Rotation2d.fromDegrees(135));
                 break;
             default:
                 waypointList = List.of();
