@@ -142,6 +142,7 @@ public class ShooterCommand extends CommandBase {
     speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime * 1.0e-9 > 3.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = Robot.time() - startTime * 1.0e-9 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
+    // !carousel.backwards will need to be removed when the shooter is re-written
     if (speedOnTarget && hoodOnTarget && !carousel.backwards)
         rapidFire();
 

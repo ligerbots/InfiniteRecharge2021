@@ -23,8 +23,8 @@ public class Carousel extends SubsystemBase {
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
     int ballCount = 0;
     double lastSpinSpeed;
-    public boolean backwards;
     // public until shooter is updated
+    public boolean backwards;
     double lastBackTime;
 
     public Carousel() {
@@ -76,6 +76,8 @@ public class Carousel extends SubsystemBase {
     }
 
     public double getSlot() {
+        // because of the encoder position, the returned value is negative
+        // so the encoder output must be made negative to return a positive encoder value
         return -getTicks() / Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
     }
 
