@@ -64,6 +64,8 @@ public final class Constants {
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
+    public static final double TURRET_ANGLE_ZERO_SETTING = 135.0;
+
     public static final double FLUP_STOP_CURRENT = 12; //TODO: FIX THIS VALUE
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this

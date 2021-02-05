@@ -89,6 +89,10 @@ public class CarouselCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // Since isFinshed always returns false, the only way we get here is if we're interrupted.
+    // Need to stop the carousel because if it's spinning when we're interrupted, the interrupting
+    // command might not expect it to be rotating.
+    carousel.spin(0.0);
   }
 
   // Returns true when the command should end.

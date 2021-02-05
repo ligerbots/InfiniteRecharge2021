@@ -105,17 +105,19 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
         }
       
-        turretAngleLookup.put(0.0, 135.0);
-        turretAngleLookup.put(1.0, 139.0);
-        turretAngleLookup.put(2.0, 142.0);
-        turretAngleLookup.put(3.0, 145.5);
-        turretAngleLookup.put(4.0, 149.0);
-        turretAngleLookup.put(5.0, 152.0);
-        turretAngleLookup.put(-5.0, 117.0);
-        turretAngleLookup.put(-4.0, 121.0);
-        turretAngleLookup.put(-3.0, 124.0);
-        turretAngleLookup.put(-2.0, 129.0);
-        turretAngleLookup.put(-1.0, 131.0);
+        // The relative setting for non-zero angles needs to be recomputed if the zero setting chenges,
+        // but at least we'll be close
+        turretAngleLookup.put(0.0, Constants.TURRET_ANGLE_ZERO_SETTING);
+        turretAngleLookup.put(1.0, Constants.TURRET_ANGLE_ZERO_SETTING + 4.0);
+        turretAngleLookup.put(2.0, Constants.TURRET_ANGLE_ZERO_SETTING + 7.0);
+        turretAngleLookup.put(3.0, Constants.TURRET_ANGLE_ZERO_SETTING + 10.5);
+        turretAngleLookup.put(4.0, Constants.TURRET_ANGLE_ZERO_SETTING + 14.0);
+        turretAngleLookup.put(5.0, Constants.TURRET_ANGLE_ZERO_SETTING + 17.0);
+        turretAngleLookup.put(-5.0, Constants.TURRET_ANGLE_ZERO_SETTING - 18.0);
+        turretAngleLookup.put(-4.0, Constants.TURRET_ANGLE_ZERO_SETTING - 14.0);
+        turretAngleLookup.put(-3.0, Constants.TURRET_ANGLE_ZERO_SETTING - 11.0);
+        turretAngleLookup.put(-2.0, Constants.TURRET_ANGLE_ZERO_SETTING - 6.0);
+        turretAngleLookup.put(-1.0, Constants.TURRET_ANGLE_ZERO_SETTING - 4.0);
 
         SmartDashboard.putNumber("shooter/P", 0.000145);
         SmartDashboard.putNumber("shooter/I",1e-8);
@@ -288,7 +290,8 @@ public class Shooter extends SubsystemBase {
         }
         else {
             System.out.println("Turret Adjustment not successful      " + adjustedAngle);
-            setTurret(72);
+            // This must equal the zero setting in turretAngleLookup
+            setTurret(Constants.TURRET_ANGLE_ZERO_SETTING);
         }
     }
 
