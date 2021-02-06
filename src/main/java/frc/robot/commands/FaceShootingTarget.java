@@ -58,6 +58,7 @@ public class FaceShootingTarget extends CommandBase {
     initialAngleOffset = shooter.vision.getRobotAngle();
     startTime = Robot.time();
     System.out.println("Initial initial heading: " + startingAngle);
+    System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -70,7 +71,7 @@ public class FaceShootingTarget extends CommandBase {
     if (targetAcquired) {
       currentHeading = robotDrive.getHeading();
       check = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldCheck;
-      System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
+      // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
       robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)), false);
 
       oldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldOldCheck;

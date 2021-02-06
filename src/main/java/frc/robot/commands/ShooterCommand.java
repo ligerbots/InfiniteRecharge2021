@@ -26,7 +26,7 @@ public class ShooterCommand extends CommandBase {
 
   boolean startShooting;
 
-  //CarouselCommand carouselCommand;
+  CarouselCommand carouselCommand;
   //DriveCommand driveCommand;
 
   int initialCarouselTicks;
@@ -46,7 +46,7 @@ public class ShooterCommand extends CommandBase {
   ControlMethod currentControlMode;
   boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime,*/ CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     addRequirements(shooter);
     this.carousel = carousel;
@@ -54,7 +54,7 @@ public class ShooterCommand extends CommandBase {
     addRequirements(carousel);
     this.robotDrive = robotDrive;
     // this.waitTime = waitTime;
-    // this.carouselCommand = carouselCommand;
+    this.carouselCommand = carouselCommand;
     // this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
@@ -165,7 +165,8 @@ public class ShooterCommand extends CommandBase {
     shooter.stopAll();
     shooter.vision.setMode(VisionMode.INTAKE);
     carousel.resetBallCount();
-    //carouselCommand.schedule();
+    carousel.spin(0.0);
+    carouselCommand.schedule();
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}

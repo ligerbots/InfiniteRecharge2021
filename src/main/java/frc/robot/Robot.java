@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    //m_robotContainer.carouselCommand.schedule();
+    m_robotContainer.carouselCommand.schedule();
 
     // Cancel the DriveCommand so that the joystick can't override this command
     // group
