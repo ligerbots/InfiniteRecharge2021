@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.DriveTrain;
@@ -31,9 +33,10 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand) {
         drivecommand.cancel();
 
-        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
+        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
+<<<<<<< HEAD
         // TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
         //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
 
@@ -44,20 +47,29 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
 
         TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",3.0))
+=======
+
+        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 1.75);
+        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 1.5);
+        
+        TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
+                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
+
+        TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
+>>>>>>> Clean up code related to AutoMaxSpeed
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
-                    FieldMapHome.gridPoint('C', 2,20,15)
+                    FieldMapHome.gridPoint('C', 2, 20, 15)
                 ),
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 configBackward);
 
         Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
-
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 List.of(
                     FieldMapHome.gridPoint('C', 4, -20, 0),
                     FieldMapHome.gridPoint('E', 5, 5, 0)
@@ -87,6 +99,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         configForward);       
                   
         System.out.println("DEBUG: Bounce path");
+        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
         System.out.println("DEBUG: Bounce path time = " + pathTime);
@@ -106,8 +119,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             robotDrive
         );
 
-        RamseteCommand ramseteBackward2 = new RamseteCommand(
-            backTrajectory2,
+        RamseteCommand ramseteForward1 = new RamseteCommand(
+            forwardTrajectory1,
             robotDrive::getPose,
             new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
             new SimpleMotorFeedforward(Constants.ksVolts,
@@ -121,8 +134,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             robotDrive
         );
 
-        RamseteCommand ramseteForward1 = new RamseteCommand(
-            forwardTrajectory1,
+        RamseteCommand ramseteBackward2 = new RamseteCommand(
+            backTrajectory2,
             robotDrive::getPose,
             new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
             new SimpleMotorFeedforward(Constants.ksVolts,
