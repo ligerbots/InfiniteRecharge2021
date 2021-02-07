@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -32,13 +33,13 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     private Pose2d initialPose;
 
     public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
-        Rotation2d rotation = Rotation2d.fromDegrees(0.0);
+        final Rotation2d startRotation = Rotation2d.fromDegrees(0.0);
         
         List<Translation2d> waypointList;
         Pose2d endPose;
-        switch(autoID){
+        switch (autoID) {
             case Barrel:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), startRotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 5),
                                        FieldMapHome.gridPoint('D', 6),
                                        FieldMapHome.gridPoint('E', 5, 0, 5),
@@ -56,8 +57,9 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        );
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
                 break;
+
             case Slalom:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1,5,0), rotation);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1,5,0), startRotation);
                 waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
                                        FieldMapHome.gridPoint('C', 8),
@@ -69,6 +71,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('E', 4, 7,0));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
+
             default:
                 waypointList = List.of();
                 endPose = new Pose2d();
@@ -76,19 +79,17 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 break;
         }
 
-        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
+        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
         // Initial baseline
-        // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-        TrajectoryConfig configForward = new TrajectoryConfig(
-                                                    SmartDashboard.getNumber("AutoMaxSpeed",2.0),
-                                                    SmartDashboard.getNumber("AutoMaxAcceleration",2.0))
+        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 2.0);
+        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 2.0);
+        TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(false);
 
-        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
+        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypointList, 
@@ -96,13 +97,14 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 configForward);
 
         System.out.println("DEBUG: AutoNav path " + autoID.name());
+        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: AutoNav path time = " + backTrajectory.getTotalTimeSeconds());
+        System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteForward = new RamseteCommand(
-            backTrajectory,
+            forwardTrajectory,
             robotDrive::getPose,
             new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
             new SimpleMotorFeedforward(Constants.ksVolts,
