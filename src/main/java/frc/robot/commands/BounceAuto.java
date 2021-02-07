@@ -37,8 +37,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 1.75);
-        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 1.5);
+        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 2.0);
+        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 3.0);
         
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
@@ -73,12 +73,12 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
               FieldMapHome.gridPoint('E', 8, 0, 5),
               FieldMapHome.gridPoint('D', 9, -3, 0)         
           ),
-          new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35/2), rotation270),
+          new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
           configBackward);
 
         Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
 
-        new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35/2), rotation270),
+        new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
         List.of(
             FieldMapHome.gridPoint('B', 10, -20, -20)
         ) ,

@@ -47,7 +47,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
         switch (autoID) {
             case RedA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45/2,  -15), Rotation2d.fromDegrees(153.0));
+                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45.0/2, -15), Rotation2d.fromDegrees(153.0));
                 waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 5),
                                        FieldMapHome.gridPoint('A', 6 , 0 , -20));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('A', 11), rotation180);
@@ -83,8 +83,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 10);
 
         // Initial baseline
-        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 2.0);
-        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 2.0);
+        double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 2.5);
+        double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 2.5);
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 

@@ -85,12 +85,6 @@ public class Robot extends TimedRobot {
         m_robotContainer.carouselCommand));
     */
 
-    // Create the auto maxSpeed and acceleration NT values
-    // This will set the value if they do not already exist. However, if a Shuffleboard
-    //  is already running, that will override these values
-    SmartDashboard.setDefaultNumber("AutoMaxSpeed", 2.0);
-    SmartDashboard.setDefaultNumber("AutoMaxAcceleration", 2.0);
-
     chosenAuto.setDefaultOption("None", null);
     chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedA));
     chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedB));
@@ -100,6 +94,13 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
+
+    // Make sure that auto maxSpeed and acceleration exist in NT
+    // NOTE: they have already been used in the auto constructors above.
+    // This will set the value if they do not already exist. However, if a Shuffleboard
+    //  is already running, that will override these values
+    SmartDashboard.setDefaultNumber("AutoMaxSpeed", 2.5);
+    SmartDashboard.setDefaultNumber("AutoMaxAcceleration", 3.0);
   }
 
   /**
