@@ -95,8 +95,6 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
-    SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
-    SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
   }
 
   /**
