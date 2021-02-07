@@ -34,10 +34,16 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
-        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        // TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
+
+        // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+      
+        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",3.0))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
 
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",3.0))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
@@ -56,28 +62,28 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                     FieldMapHome.gridPoint('C', 4, -20, 0),
                     FieldMapHome.gridPoint('E', 5, 5, 0)
                 ) ,
-                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
+                new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 configForward);
 
         Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
 
-          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -45/2), rotation90),
+          new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
           List.of( 
               FieldMapHome.gridPoint('D', 7, -27, 0),
               FieldMapHome.gridPoint('E', 7, 0, 5),
               FieldMapHome.gridPoint('E', 8, 0, 5),
               FieldMapHome.gridPoint('D', 9, -3, 0)         
           ),
-          new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
+          new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35/2), rotation270),
           configBackward);
 
         Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
 
-        new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -45/2), rotation270),
+        new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35/2), rotation270),
         List.of(
             FieldMapHome.gridPoint('B', 10, -20, -20)
         ) ,
-        new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
+        new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
         configForward);       
                   
         System.out.println("DEBUG: Bounce path");

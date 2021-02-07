@@ -46,7 +46,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('C', 5, -10, 0),
                                        FieldMapHome.gridPoint('C', 8),
                                        FieldMapHome.gridPoint('B', 9, 0, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, -5),
+                                       FieldMapHome.gridPoint('A', 8),
                                        FieldMapHome.gridPoint('B', 7),
                                        FieldMapHome.gridPoint('D', 8, 0, -10),
                                        FieldMapHome.gridPoint('E', 10, 0, 3),
@@ -66,6 +66,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('D', 11),
                                        FieldMapHome.gridPoint('C', 10),
                                        FieldMapHome.gridPoint('E', 8),
+                                       FieldMapHome.gridPoint('E', 7),
                                        FieldMapHome.gridPoint('E', 4, 7,0));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;

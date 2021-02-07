@@ -45,8 +45,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         switch(autoID){
             case RedA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45/2,  -15), Rotation2d.fromDegrees(153.0));
-                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 15),
-                                       FieldMapHome.gridPoint('A', 6 , 0 , -15));
+                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 5),
+                                       FieldMapHome.gridPoint('A', 6 , 0 , -20));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('A', 11), rotation180);
                 break;
             case RedB:
@@ -66,9 +66,9 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             case BlueB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 45/2, 0), rotation180);
                 waypointList = List.of(FieldMapHome.gridPoint('D', 6, 0, 10),
-                                       FieldMapHome.gridPoint('B', 8 ,0 ,-10),
+                                       FieldMapHome.gridPoint('B', 8 ,0 ,-5),
                                        FieldMapHome.gridPoint('D', 10, 0, 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('E', 11), Rotation2d.fromDegrees(135));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11, 0, -10), Rotation2d.fromDegrees(135));
                 break;
             default:
                 waypointList = List.of();
@@ -84,7 +84,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         // Initial baseline
         // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
         //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",2.0))
+        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.5), SmartDashboard.getNumber("AutoMaxAcceleration",2.5))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(

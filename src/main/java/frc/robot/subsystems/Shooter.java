@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
-// suppress unneeded warnings about serialVerionUID in TreeMap
+// suppress unneeded warnings about serialVersionUID in TreeMap
 @SuppressWarnings("serial")
 public class Shooter extends SubsystemBase {
 
@@ -72,13 +72,9 @@ public class Shooter extends SubsystemBase {
         motor3.setSmartCurrentLimit(40);
         
         // Reset Smart Dashboard for shooter test
-        SmartDashboard.putString("Shooting", "Idle");
+        SmartDashboard.putString("shooter/Status", "Idle");
 
-        SmartDashboard.putNumber("Turret Angle", 75);
-        SmartDashboard.putNumber("Target Hood Angle", 60);
-        SmartDashboard.putNumber("TSR", -5500);
-
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))){
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().length() == 0) continue;
@@ -105,38 +101,41 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
         }
       
-        turretAngleLookup.put(0.0, 135.0);
-        turretAngleLookup.put(1.0, 139.0);
-        turretAngleLookup.put(2.0, 142.0);
-        turretAngleLookup.put(3.0, 145.5);
-        turretAngleLookup.put(4.0, 149.0);
-        turretAngleLookup.put(5.0, 152.0);
-        turretAngleLookup.put(-5.0, 117.0);
-        turretAngleLookup.put(-4.0, 121.0);
-        turretAngleLookup.put(-3.0, 124.0);
-        turretAngleLookup.put(-2.0, 129.0);
-        turretAngleLookup.put(-1.0, 131.0);
+        // The relative setting for non-zero angles needs to be recomputed if the zero setting chenges,
+        // but at least we'll be close
+        turretAngleLookup.put(0.0, Constants.TURRET_ANGLE_ZERO_SETTING);
+        turretAngleLookup.put(1.0, Constants.TURRET_ANGLE_ZERO_SETTING + 4.0);
+        turretAngleLookup.put(2.0, Constants.TURRET_ANGLE_ZERO_SETTING + 7.0);
+        turretAngleLookup.put(3.0, Constants.TURRET_ANGLE_ZERO_SETTING + 10.5);
+        turretAngleLookup.put(4.0, Constants.TURRET_ANGLE_ZERO_SETTING + 14.0);
+        turretAngleLookup.put(5.0, Constants.TURRET_ANGLE_ZERO_SETTING + 17.0);
+        turretAngleLookup.put(-5.0, Constants.TURRET_ANGLE_ZERO_SETTING - 18.0);
+        turretAngleLookup.put(-4.0, Constants.TURRET_ANGLE_ZERO_SETTING - 14.0);
+        turretAngleLookup.put(-3.0, Constants.TURRET_ANGLE_ZERO_SETTING - 11.0);
+        turretAngleLookup.put(-2.0, Constants.TURRET_ANGLE_ZERO_SETTING - 6.0);
+        turretAngleLookup.put(-1.0, Constants.TURRET_ANGLE_ZERO_SETTING - 4.0);
 
+        // used in ShooterPIDTuner
         SmartDashboard.putNumber("shooter/P", 0.000145);
-        SmartDashboard.putNumber("shooter/I",1e-8);
+        SmartDashboard.putNumber("shooter/I", 1e-8);
         SmartDashboard.putNumber("shooter/D", 0);
         SmartDashboard.putNumber("shooter/F", 6.6774 * 0.00001);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter RPM", getSpeed());
-        SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
-        SmartDashboard.putNumber("Hood Adjustment", HoodAdjustment);
-        SmartDashboard.putNumber("RPM Adjustment", RPMAdjustment);
-        SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
+        SmartDashboard.putNumber("shooter/RPM", getSpeed());
+        SmartDashboard.putNumber("shooter/current", motor2.getOutputCurrent());
+        SmartDashboard.putNumber("shooter/Hood_Adjustment", HoodAdjustment);
+        SmartDashboard.putNumber("shooter/RPM_Adjustment", RPMAdjustment);
+        SmartDashboard.putNumber("shooter/Output_Voltage", motor2.getAppliedOutput());
     }
 
     public double getVoltage() {
         return motor2.getBusVoltage();
     }
 
-    public void setHood (double angle) {
+    public void setHood(double angle) {
         System.out.println("hood angle SET!!!!");
         if (angle < 40) {
             angle = 40;
@@ -147,23 +146,21 @@ public class Shooter extends SubsystemBase {
         hoodServo.setAngle(angle);
     }
 
-    public double getSpeed () {
+    public double getSpeed() {
         return -shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(double distance) {
+        // Set the shooter and hood based on the distance
         setShooterRpm(calculateShooterSpeed(distance));
         setHood(calculateShooterHood(distance));
-        /* The idea was that this would set the shooter speed and hoodServo value 
-        based on the input distance. 
-        */
     }
 
     // public void setShooterVoltage (double voltage) {
     //     pidController.setReference(voltage, ControlType.kVoltage);
     // }
 
-    public void shoot () {
+    public void shoot() {
         //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
             flup.set(-0.5);
         //} else {
@@ -171,17 +168,17 @@ public class Shooter extends SubsystemBase {
         //}*/
     }
 
-    public void testSpin () {
+    public void testSpin() {
         setShooterRpm(4000.0);
-        SmartDashboard.putString("Shooting", "Shooting");
+        SmartDashboard.putString("shooter/Status", "Shooting");
     }
 
-    public void setShooterRpm (double rpm) {
+    public void setShooterRpm(double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        //for the shooter to run the right direction, rpm values passed to setReference must be negative
-        //passing the negative absolute value causes the passed value to always be negative, 
-        //while allowing the function argument to be positive or negative  
-        if (rpm < 0) System.out.println("warning: rpm argument should be positive");
+        // for the shooter to run the right direction, rpm values passed to setReference must be negative
+        // passing the negative absolute value causes the passed value to always be negative, 
+        // while allowing the function argument to be positive or negative  
+        if (rpm < 0) System.out.println("warning: shooter rpm argument should be positive");
         pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
     }
 
@@ -199,8 +196,9 @@ public class Shooter extends SubsystemBase {
             return result/* + Robot.RPMAdjustment*/;
         }
         else {
-            System.out.println("Shooter: floorEntry or celingEntry was null");
-            return -1000;
+            System.out.println("Shooter: floorEntry or ceilingEntry was null");
+            // Typical speed. Not sure this will work for much, but it won't break anything.
+            return 4000;
         }
     }
 
@@ -214,9 +212,6 @@ public class Shooter extends SubsystemBase {
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
             System.out.format(" hood %3.0f%n", result);
 
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-
             return result + HoodAdjustment;
         }
         else {
@@ -224,22 +219,22 @@ public class Shooter extends SubsystemBase {
         }
     }
 
-    public void warmUp () {
+    public void warmUp() {
         setShooterRpm(Constants.WARM_UP_RPM);
     }
 
-    public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
+    public boolean speedOnTarget(final double targetVelocity, final double percentAllowedError) {
         final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
         final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
         return shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
     }
 
-    public boolean hoodOnTarget (final double targetAngle) {
+    public boolean hoodOnTarget(final double targetAngle) {
         System.out.println("ServoPosition: " + hoodServo.getPosition());
         return hoodServo.getAngle() > targetAngle - 0.5 && hoodServo.getAngle() < targetAngle + 0.5;
     }
 
-    public void calibratePID (final double p, final double i, final double d, final double f) {
+    public void calibratePID(final double p, final double i, final double d, final double f) {
         pidController.setIAccum(0);
         pidController.setP(p);
         pidController.setI(i);
@@ -248,17 +243,18 @@ public class Shooter extends SubsystemBase {
         pidController.setIZone(1000);
     }
 
-    public void stopAll () {
+    public void stopAll() {
         setShooterRpm(0.0);
         flup.set(0);
         setHood(160);
+        SmartDashboard.putString("shooter/Status", "Idle");
     }
 
-    public double getTurretAngle () {
+    public double getTurretAngle() {
         return turretServo.get() *  Constants.TURRET_ANGLE_COEFFICIENT;
     }
 
-    private void setTurret (double angle) {
+    private void setTurret(double angle) {
         System.out.println("Moving turret to " + angle);
         turretServo.setAngle(angle);
     }
@@ -280,17 +276,13 @@ public class Shooter extends SubsystemBase {
             double ratio = 1 - (ceilingEntry.getKey() - adjustedAngle) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue() + ratio * (ceilingEntry.getValue() - floorEntry.getValue());
 
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-
             setTurret(result);
             System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
             System.out.println("Turret Adjustment not successful      " + adjustedAngle);
-            setTurret(72);
+            // This must equal the zero setting in turretAngleLookup
+            setTurret(Constants.TURRET_ANGLE_ZERO_SETTING);
         }
     }
-
-    
 }
