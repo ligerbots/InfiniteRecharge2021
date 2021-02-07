@@ -36,18 +36,6 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
-<<<<<<< HEAD
-        // TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
-
-        // TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-        //         .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-      
-        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",3.0))
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
-
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",2.0), SmartDashboard.getNumber("AutoMaxAcceleration",3.0))
-=======
 
         double maxSpeed = SmartDashboard.getNumber("AutoMaxSpeed", 1.75);
         double maxAccel = SmartDashboard.getNumber("AutoMaxAcceleration", 1.5);
@@ -56,7 +44,6 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
->>>>>>> Clean up code related to AutoMaxSpeed
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(

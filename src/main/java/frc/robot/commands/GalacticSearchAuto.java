@@ -47,15 +47,9 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
         switch (autoID) {
             case RedA:
-<<<<<<< HEAD
                 initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45/2,  -15), Rotation2d.fromDegrees(153.0));
                 waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0 , 5),
                                        FieldMapHome.gridPoint('A', 6 , 0 , -20));
-=======
-                initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45.0/2, -15), Rotation2d.fromDegrees(153.0));
-                waypointList = List.of(FieldMapHome.gridPoint('D', 5, 0, 15),
-                                       FieldMapHome.gridPoint('A', 6, 0, -15));
->>>>>>> Clean up code related to AutoMaxSpeed
                 endPose =  new Pose2d(FieldMapHome.gridPoint('A', 11), rotation180);
                 break;
 
