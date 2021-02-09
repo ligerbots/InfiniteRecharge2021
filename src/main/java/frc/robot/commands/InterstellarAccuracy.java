@@ -37,13 +37,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
-        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
+        TrajectoryConfig config = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
-
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
-
-
 
         Trajectory trajectory1Forward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -51,7 +46,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                configBackward);
+                config);
 
         Trajectory trajectory1Backward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -59,7 +54,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 initialPose,
-                configBackward);       
+                config);       
                 
         Trajectory trajectory2Forward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -67,7 +62,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180),
-                configBackward);
+                config);
 
         Trajectory trajectory2Backward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -75,7 +70,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 initialPose,
-                configBackward);      
+                config);      
                   
         Trajectory trajectory3Forward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -83,7 +78,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180),
-                configBackward);
+                config);
     
         Trajectory trajectory3Backward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -91,7 +86,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 initialPose,
-                configBackward);      
+                config);      
 
         Trajectory trajectory4Forward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -99,7 +94,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180),
-                configBackward);
+                config);
         
         Trajectory trajectory4Backward = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -107,21 +102,21 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                 List.of( 
                 ),
                 initialPose,
-                configBackward);      
+                config);      
         Trajectory trajectory1Forward2 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 List.of( 
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                configBackward);
+                config);
         Trajectory trajectory1Backward2 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
                 List.of( 
                 ),
                 initialPose,
-                configBackward);
+                config);
     
         RamseteCommand ramsete1forward = createRamsetteCommand(trajectory1Forward, robotDrive);
         RamseteCommand ramsete1backward = createRamsetteCommand(trajectory1Backward, robotDrive);
