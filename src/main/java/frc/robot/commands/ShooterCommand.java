@@ -26,17 +26,18 @@ public class ShooterCommand extends CommandBase {
 
   boolean startShooting;
 
-  //CarouselCommand carouselCommand;
+  CarouselCommand carouselCommand;
   //DriveCommand driveCommand;
 
   int initialCarouselTicks;
 
-  long stableRPMTime;
+  double stableRPMTime;
   boolean startedTimerFlag;
   boolean foundTarget;
   boolean setPid;
  
   public enum ControlMethod {
+    ACQUIRING, // Acquiring vision target
     SPIN_UP, // PIDF to desired RPM
     HOLD_WHEN_READY, // calculate average kF
     HOLD, // switch to pure kF control
@@ -45,21 +46,24 @@ public class ShooterCommand extends CommandBase {
   ControlMethod currentControlMode;
   boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, /*CarouselCommand carouselCommand, DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime,*/ CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
     this.shooter = shooter;
+    addRequirements(shooter);
     this.carousel = carousel;
+    // The following statement will cause the CarouselCommand to be interrupted. This is good.
+    addRequirements(carousel);
     this.robotDrive = robotDrive;
-    this.waitTime = waitTime;
-    //this.carouselCommand = carouselCommand;
-    //this.driveCommand = driveCommand;
+    // this.waitTime = waitTime;
+    this.carouselCommand = carouselCommand;
+    // this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
     pidTuner = new ShooterPIDTuner(shooter);
   }
 
   public void rapidFire() {
-    carousel.spin(0.8);
     shooter.shoot();
+    carousel.spin(0.8);
   }
 
   // Called when the command is initially scheduled.
@@ -72,10 +76,10 @@ public class ShooterCommand extends CommandBase {
     setPid = true;
 
     // driveCommand.cancel();
-    startTime = System.nanoTime();
+    startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
     // carouselCommand.cancel();
-    currentControlMode = ControlMethod.SPIN_UP;
+    currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
     pidTuner.spinUpTune();
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
@@ -88,7 +92,7 @@ public class ShooterCommand extends CommandBase {
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
     System.out.println("Initial Angle Offset: " + angleError);
-    shooter.setTurretAdjusted(0/*-Robot.angleErrorAfterTurn*/);
+    shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -105,12 +109,15 @@ public class ShooterCommand extends CommandBase {
       distance = shooter.vision.getDistance();
       if (distance != 0.0) {
         foundTarget = true;
+        currentControlMode = ControlMethod.SPIN_UP;
+        // We found the target. Set the turret angle based on the vision system before
+        // we spin up the shooter
+        angleError = shooter.vision.getRobotAngle();
+        shooter.setTurretAdjusted(angleError);
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
         shooter.prepareShooter(distance);   
       }   
     }
-
-    angleError = shooter.vision.getRobotAngle();
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
@@ -118,12 +125,12 @@ public class ShooterCommand extends CommandBase {
 
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         if (startedTimerFlag) {
-          if (Robot.time() - stableRPMTime * 1.0e-9 > 0.2) {
+          if (Robot.time() - stableRPMTime > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
         }
         else {
-          stableRPMTime = System.nanoTime();
+          stableRPMTime = Robot.time();
           startedTimerFlag = true;
         }
       }
@@ -139,10 +146,11 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime * 1.0e-9 > 3.5; //TODO: May need to adjust acceptable error
-    hoodOnTarget = Robot.time() - startTime * 1.0e-9 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
+    hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
-    if (speedOnTarget && hoodOnTarget)
+    // !carousel.backwards will need to be removed when the shooter is re-written
+    if (speedOnTarget && hoodOnTarget && !carousel.backwards)
         rapidFire();
 
   }
@@ -156,8 +164,9 @@ public class ShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     shooter.vision.setMode(VisionMode.INTAKE);
-    carousel.setBallCount(0);
-    //carouselCommand.schedule();
+    carousel.resetBallCount();
+    carousel.spin(0.0);
+    carouselCommand.schedule();
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}
@@ -167,7 +176,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime * 1.0e-9 > 2.0);
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;

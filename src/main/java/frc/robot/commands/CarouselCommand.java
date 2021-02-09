@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -13,87 +12,87 @@ public class CarouselCommand extends CommandBase {
 
   Carousel carousel;
 
-  long lastTimeCheck;
-  long timeCheck;
-  boolean backwards;
+  double targetSlot;
+  double sensorStartTime;
+  
+  final double sensorWaitTime = 0.04; // seconds
+  //TODO find a better value
+  final double earlySlotStopDelta = 0.04;
+  
+  private static enum State {
+    // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
+    Rotating,  WaitingForBall, Full, WaitingForSensor;
 
-  long lastBackTime;
+  } 
 
-  int currentTicks;
-  int lastCheckpoint;
-  int currentCheckpoint;
-
-  boolean stopForOpenSpace;
-  int checkForFullnessCount = 0;
-
-  final int fifthRotationTicks = Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
-  final double pauseTime = 0.04; // seconds
+  private State state;
 
   public CarouselCommand(Carousel carousel) {
     this.carousel = carousel;
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(carousel);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timeCheck = System.nanoTime();
-    lastTimeCheck = timeCheck;
-    currentTicks = 0;
-    lastCheckpoint = 0;
-    currentCheckpoint = 0;
-    backwards = false;
-    stopForOpenSpace = !carousel.isBallInFront();
-    checkForFullnessCount = 0;
+    // every time the command is remade, the robot sets its state to waiting for ball
+    state = State.WaitingForBall;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Color Sensor distance reading", carousel.getColorSensorProximity());
-    SmartDashboard.putNumber("Output current", carousel.getCurrent());
-    SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
+  
+    if (state == State.Full) {
+      // if we have a full carousel, we do nothing and wait for a shooting command
+      return;
+    } 
 
-    currentTicks = -carousel.getTicks();
-    currentCheckpoint = currentTicks / fifthRotationTicks;
-
-    if (carousel.getCurrent() > 10.35) { // First check is to see if the current is spiking
-      lastBackTime = System.nanoTime(); // start timer for going backwards
-      backwards = true; // now we goin backwards
+    if (state == State.WaitingForSensor) {
+      // checks if we have waited at least .04 seconds since the carousel stopped
+      // this allows the sensor to settle and get an accurate reading when used
+      if (Robot.time() - sensorStartTime >= sensorWaitTime) {
+        // sets the state to WaitingForBall
+        state = State.WaitingForBall;
+      }
     }
-
-    if (!backwards) { // This is what we do if we aren't going backwards
-      if (currentCheckpoint > lastCheckpoint) { // if we have indexed to the next slot...
-        lastCheckpoint = currentCheckpoint;
-        lastTimeCheck = System.nanoTime(); // Start the timer for pausing at a slot
-      }
-      if (Robot.time() - lastTimeCheck*1.0e-9 > pauseTime && !stopForOpenSpace/* && checkForFullnessCount < 5*/) {
-        // This block executes if we aren't pausing, the slot isn't open, and we haven't already gone around 5 times
-        carousel.spin(Constants.CAROUSEL_INTAKE_SPEED); // Spin the carousel
-      }
-      else { // This block runs if 
-        if (!carousel.isBallInFront()) { // This block runs if there is not ball up front
-          stopForOpenSpace = true; 
-          checkForFullnessCount = 0; // reset the counter to see if we are full, cause we obviously aren't
+    
+    if (state == State.WaitingForBall) {
+      // checks if there is a ball in the front slot
+      if (carousel.isBallInFront()) {
+        // increases the ball count by 1
+        carousel.incrementBallCount();
+        // if there are 3 or more balls in the carousel
+        if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
+          state = State.Full;
+        } else {
+          // remembers the position of the next slot we are aiming for
+          targetSlot = Math.round(carousel.getSlot()) + 1.0;
+          carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+          state = State.Rotating;
         }
-        else {
-          stopForOpenSpace = false;
-          checkForFullnessCount += 1;
-        }
-        carousel.spin(0); // We aren't supposed to be spinning here
       }
     }
-    else { // This is decently readable go backwards code that runs on a timer
-      carousel.spin(-0.6);
-      if (Robot.time() - lastBackTime*1.0e-9 > 0.5) {
-        backwards = false;
+    
+    if (state == State.Rotating) {
+      // checks if we have rotated to a position just ahead of the next slot
+      // this allows the carousel to coast to a stop and still land at the right spot
+      if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
+        // remembers the time that we started to stop
+        sensorStartTime = Robot.time();
+        carousel.spin(0.0);
+        state = State.WaitingForSensor;
       }
-    }
+    }   
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // Since isFinshed always returns false, the only way we get here is if we're interrupted.
+    // Need to stop the carousel because if it's spinning when we're interrupted, the interrupting
+    // command might not expect it to be rotating.
+    carousel.spin(0.0);
   }
 
   // Returns true when the command should end.
