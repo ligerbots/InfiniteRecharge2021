@@ -35,8 +35,16 @@ public class CarouselCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // every time the command is remade, the robot sets its state to waiting for ball
-    state = State.WaitingForBall;
+    // check the carousel is on the center of a slot
+    double slotError = Math.abs(Math.round(carousel.getSlot()) - carousel.getSlot());
+    if (slotError <= 0.1){
+      // carousel is aligned, wait for ball
+      state = State.WaitingForBall;
+    }
+    else{
+      // carousel not aligned, rotate to the next slot
+      moveToNextSlot();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,10 +74,7 @@ public class CarouselCommand extends CommandBase {
         if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
           state = State.Full;
         } else {
-          // remembers the position of the next slot we are aiming for
-          targetSlot = Math.round(carousel.getSlot()) + 1.0;
-          carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
-          state = State.Rotating;
+          moveToNextSlot();
         }
       }
     }
@@ -84,6 +89,13 @@ public class CarouselCommand extends CommandBase {
         state = State.WaitingForSensor;
       }
     }   
+  }
+
+  private void moveToNextSlot(){
+    // remembers the position of the next slot we are aiming for
+    targetSlot = Math.round(carousel.getSlot()) + 1.0;
+    carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+    state = State.Rotating;
   }
 
   // Called once the command ends or is interrupted.
