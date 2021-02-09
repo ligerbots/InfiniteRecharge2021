@@ -194,6 +194,10 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             ballsLoadedEntry.setBoolean(false);
         }
         @Override
+        public void end(boolean interrupted) {
+            ballsLoadedEntry.setBoolean(false);
+        }
+        @Override
         public boolean isFinished() {
             return(ballsLoadedEntry.getBoolean(false));
         }
