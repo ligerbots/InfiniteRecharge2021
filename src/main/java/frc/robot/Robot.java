@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
+import frc.robot.commands.InterstellarAccuracy.WaitForSmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -94,10 +95,12 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Barrel", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Barrel));
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
-    chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
+    chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.driveCommand,
+        m_robotContainer.shooter, m_robotContainer.carousel, m_robotContainer.carouselCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
     SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
     SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
+    WaitForSmartDashboard.initSmartDashboard();
   }
 
   /**
