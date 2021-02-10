@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,9 +25,9 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 public class InterstellarAccuracy extends SequentialCommandGroup implements AutoCommandInterface {
-  Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
-  Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
-  Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
+    Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
+    Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
+    Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
@@ -42,127 +43,52 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
-        Trajectory trajectory1Forward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                initialPose,
-                List.of( 
-                ),
-                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                configForward);
-        System.out.println(new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180));
-        System.out.println(initialPose);
-        Trajectory trajectory1Backward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                List.of( 
-                ),
-                initialPose,
-                configBackward);       
-                
-        Trajectory trajectory2Forward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                initialPose,
-                List.of( 
-                ),
-                new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180),
-                configForward);
-
-        Trajectory trajectory2Backward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180),
-                List.of( 
-                ),
-                initialPose,
-                configBackward);      
-                  
-        Trajectory trajectory3Forward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                initialPose,
-                List.of( 
-                ),
-                new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180),
-                configForward);
     
-        Trajectory trajectory3Backward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180),
-                List.of( 
-                ),
-                initialPose,
-                configBackward);      
+        RamseteCommand ramsete1forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete1backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), initialPose, configBackward, robotDrive);
+        RamseteCommand ramsete2forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete2backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 7), rotation180), initialPose, configBackward, robotDrive);
+        RamseteCommand ramsete3forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete3backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 5), rotation180), initialPose, configBackward, robotDrive);
+        RamseteCommand ramsete4forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete4backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180), initialPose, configBackward, robotDrive);
+        RamseteCommand ramsete1forward2 = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete1backward2 = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), initialPose, configBackward, robotDrive);
 
-        Trajectory trajectory4Forward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                initialPose,
-                List.of( 
-                ),
-                new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180),
-                configForward);
-        
-        Trajectory trajectory4Backward = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(FieldMapHome.gridPoint('C', 3), rotation180),
-                List.of( 
-                ),
-                initialPose,
-                configBackward);      
-        Trajectory trajectory1Forward2 = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                initialPose,
-                List.of( 
-                ),
-                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                configForward);
-        Trajectory trajectory1Backward2 = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180),
-                List.of( 
-                ),
-                initialPose,
-                configBackward);
-    
-        RamseteCommand ramsete1forward = createRamsetteCommand(trajectory1Forward, robotDrive);
-        RamseteCommand ramsete1backward = createRamsetteCommand(trajectory1Backward, robotDrive);
-        RamseteCommand ramsete2forward = createRamsetteCommand(trajectory2Forward, robotDrive);
-        RamseteCommand ramsete2backward = createRamsetteCommand(trajectory2Backward, robotDrive);
-        RamseteCommand ramsete3forward = createRamsetteCommand(trajectory3Forward, robotDrive);
-        RamseteCommand ramsete3backward = createRamsetteCommand(trajectory3Backward, robotDrive);
-        RamseteCommand ramsete4forward = createRamsetteCommand(trajectory4Forward, robotDrive);
-        RamseteCommand ramsete4backward = createRamsetteCommand(trajectory4Backward, robotDrive);
-        RamseteCommand ramsete1forward2 = createRamsetteCommand(trajectory1Forward2, robotDrive);
-        RamseteCommand ramsete1backward2 = createRamsetteCommand(trajectory1Backward2, robotDrive);
-        // System.out.println("DEBUG: Bounce path");
-        // double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
-        //     + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
-        // System.out.println("DEBUG: Bounce path time = " + pathTime);
-        
         addCommands(
             ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            //new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            //new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            //new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            //new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            //new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete1backward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
-    RamseteCommand createRamsetteCommand(Trajectory trajectory, DriveTrain robotDrive) {
+
+    RamseteCommand createRamseteCommand(Pose2d start, Pose2d end, TrajectoryConfig config, DriveTrain robotDrive) {
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            start,
+            List.of(),
+            end,
+            config);
         return new RamseteCommand(
             trajectory, 
             robotDrive::getPose,
@@ -178,10 +104,12 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             robotDrive
         );
     }
+
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
     }
+
     static public class WaitForSmartDashboard extends CommandBase {
         static NetworkTableEntry ballsLoadedEntry;
         static public void initSmartDashboard() {
@@ -202,7 +130,6 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             return(ballsLoadedEntry.getBoolean(false));
         }
     }
-    
 }
 
 
