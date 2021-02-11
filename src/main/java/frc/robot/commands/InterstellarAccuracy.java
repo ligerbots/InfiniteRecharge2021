@@ -33,6 +33,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
 
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
+        SmartDashboard.putBoolean("Interstellar", false);
         drivecommand.cancel();
 
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
@@ -103,6 +104,10 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             robotDrive::tankDriveVolts,
             robotDrive
         );
+    }
+
+    public void end(boolean interrupted){
+        SmartDashboard.putBoolean("Interstellar", interrupted);
     }
 
     // Allows the system to get the initial pose of this command
