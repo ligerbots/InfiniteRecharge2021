@@ -69,6 +69,9 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    SmartDashboard.putString("shooter/Shooting", "Shoot");
+
     foundTarget = false;
     shooterTargetSpeed = 0.0;
     // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
@@ -170,6 +173,8 @@ public class ShooterCommand extends CommandBase {
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}
+  SmartDashboard.putString("shooter/Shooting", "Idle");
+    
   }
 
   // Returns true when the command should end.
