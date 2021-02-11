@@ -86,7 +86,6 @@ public class Robot extends TimedRobot {
     */
 
     chosenAuto.setDefaultOption("None", null);
-    chosenAuto.addOption("AtHomeAuto", new AtHomeTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
     chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedA));
     chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedB));
     chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueA));
@@ -95,8 +94,6 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, m_robotContainer.driveCommand, AutoNavPaths.Path.Slalom));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
-    SmartDashboard.putNumber("AutoMaxSpeed", 1.75);
-    SmartDashboard.putNumber("AutoMaxAcceleration", 1.5);
   }
 
   /**
