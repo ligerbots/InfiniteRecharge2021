@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.driveCommand,
         m_robotContainer.shooter, m_robotContainer.carousel, m_robotContainer.carouselCommand));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
+    WaitForSmartDashboard.initSmartDashboard();
   }
 
   /**
