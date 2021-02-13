@@ -55,6 +55,7 @@ public class ShooterCommand extends CommandBase {
     this.robotDrive = robotDrive;
     // this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
+    System.out.println("Shooter.carouselCommand = " + this.carouselCommand);
     // this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
@@ -81,7 +82,7 @@ public class ShooterCommand extends CommandBase {
     // driveCommand.cancel();
     startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
-    // carouselCommand.cancel();
+    carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
     pidTuner.spinUpTune();
@@ -167,9 +168,10 @@ public class ShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     shooter.vision.setMode(VisionMode.INTAKE);
-    carousel.resetBallCount();
     carousel.spin(0.0);
+    carousel.resetBallCount();
     carouselCommand.schedule();
+    System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}

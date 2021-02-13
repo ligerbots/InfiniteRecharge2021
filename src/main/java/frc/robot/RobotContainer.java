@@ -96,7 +96,8 @@ public class RobotContainer {
       DriverStation.getInstance().silenceJoystickConnectionWarning(true);
     }
 
-    // JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
+    JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
+    xboxA.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, true));
     // JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     // JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);

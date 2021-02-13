@@ -39,7 +39,8 @@ public class Carousel extends SubsystemBase {
         // This method will be called once per scheduler run
         SmartDashboard.putNumber("Carousel/Color Sensor distance", getColorSensorProximity());
         SmartDashboard.putNumber("Carousel/Output current", getCurrent());
-        SmartDashboard.putNumber("Carousel/Carousel ticks", -getTicks());
+        SmartDashboard.putNumber("Carousel/Ticks", -getTicks());
+        SmartDashboard.putNumber("Carousel/Slot", getSlot());
 
         // First check is to see if the current is spiking, this would indicate a stuck ball
         if (getCurrent() > 10.35) { 
@@ -78,7 +79,7 @@ public class Carousel extends SubsystemBase {
     public double getSlot() {
         // because of the encoder position, the returned value is negative
         // so the encoder output must be made negative to return a positive encoder value
-        return -getTicks() / Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+        return (double)(-getTicks()) / Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
     }
 
     public void resetEncoder () {

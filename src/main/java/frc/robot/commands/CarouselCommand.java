@@ -18,7 +18,7 @@ public class CarouselCommand extends CommandBase {
   
   final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
-  final double earlySlotStopDelta = 0.04;
+  final double earlySlotStopDelta = 0.1;
   
   private static enum State {
     // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
@@ -30,12 +30,13 @@ public class CarouselCommand extends CommandBase {
 
   public CarouselCommand(Carousel carousel) {
     this.carousel = carousel;
-    addRequirements(carousel);
+    // addRequirements(carousel);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("CarouselCommand initialize" + this);
     // check the carousel is on the center of a slot
     double slotError = Math.abs(Math.round(carousel.getSlot()) - carousel.getSlot());
     if (slotError <= 0.1){
