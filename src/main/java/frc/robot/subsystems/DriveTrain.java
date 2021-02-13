@@ -68,7 +68,7 @@ public class DriveTrain extends SubsystemBase {
 
     private int prevBallLocation = 0;
     private int prevStartLocation = 10;
-
+    Pose2d prevPose=null;
     public DriveTrain() {
         // Note: since we are using the DifferentialDrive class, we don't need to invert any motors.
 
@@ -205,7 +205,15 @@ public class DriveTrain extends SubsystemBase {
       rightEncoderSim.setRate(drivetrainSimulator.getRightVelocityMetersPerSecond());
   
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
-  
+      Pose2d nowPose=fieldSim.getRobotPose();
+      if(prevPose!=null&&(
+        Math.abs(prevPose.getX()-nowPose.getX())>0.001||
+        Math.abs(prevPose.getY()-nowPose.getY())>0.001||
+        Math.abs(prevPose.getRotation().getRadians()-nowPose.getRotation().getRadians())>0.001
+        )){
+          setPose(nowPose);
+      }
+      prevPose=getPose();
       fieldSim.setRobotPose(getPose());
     }
 
