@@ -44,6 +44,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
+        // Define these here, but we may override them within the case statement so we can tune each
+        // path individually
+        double maxSpeed = 2.5;
+        double maxAccel = 2.5;
+
         switch (autoID) {
             case RedA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('B', 1, 45.0/2, -15), Rotation2d.fromDegrees(153.0));
@@ -79,9 +84,6 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
-
-        double maxSpeed = 2.5;
-        double maxAccel = 2.5;
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);

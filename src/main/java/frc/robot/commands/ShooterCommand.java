@@ -51,7 +51,7 @@ public class ShooterCommand extends CommandBase {
     addRequirements(shooter);
     this.carousel = carousel;
     // The following statement will cause the CarouselCommand to be interrupted. This is good.
-    addRequirements(carousel);
+    // addRequirements(carousel);
     this.robotDrive = robotDrive;
     // this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;

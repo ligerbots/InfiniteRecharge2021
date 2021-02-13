@@ -37,6 +37,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
+        // Define these here, but we may override them within the case statement so we can tune each
+        // path individually
+        double maxSpeed = 2.5;
+        double maxAccel = 2.5;
+
         switch (autoID) {
             case Barrel:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
@@ -78,9 +83,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        // Initial baseline
-        double maxSpeed = 2.0;
-        double maxAccel = 2.0;
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(false);
 
