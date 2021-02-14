@@ -39,7 +39,6 @@ public class ShooterCommand extends CommandBase {
   public enum ControlMethod {
     ACQUIRING, // Acquiring vision target
     SPIN_UP, // PIDF to desired RPM
-    HOLD_WHEN_READY, // calculate average kF
     HOLD, // switch to pure kF control
   }
 
@@ -112,26 +111,29 @@ public class ShooterCommand extends CommandBase {
     if (!foundTarget) {
       distance = shooter.vision.getDistance();
       if (distance != 0.0) {
+        // We found the target. Set the turret angle based on the vision system before
         foundTarget = true;
         currentControlMode = ControlMethod.SPIN_UP;
-        // We found the target. Set the turret angle based on the vision system before
-        // we spin up the shooter
+        // adjust the turret and hood to align
         angleError = shooter.vision.getRobotAngle();
         shooter.setTurretAdjusted(angleError);
-        shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
-        shooter.prepareShooter(distance);   
-      }   
+        shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
+        shooter.prepareShooter(distance);
+      }
     }
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
-    if (currentControlMode == ControlMethod.SPIN_UP){ 
-
+    if (currentControlMode == ControlMethod.SPIN_UP) {
+      // if not in range, then
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
+        // Timer starts when shooter is in range
         if (startedTimerFlag) {
+          // 0.2 seconds after shooter speed is in range
           if (Robot.time() - stableRPMTime > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
+        // Loops here first in order to 
         } else {
           stableRPMTime = Robot.time();
           startedTimerFlag = true;
@@ -153,14 +155,10 @@ public class ShooterCommand extends CommandBase {
     hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     // !carousel.backwards will need to be removed when the shooter is re-written
-    if (speedOnTarget && hoodOnTarget && !carousel.backwards)
-        rapidFire();
-
+    if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
+      rapidFire();
+    }
   }
-
-  // if (shooter.speedOnTarget(shooter.calculateShooterSpeed(visionInfo[1]), 1) && shooter.hoodOnTarget(shooter.calculateShooterHood(visionInfo[1]))) {
-  //   shooter.shoot();
-  // } //The allowed error here matters a lot
 
   // Called once the command ends or is interrupted.
   @Override
@@ -185,12 +183,5 @@ public class ShooterCommand extends CommandBase {
 
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
     return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
-            /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
-    // if (waitTime == 0.0) {
-    //   return false;
-    // }
-    // else {
-    //   return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
-    // }
   }
 }

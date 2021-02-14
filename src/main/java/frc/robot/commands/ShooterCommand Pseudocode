@@ -2,13 +2,27 @@ state = Acquiring
 
 State Acquiring:
     Find target
+    adjust turret
+    adjust hood
     state = Spin-up
 
 State Spin-up:
-
-
-State Hold-when-ready:
-
+    if shooter speed within 15%
+        if timer started
+            if robot time - stable shooting > 0.2
+                state = Hold
+        else
+            stable shooting=robot time
+            timer started = true
+    else 
+        timer started = false
 
 State Hold:
-    
+    Set PID
+    state = Fire
+
+State Fire:
+    speedOnTarget = shooter speed within 8% or robotTime-startTime=3.5
+    hoodOnTarget = robotTime-startTime > 0.75
+    If (speedOnTarget && hoodOnTarget && !carouselBackwards)
+        fire shooter
