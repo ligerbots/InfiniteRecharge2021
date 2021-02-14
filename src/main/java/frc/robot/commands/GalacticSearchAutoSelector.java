@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.commands.GalacticSearchAuto.Path;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.GalacticSearchChooserResult;
 import frc.robot.subsystems.Vision.VisionMode;
@@ -22,10 +26,19 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
    */
 
   Vision vision;
+  DriveTrain robotDrive;
+  DriveCommand drivecommand;
+  Carousel carousel;
+  Intake intake;
+
   Vision.GalacticSearchChooserResult result = GalacticSearchChooserResult.NONE;
 
-  public GalacticSearchAutoSelector(Vision vision) {
+  public GalacticSearchAutoSelector(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Vision vision) {
     this.vision = vision;
+    this.robotDrive = robotDrive;
+    this.drivecommand = drivecommand;
+    this.carousel = carousel;
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -46,25 +59,27 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // kinda a hack but sendablechooser doesn't have a method to select a option
-    // exposed
-    System.out.println("Setting auto to " + result);
+    System.out.println("Scheduling " + result);
+    GalacticSearchAuto command = null;
     switch (result) {
       case A_RED:
-        SmartDashboard.putString("Chosen Auto/selected", "RedAAuto");
+        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedA);
         break;
       case A_BLUE:
-        SmartDashboard.putString("Chosen Auto/selected", "BlueAAuto");
+        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueA);
         break;
       case B_RED:
-        SmartDashboard.putString("Chosen Auto/selected", "RedBAuto");
+        command =new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedB);
         break;
       case B_BLUE:
-        SmartDashboard.putString("Chosen Auto/selected", "BlueBAuto");
+        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueB);
         break;
     }
+    if(command != null){
+      robotDrive.setPose(command.getInitialPose());
+      command.schedule();
+    }
     vision.setMode(VisionMode.INTAKE);
-    
   }
 
   // Returns true when the command should end.
