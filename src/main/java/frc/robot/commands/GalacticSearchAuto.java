@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
@@ -80,11 +81,12 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        double maxSpeed = 2.5;
-        double maxAccel = 2.5;
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
+        double maxSpeed = 45.5;
+        double maxAccel = 45.5;
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(true);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
