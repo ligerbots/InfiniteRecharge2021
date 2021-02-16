@@ -8,13 +8,8 @@ State Acquiring:
 
 State Spin-Up:
     if shooter speed within 15%
-        if timer started
-            state = Waiting-For-Stability
-        else
-            stable shooting=robot time
-            timer started = true
-    else 
-        timer started = false
+        stable shooting=robot time
+        state = Waiting-For-Stability
 
 State Waiting-For-Stability:
     if shooter speed within 15%
