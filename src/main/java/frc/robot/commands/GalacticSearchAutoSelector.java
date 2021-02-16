@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import java.util.HashMap;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,23 +33,33 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
   Carousel carousel;
   Intake intake;
 
+  Pose2d initialPose = new Pose2d();
   Vision.GalacticSearchChooserResult result = GalacticSearchChooserResult.NONE;
-
+  HashMap<GalacticSearchChooserResult, GalacticSearchAuto> galacticSearchAutos;
   public GalacticSearchAutoSelector(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Vision vision) {
     this.vision = vision;
     this.robotDrive = robotDrive;
     this.drivecommand = drivecommand;
     this.carousel = carousel;
     this.intake = intake;
+
+    galacticSearchAutos = new HashMap<>();
+    galacticSearchAutos.put(GalacticSearchChooserResult.A_RED, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedA));
+    galacticSearchAutos.put(GalacticSearchChooserResult.A_BLUE, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueA));
+    galacticSearchAutos.put(GalacticSearchChooserResult.B_RED, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedB));
+    galacticSearchAutos.put(GalacticSearchChooserResult.B_BLUE, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueB));
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
+
   @Override
   public void initialize() {
     result=GalacticSearchChooserResult.NONE;
     vision.resetGalacticSearchChooserResult();
     vision.setMode(VisionMode.GALACTIC_SEARCH_PATH_CHOOSER);
+
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,21 +72,8 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
   @Override
   public void end(boolean interrupted) {
     System.out.println("Scheduling " + result);
-    GalacticSearchAuto command = null;
-    switch (result) {
-      case A_RED:
-        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedA);
-        break;
-      case A_BLUE:
-        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueA);
-        break;
-      case B_RED:
-        command =new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedB);
-        break;
-      case B_BLUE:
-        command = new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueB);
-        break;
-    }
+    GalacticSearchAuto command = galacticSearchAutos.getOrDefault(result, null);
+    
     if(command != null){
       robotDrive.setPose(command.getInitialPose());
       command.schedule();
@@ -90,6 +89,6 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
 
   @Override
   public Pose2d getInitialPose() {
-    return new Pose2d(); // shouldn't be in this state for long
+    return initialPose; // shouldn't be in this state for long
   }
 }
