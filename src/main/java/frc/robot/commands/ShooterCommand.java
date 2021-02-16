@@ -39,7 +39,9 @@ public class ShooterCommand extends CommandBase {
   public enum ControlMethod {
     ACQUIRING, // Acquiring vision target
     SPIN_UP, // PIDF to desired RPM
-    HOLD, // switch to pure kF control
+    WAITING_FOR_STABILITY, //Wait two seconds to shoot
+    HOLD, // Keep the shooter wheel at specific RPM, check to see if all systems ready
+    FIRE, //Fire the shooter
   }
 
   ControlMethod currentControlMode;
@@ -108,54 +110,98 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (!foundTarget) {
+    if (currentControlMode == ControlMethod.ACQUIRING) {
       distance = shooter.vision.getDistance();
       if (distance != 0.0) {
-        // We found the target. Set the turret angle based on the vision system before
-        foundTarget = true;
-        currentControlMode = ControlMethod.SPIN_UP;
-        // adjust the turret and hood to align
+        foundTarget = true; // what is foundTarget used for
         angleError = shooter.vision.getRobotAngle();
         shooter.setTurretAdjusted(angleError);
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
         shooter.prepareShooter(distance);
+        currentControlMode = ControlMethod.SPIN_UP;
       }
     }
+
+    // if (!foundTarget) {
+    //   distance = shooter.vision.getDistance();
+    //   if (distance != 0.0) {
+    //     // We found the target. Set the turret angle based on the vision system before
+    //     foundTarget = true;
+    //     currentControlMode = ControlMethod.SPIN_UP;
+    //     // adjust the turret and hood to align
+    //     angleError = shooter.vision.getRobotAngle();
+    //     shooter.setTurretAdjusted(angleError);
+    //     shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
+    //     shooter.prepareShooter(distance);
+    //   }
+    // }
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
     if (currentControlMode == ControlMethod.SPIN_UP) {
-      // if not in range, then
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
-        // Timer starts when shooter is in range
-        if (startedTimerFlag) {
-          // 0.2 seconds after shooter speed is in range
-          if (Robot.time() - stableRPMTime > 0.2) {
-            currentControlMode = ControlMethod.HOLD;
-          }
-        // Loops here first in order to 
-        } else {
-          stableRPMTime = Robot.time();
-          startedTimerFlag = true;
-        }
-      }
-      else {
-        startedTimerFlag = false;
+        stableRPMTime = Robot.time();
+        currentControlMode = ControlMethod.WAITING_FOR_STABILITY;
       }
     }
-    else if (currentControlMode == ControlMethod.HOLD) {
-      if(setPid){
+
+    if (currentControlMode == ControlMethod.WAITING_FOR_STABILITY) {
+      if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
+        if (Robot.time() - stableRPMTime > 0.2) {
+          currentControlMode = ControlMethod.HOLD;
+        }
+      } else {
+        currentControlMode = ControlMethod.SPIN_UP;
+      }
+    }
+
+    // if (currentControlMode == ControlMethod.SPIN_UP) {
+    //   // if not in range, then
+    //   if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
+    //     // Timer starts when shooter is in range
+    //     if (startedTimerFlag) {
+    //       // 0.2 seconds after shooter speed is in range
+    //       if (Robot.time() - stableRPMTime > 0.2) {
+    //         currentControlMode = ControlMethod.HOLD;
+    //       }
+    //     // Loops here first in order to 
+    //     } else {
+    //       stableRPMTime = Robot.time();
+    //       startedTimerFlag = true;
+    //     }
+    //   }
+    //   else {
+    //     startedTimerFlag = false;
+    //   }
+    // }
+    // else if (currentControlMode == ControlMethod.HOLD) {
+    //   if(setPid){
+    //     pidTuner.HoldTune();
+    //   }
+    //   setPid = false;
+    // }
+
+    if (currentControlMode == ControlMethod.HOLD) {
+      if(setPid) {
         pidTuner.HoldTune();
       }
       setPid = false;
+      speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) || (Robot.time() - startTime > 3.5));
+      hoodOnTarget = Robot.time() - startTime > 0.75;
+      if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
+        currentControlMode = ControlMethod.FIRE;
+      }
     }
 
-  
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
-    hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+    // speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
+    // hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
-    // !carousel.backwards will need to be removed when the shooter is re-written
-    if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
+    // // !carousel.backwards will need to be removed when the shooter is re-written
+    // if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
+    //   rapidFire();
+    // }
+
+    if (currentControlMode == ControlMethod.FIRE) {
       rapidFire();
     }
   }
