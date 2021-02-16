@@ -40,8 +40,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
         // Define these here, but we may override them within the case statement so we can tune each
         // path individually
-        double maxSpeed = 2.5;
-        double maxAccel = 2.5;
+        double maxSpeed = 3.5;
+        double maxAccel = 3.5;
+
+        // This will make the robot slow down around turns
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
         switch (autoID) {
             case Barrel:
@@ -79,7 +82,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
         }
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
@@ -96,11 +98,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 configForward);
 
         System.out.println("DEBUG: AutoNav path " + autoID.name());
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
+        System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,

@@ -87,10 +87,10 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 configForward);
                   
         System.out.println("DEBUG: Bounce path");
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
-        System.out.println("DEBUG: Bounce path time = " + pathTime);
+        System.out.println("Path time = " + pathTime);
         
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,

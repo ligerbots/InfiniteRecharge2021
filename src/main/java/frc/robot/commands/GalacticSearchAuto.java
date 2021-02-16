@@ -47,8 +47,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
         // Define these here, but we may override them within the case statement so we can tune each
         // path individually
-        double maxSpeed = 2.5;
-        double maxAccel = 2.5;
+        double maxSpeed = 3.5;
+        double maxAccel = 3.5;
+
+        // This will make the robot slow down around turns
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
         switch (autoID) {
             case RedA:
@@ -82,8 +85,6 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 break;
         }
 
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
-
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
@@ -99,11 +100,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 configBackward);
 
         System.out.println("DEBUG: Galactic Search path " + autoID.name());
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
+        System.out.println("Path time = " + backTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

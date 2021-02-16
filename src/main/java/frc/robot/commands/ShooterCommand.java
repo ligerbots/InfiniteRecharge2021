@@ -55,7 +55,7 @@ public class ShooterCommand extends CommandBase {
     this.robotDrive = robotDrive;
     // this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
-    System.out.println("Shooter.carouselCommand = " + this.carouselCommand);
+    // System.out.println("Shooter.carouselCommand = " + this.carouselCommand);
     // this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
