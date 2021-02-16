@@ -132,8 +132,7 @@ public class ShooterCommand extends CommandBase {
           if (Robot.time() - stableRPMTime > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
-        }
-        else {
+        } else {
           stableRPMTime = Robot.time();
           startedTimerFlag = true;
         }
