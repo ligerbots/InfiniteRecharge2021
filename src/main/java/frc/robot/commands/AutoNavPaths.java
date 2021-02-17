@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
@@ -101,6 +102,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose, 
                 configForward);
 
+<<<<<<< HEAD
         System.out.println("DEBUG: AutoNav path " + autoID.name());
         System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
@@ -108,6 +110,19 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
 
+=======
+        if (Robot.isSimulation()) {
+            System.out.println("DEBUG: AutoNav path " + autoID.name());
+            System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+            // for (State state : backTrajectory.getStates()) {
+            // System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+            // }
+            System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
+            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+            writer.WriteTrajectory(forwardTrajectory);
+        }
+        
+>>>>>>> Add ability to write trajectory out and plot it on the field map.
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,
             robotDrive::getPose,

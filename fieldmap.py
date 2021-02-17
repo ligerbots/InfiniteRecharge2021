@@ -14,6 +14,7 @@ import logging
 import argparse
 import math
 import matplotlib.pyplot as plt
+import csv
 
 # unless otherwise noted, these values are from the Manual
 
@@ -82,6 +83,7 @@ def sc_y_pos(index):
         v = 30
     return v
 
+
 def draw_marker(x, y, color="orange"):
     logging.info(f'Marker: ({x:.3f}, {y:.3f})')
 
@@ -89,6 +91,7 @@ def draw_marker(x, y, color="orange"):
     c = plt.Circle((x, y), 2.5, fill=True, color=color, zorder=100)
     plt.gcf().gca().add_artist(c)
     return
+
 
 def draw_one_ball(x, y):
     logging.info(f'Ball: ({x:.3f}, {y:.3f})')
@@ -163,6 +166,7 @@ def draw_galactic_search(map_name):
         draw_one_ball(sc_x_pos(10), sc_y_pos("D"))
     return
 
+
 def draw_slalom():
     # set the plot area to be the size of the field
     axis1.set_xlim((0, sc_field_length))
@@ -183,6 +187,7 @@ def draw_slalom():
     draw_marker(sc_x_pos(8), sc_y_pos("D"))
     draw_marker(sc_x_pos(10), sc_y_pos("D"))
     return
+
 
 def draw_bounce():
     # set the plot area to be the size of the field
@@ -215,6 +220,7 @@ def draw_bounce():
     draw_marker(sc_x_pos(9), sc_y_pos("A"), "green")
     return
 
+
 def draw_lightspeed():
     # set the plot area to be the size of the field
     axis1.set_xlim((0, sc_field_length))
@@ -243,6 +249,7 @@ def draw_lightspeed():
     draw_marker(sc_x_pos(10), sc_y_pos("D"))
     return
 
+
 def draw_barrel():
     # set the plot area to be the size of the field
     axis1.set_xlim((0, sc_field_length))
@@ -260,6 +267,7 @@ def draw_barrel():
     draw_marker(sc_x_pos(5), sc_y_pos("D"))
     draw_marker(sc_x_pos(10), sc_y_pos("D"))
     return
+
 
 def draw_competition_map():
     '''Create the map for 2021 competition field'''
@@ -348,10 +356,23 @@ def draw_competition_map():
     return
 
 
+def plot_trajectory(trajfile):
+    with open(trajfile) as f:
+        incsv = csv.DictReader(f)
+        x = []
+        y = []
+        for row in incsv:
+            x.append(float(row['X']))
+            y.append(float(row['Y']))
+    plt.plot(x, y, 'red')
+    return
+
+
 map_choices = ('competition', 'redA', 'redB', 'blueA', 'blueB', "slalom", "bounce", "barrel", "lightspeed")
 
 parser = argparse.ArgumentParser(description='Output a PNG of a simple field map')
 parser.add_argument('--map', '-m', required=True, choices=map_choices, help='Which map to produce')
+parser.add_argument('--trajectory', '-t', help='Trajectory CSV')
 parser.add_argument('--verbose', '-v', default=0, action='count', help='Verbose')
 
 args = parser.parse_args()
@@ -379,6 +400,11 @@ else:
     logging.error(f"Map '{args.map}' not implemented")
     sys.exit(10)
 
+outname = f"fieldmap_{args.map}.png"
+if args.trajectory:
+    plot_trajectory(args.trajectory)
+    outname = f"{args.map}_traj.png"
+
 plt.axis('off')
-plt.savefig(f"fieldmap_{args.map}.png", bbox_inches='tight', pad_inches=0, dpi=200, transparent=True)
+plt.savefig(outname, bbox_inches='tight', pad_inches=0, dpi=200, transparent=True)
 plt.show()
