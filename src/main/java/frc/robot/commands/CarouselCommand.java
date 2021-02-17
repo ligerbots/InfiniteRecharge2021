@@ -18,7 +18,8 @@ public class CarouselCommand extends CommandBase {
   
   final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
-  final double earlySlotStopDelta = -7032/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+  // must be the carousel's overshoot ticks divided by the ticks in one fith of a rotation
+  final double earlySlotStopDelta = 1000/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   
   private static enum State {
     // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
@@ -52,7 +53,6 @@ public class CarouselCommand extends CommandBase {
   @Override
   public void execute() {
   
-  
     // Print state value to smart dashboard
     SmartDashboard.putString("carousel/state", state.toString());
 
@@ -78,7 +78,8 @@ public class CarouselCommand extends CommandBase {
         // if there are 3 or more balls in the carousel
         if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
           state = State.Full;
-        } else {
+        } 
+        else {
           moveToNextSlot();
         }
       }
@@ -87,7 +88,7 @@ public class CarouselCommand extends CommandBase {
     if (state == State.Rotating) {
       // checks if we have rotated to a position just ahead of the next slot
       // this allows the carousel to coast to a stop and still land at the right spot
-      if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
+      if (carousel.getSlot() >= targetSlot) {
         // remembers the time that we started to stop
         sensorStartTime = Robot.time();
         carousel.spin(0.0);
@@ -98,7 +99,7 @@ public class CarouselCommand extends CommandBase {
 
   private void moveToNextSlot(){
     // remembers the position of the next slot we are aiming for
-    targetSlot = Math.round(carousel.getSlot()) + 1.0;
+    targetSlot = Math.round(carousel.getSlot()) + 1.0 - earlySlotStopDelta;
     carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
     state = State.Rotating;
   }
