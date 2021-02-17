@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -93,12 +94,16 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 endPose, 
                 configBackward);
 
-        System.out.println("DEBUG: Galactic Search path " + autoID.name());
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
-        // for (State state : backTrajectory.getStates()) {
-        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        // }
-        System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
+        if ( Robot.isSimulation() ) {
+            System.out.println("DEBUG: Galactic Search path " + autoID.name());
+            System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+            // for (State state : backTrajectory.getStates()) {
+            // System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+            // }
+            System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
+            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+            writer.WriteTrajectory(backTrajectory);
+        }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
