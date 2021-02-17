@@ -102,7 +102,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose, 
                 configForward);
 
-<<<<<<< HEAD
         System.out.println("DEBUG: AutoNav path " + autoID.name());
         System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
@@ -110,7 +109,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
 
-=======
         if (Robot.isSimulation()) {
             System.out.println("DEBUG: AutoNav path " + autoID.name());
             System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
@@ -122,7 +120,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
             writer.WriteTrajectory(forwardTrajectory);
         }
         
->>>>>>> Add ability to write trajectory out and plot it on the field map.
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,
             robotDrive::getPose,

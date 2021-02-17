@@ -19,7 +19,7 @@ public class TrajectoryWriter {
 
     public TrajectoryWriter(String name) {
         m_name = name;
-        String filename = name + "_trajectory.csv";
+        String filename = "trajectory_" + name + ".csv";
 
         m_file = new File(filename);
         try {

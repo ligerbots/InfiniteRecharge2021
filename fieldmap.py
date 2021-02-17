@@ -403,7 +403,7 @@ else:
 outname = f"fieldmap_{args.map}.png"
 if args.trajectory:
     plot_trajectory(args.trajectory)
-    outname = f"{args.map}_traj.png"
+    outname = f"trajectory_{args.map}.png"
 
 plt.axis('off')
 plt.savefig(outname, bbox_inches='tight', pad_inches=0, dpi=200, transparent=True)

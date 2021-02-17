@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class BounceAuto extends SequentialCommandGroup implements AutoCommandInterface {
@@ -93,12 +94,28 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
                 configForward);
                   
+<<<<<<< HEAD
         System.out.println("DEBUG: Bounce path");
         System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
         System.out.println("Path time = " + pathTime);
         
+=======
+        if (Robot.isSimulation()) {
+            System.out.println("DEBUG: Bounce path");
+            System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+            double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
+                    + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
+            System.out.println("DEBUG: Bounce path time = " + pathTime);
+            TrajectoryWriter writer = new TrajectoryWriter("Bounce");
+            writer.WriteTrajectory(backTrajectory1);
+            writer.WriteTrajectory(forwardTrajectory1);
+            writer.WriteTrajectory(backTrajectory2);
+            writer.WriteTrajectory(forwardTrajectory2);
+        }
+
+>>>>>>> Add trajectory writing to all autos, and change filename.
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
             robotDrive::getPose,
