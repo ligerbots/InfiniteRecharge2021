@@ -181,6 +181,7 @@ public class DriveTrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
 
         SmartDashboard.putNumber("driveTrain/heading", getHeading());
+        SmartDashboard.putNumber("driveTrain/NavX gyro", getGyroAngle());
         SmartDashboard.putNumber("driveTrain/x position", getPose().getX());
         SmartDashboard.putNumber("driveTrain/y position", getPose().getY());
 
