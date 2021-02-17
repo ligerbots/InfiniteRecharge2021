@@ -146,7 +146,8 @@ public class Vision extends SubsystemBase {
         try {
             return GalacticSearchChooserResult.valueOf(result.toUpperCase().replace('-', '_'));
         } catch(Exception e) {
-            System.out.println("unknown result "+result);
+            if(!result.equals(""))
+                System.out.println("unknown result "+result);
         }
         return GalacticSearchChooserResult.NONE;
     }
