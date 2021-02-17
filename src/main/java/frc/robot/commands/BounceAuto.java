@@ -37,8 +37,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 10);
 
 
-        double maxSpeed = 25.0;
-        double maxAccel = 35.0;
+        double maxSpeed = 3.0;
+        double maxAccel = 3.0;
 
         TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
