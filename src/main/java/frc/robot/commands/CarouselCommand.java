@@ -19,7 +19,7 @@ public class CarouselCommand extends CommandBase {
   final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
   // must be the carousel's overshoot ticks divided by the ticks in one fith of a rotation
-  final double earlySlotStopDelta = 1000/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+  final double earlySlotStopDelta = 1830.0/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   
   private static enum State {
     // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor

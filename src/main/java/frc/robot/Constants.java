@@ -44,7 +44,7 @@ public final class Constants {
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
     public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
-    public static final int CAROUSEL_MAX_BALLS = 3;
+    public static final int CAROUSEL_MAX_BALLS = 6;
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
@@ -99,7 +99,7 @@ public final class Constants {
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 5.0;
 
-    public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
+    public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12615;
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
     public static final double WINCH_SPEED_FAST = 10.0; // winch speed for going fast
     public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
