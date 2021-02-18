@@ -84,21 +84,22 @@ def sc_y_pos(index):
     return v
 
 
+def draw_circle(x, y, color="orange", radius=2.5, zorder=100):
+    # zorder pulls the balls to the front, so they are on top of the lines
+    c = plt.Circle((x, y), radius, fill=True, color=color, zorder=zorder)
+    plt.gcf().gca().add_artist(c)
+    return
+
+
 def draw_marker(x, y, color="orange"):
     logging.info(f'Marker: ({x:.3f}, {y:.3f})')
-
-    # zorder pulls the balls to the front, so they are on top of the lines
-    c = plt.Circle((x, y), 2.5, fill=True, color=color, zorder=100)
-    plt.gcf().gca().add_artist(c)
+    draw_circle(x, y, color=color)
     return
 
 
 def draw_one_ball(x, y):
     logging.info(f'Ball: ({x:.3f}, {y:.3f})')
-
-    # zorder pulls the balls to the front, so they are on top of the lines
-    c = plt.Circle((x, y), ball_rad, fill=True, color='yellow', zorder=100)
-    plt.gcf().gca().add_artist(c)
+    draw_circle(x, y, radius=ball_rad, color='yellow')
     return
 
 
@@ -106,14 +107,10 @@ def draw_one_ball(x, y):
 # so draw a pair
 def draw_ball(x, y):
     logging.info(f'Ball: ({x:.3f}, {y:.3f})')
-
-    # zorder pulls the balls to the front, so they are on top of the lines
-    c = plt.Circle((x, y), ball_rad, fill=True, color='yellow', zorder=100)
-    plt.gcf().gca().add_artist(c)
+    draw_circle(x, y, radius=ball_rad, color='yellow')
 
     logging.info(f'Ball: ({field_length - x:.3f}, {field_width - y:.3f})')
-    c = plt.Circle((field_length - x, field_width - y), ball_rad, fill=True, color='yellow', zorder=100)
-    plt.gcf().gca().add_artist(c)
+    draw_circle(field_length - x, field_width - y, radius=ball_rad, color='yellow')
     return
 
 
@@ -362,8 +359,11 @@ def plot_trajectory(trajfile):
         x = []
         y = []
         for row in incsv:
-            x.append(float(row['X']))
-            y.append(float(row['Y']))
+            if int(row['IsWaypoint']):
+                draw_circle(float(row['X']), float(row['Y']), color='blue', radius=1)
+            else:
+                x.append(float(row['X']))
+                y.append(float(row['Y']))
     plt.plot(x, y, 'red')
     return
 

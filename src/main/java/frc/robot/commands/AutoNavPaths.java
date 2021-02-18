@@ -118,8 +118,9 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
             System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
             TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
             writer.WriteTrajectory(forwardTrajectory);
+            writer.WriteWaypoints(initialPose, waypointList, endPose);
         }
-        
+
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,
             robotDrive::getPose,
