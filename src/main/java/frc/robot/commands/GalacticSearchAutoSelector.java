@@ -58,8 +58,6 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
     result=GalacticSearchChooserResult.NONE;
     vision.resetGalacticSearchChooserResult();
     vision.setMode(VisionMode.GALACTIC_SEARCH_PATH_CHOOSER);
-
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.

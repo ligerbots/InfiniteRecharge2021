@@ -10,8 +10,6 @@ import frc.robot.Constants;
 import frc.robot.FieldMap;
 import frc.robot.Robot;
 
-
-
 public class Vision extends SubsystemBase {
     public enum VisionMode {
         INTAKE,                 // driver view through Intake camera
