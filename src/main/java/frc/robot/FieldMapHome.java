@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
@@ -42,5 +44,10 @@ public class FieldMapHome {
     public static Translation2d gridPoint(char row, int col, double x, double y){
         Translation2d translation = gridPoint(row,col);
         return new Translation2d(translation.getX() + Units.inchesToMeters(x), translation.getY() + Units.inchesToMeters(y));
+    }
+
+    // returns a waypoint that has x and y offsets as well as a rotation in radians.
+    public static Pose2d gridPoint(char row, int col, double x, double y, int radians){
+        return new Pose2d(gridPoint(row, col, x, y), new Rotation2d(radians));
     }
 }
