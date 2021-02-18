@@ -47,7 +47,10 @@ public class FieldMapHome {
     }
 
     // returns a waypoint that has x and y offsets determined by radius and angle
+    //angle is in degrees, 0 angle = 0 degrees
+    //clockwise = negative angle, counterclockwise = positive angle
+
     public static Translation2d gridpointPolar(char row, int col, double radius, double angle){
-        return gridPoint(row, col, radius * Math.cos(angle), radius*Math.sin(angle));
+        return gridPoint(row, col, radius * Math.cos(Units.degreesToRadians(angle)), radius*Math.sin(Units.degreesToRadians(angle)));
     }
 }
