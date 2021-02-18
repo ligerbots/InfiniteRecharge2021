@@ -174,7 +174,7 @@ public class ShooterCommand extends CommandBase {
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}
-  SmartDashboard.putString("shooter/Shooting", "Idle");
+    SmartDashboard.putString("shooter/Shooting", "Idle");
     
   }
 

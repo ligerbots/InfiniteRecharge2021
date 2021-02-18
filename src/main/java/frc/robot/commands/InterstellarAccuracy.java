@@ -25,9 +25,9 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 public class InterstellarAccuracy extends SequentialCommandGroup implements AutoCommandInterface {
-    Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
-    Rotation2d rotation270 = Rotation2d.fromDegrees(270.0);
-    Rotation2d rotation90 = Rotation2d.fromDegrees(90.0);
+    
+    final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
+    
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);

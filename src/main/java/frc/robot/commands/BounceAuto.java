@@ -32,9 +32,11 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand) {
         drivecommand.cancel();
 
-        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
-                Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
-                10);
+        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                       Constants.kvVoltSecondsPerMeter,
+                                       Constants.kaVoltSecondsSquaredPerMeter), 
+            Constants.kDriveKinematics, 10);
 
 
         double maxSpeed = 3.0;
@@ -43,10 +45,15 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint);
+                .setKinematics(Constants.kDriveKinematics)
+                    .addConstraint(autoVoltageConstraint)
+                    .addConstraint(centripetalAccelerationConstraint);
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(true);
+                .setKinematics(Constants.kDriveKinematics)
+                    .addConstraint(autoVoltageConstraint)
+                    .addConstraint(centripetalAccelerationConstraint)
+                    .setReversed(true);
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction

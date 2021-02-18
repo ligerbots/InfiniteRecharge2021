@@ -54,7 +54,7 @@ public class CarouselCommand extends CommandBase {
   public void execute() {
   
     // Print state value to smart dashboard
-    SmartDashboard.putString("carousel/state", state.toString());
+    SmartDashboard.putString("Carousel/state", state.toString());
 
     if (state == State.Full) {
       // if we have a full carousel, we do nothing and wait for a shooting command
