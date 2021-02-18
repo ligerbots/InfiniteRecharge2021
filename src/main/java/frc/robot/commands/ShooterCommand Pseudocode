@@ -1,0 +1,14 @@
+state = Acquiring
+
+State Acquiring:
+    Find target
+    state = Spin-up
+
+State Spin-up:
+
+
+State Hold-when-ready:
+
+
+State Hold:
+    

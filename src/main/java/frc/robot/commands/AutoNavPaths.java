@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
@@ -37,23 +38,35 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
+        // Define these here, but we may override them within the case statement so we can tune each
+        // path individually
+        double maxSpeed = 1.5;
+        double maxAccel = 1.0;
+
+        // This will make the robot slow down around turns
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
+
         switch (autoID) {
             case Barrel:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 5),
-                                       FieldMapHome.gridPoint('D', 6),
+                                       FieldMapHome.gridPoint('D', 6, -5, 0),
                                        FieldMapHome.gridPoint('E', 5, 0, 5),
-                                       FieldMapHome.gridPoint('D', 4, -5, 0),
-                                       FieldMapHome.gridPoint('C', 5, -10, 0),
-                                       FieldMapHome.gridPoint('C', 8),
-                                       FieldMapHome.gridPoint('B', 9),
-                                       FieldMapHome.gridPoint('A', 8),
-                                       FieldMapHome.gridPoint('B', 7),
-                                       FieldMapHome.gridPoint('D', 8, 0, -10),
-                                       FieldMapHome.gridPoint('E', 10, 0, 3),
-                                       FieldMapHome.gridPoint('D', 11, -1, 0),
+                                       FieldMapHome.gridPoint('D', 4, 5, 0),
+                                       FieldMapHome.gridPoint('C', 5, 0, -5),
+                                       FieldMapHome.gridPoint('C', 8, 0, 5),
+                                       FieldMapHome.gridPoint('B', 9, -5, 0),
+                                       FieldMapHome.gridPoint('A', 8, 0, 5),
+                                       FieldMapHome.gridPoint('B', 7, 5, 0),
+                                    //    FieldMapHome.gridPoint('D', 9, -15, 0),
+                                    //    FieldMapHome.gridPoint('D', 10, -15, 0),
+                                       FieldMapHome.gridPoint('D', 10, -20, -20),
+                                       FieldMapHome.gridPoint('D', 10, 20, -20),
+                                       FieldMapHome.gridPoint('D', 10, 20, 20),
+                                       FieldMapHome.gridPoint('C', 9)
+                                    //    FieldMapHome.gridPoint('D', 11, -5, 0),
                                        //FieldMapHome.gridPoint('C', 11, -7, 0),
-                                       FieldMapHome.gridPoint('C', 9, 10, 1)
+                                    //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
                 break;
@@ -78,11 +91,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        // Initial baseline
-        double maxSpeed = 2.0;
-        double maxAccel = 2.0;
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(false);
+                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
 
         Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -92,11 +102,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 configForward);
 
         System.out.println("DEBUG: AutoNav path " + autoID.name());
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
+        System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,

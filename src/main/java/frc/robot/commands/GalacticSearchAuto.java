@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
@@ -43,6 +44,14 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
         List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
+
+        // Define these here, but we may override them within the case statement so we can tune each
+        // path individually
+        double maxSpeed = 3.5;
+        double maxAccel = 3.5;
+
+        // This will make the robot slow down around turns
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
 
         switch (autoID) {
             case RedA:
@@ -80,11 +89,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
 
-        double maxSpeed = 2.5;
-        double maxAccel = 2.5;
-
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(true);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -94,11 +100,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 configBackward);
 
         System.out.println("DEBUG: Galactic Search path " + autoID.name());
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         // for (State state : backTrajectory.getStates()) {
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
-        System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
+        System.out.println("Path time = " + backTrajectory.getTotalTimeSeconds());
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

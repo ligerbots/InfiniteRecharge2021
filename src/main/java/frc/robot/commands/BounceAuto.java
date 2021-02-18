@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -31,19 +32,28 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand) {
         drivecommand.cancel();
 
-        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
-                Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
-                10);
+        TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                       Constants.kvVoltSecondsPerMeter,
+                                       Constants.kaVoltSecondsSquaredPerMeter), 
+            Constants.kDriveKinematics, 10);
 
 
-        double maxSpeed = 2.0;
+        double maxSpeed = 3.0;
         double maxAccel = 3.0;
 
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
+
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
+                .setKinematics(Constants.kDriveKinematics)
+                    .addConstraint(autoVoltageConstraint)
+                    .addConstraint(centripetalAccelerationConstraint);
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+                .setKinematics(Constants.kDriveKinematics)
+                    .addConstraint(autoVoltageConstraint)
+                    .addConstraint(centripetalAccelerationConstraint)
+                    .setReversed(true);
       
         Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
@@ -84,10 +94,10 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 configForward);
                   
         System.out.println("DEBUG: Bounce path");
-        System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
+        System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
-        System.out.println("DEBUG: Bounce path time = " + pathTime);
+        System.out.println("Path time = " + pathTime);
         
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
