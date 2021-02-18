@@ -99,7 +99,7 @@ public final class Constants {
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 5.0;
 
-    public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12615;
+    public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12615; // Calibrated Feb 17, 2021
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
     public static final double WINCH_SPEED_FAST = 10.0; // winch speed for going fast
     public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
