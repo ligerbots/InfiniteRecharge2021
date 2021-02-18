@@ -98,11 +98,12 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             System.out.println("DEBUG: Galactic Search path " + autoID.name());
             System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
             // for (State state : backTrajectory.getStates()) {
-            // System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+            //     System.out.println("DEBUG: backTrajectory STATE " + state.poseMeters);
             // }
             System.out.println("DEBUG: Galactic Search path time = " + backTrajectory.getTotalTimeSeconds());
             TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
             writer.WriteTrajectory(backTrajectory);
+            writer.WriteWaypoints(initialPose, waypointList, endPose);
         }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
