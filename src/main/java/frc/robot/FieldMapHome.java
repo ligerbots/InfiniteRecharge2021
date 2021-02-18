@@ -46,8 +46,8 @@ public class FieldMapHome {
         return new Translation2d(translation.getX() + Units.inchesToMeters(x), translation.getY() + Units.inchesToMeters(y));
     }
 
-    // returns a waypoint that has x and y offsets as well as a rotation in radians.
-    public static Pose2d gridPoint(char row, int col, double x, double y, int radians){
-        return new Pose2d(gridPoint(row, col, x, y), new Rotation2d(radians));
+    // returns a waypoint that has x and y offsets determined by radius and angle
+    public static Translation2d gridpointPolar(char row, int col, double radius, double angle){
+        return gridPoint(row, col, radius * Math.cos(angle), radius*Math.sin(angle));
     }
 }
