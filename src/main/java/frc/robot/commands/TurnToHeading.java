@@ -14,16 +14,14 @@ public class TurnToHeading extends CommandBase {
   /**
    * Creates a new FaceShootingTarget.
    */
+  DriveTrain driveTrain;
+  DriveCommand driveCommand;
   double acceptableError;
-
   double targetHeading;
   double deltaAngle;
 
-  DriveTrain robotDrive;
-  DriveCommand driveCommand;
-
-  public TurnToHeading(DriveTrain robotDrive, double acceptableError, DriveCommand driveCommand, double targetHeading) {
-    this.robotDrive = robotDrive;
+  public TurnToHeading(DriveTrain driveTrain, DriveCommand driveCommand, double targetHeading, double acceptableError) {
+    this.driveTrain = driveTrain;
     this.acceptableError = acceptableError;
     this.driveCommand = driveCommand;
     this.targetHeading = targetHeading;
@@ -33,7 +31,9 @@ public class TurnToHeading extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveCommand.cancel();   
+    if (driveCommand != null) driveCommand.cancel();
+
+    // set deltaAngle high to make sure it does at least one loop 
     deltaAngle = Math.PI;
   }
 
@@ -41,23 +41,21 @@ public class TurnToHeading extends CommandBase {
 
   @Override
   public void execute() {
-      double currentHeading = robotDrive.getHeading();
+      double currentHeading = driveTrain.getHeading();
       deltaAngle = currentHeading - targetHeading;
-      if(deltaAngle > 180)  deltaAngle-= 360;
-      if(deltaAngle < -180)  deltaAngle+= 360;
-      double turnspeed=robotDrive.turnSpeedCalc(deltaAngle);
+      if (deltaAngle > 180.0)  deltaAngle -= 360.0;
+      if (deltaAngle < -180.0)  deltaAngle += 360.0;
+      double turnspeed = driveTrain.turnSpeedCalc(deltaAngle);
 
-      // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
-      // curvature drive doesn't work so use arcade drive
-      robotDrive.arcadeDrive(0, turnspeed);
-
+      // curvature drive cannot turn without moving, so make sure to use arcade drive
+      driveTrain.arcadeDrive(0, turnspeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    robotDrive.allDrive(0, 0, false);
-    driveCommand.schedule();
+    driveTrain.allDrive(0, 0, false);
+    if (driveCommand != null) driveCommand.schedule();
   }
 
   // Returns true when the command should end.

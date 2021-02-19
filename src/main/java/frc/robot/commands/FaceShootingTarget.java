@@ -51,10 +51,9 @@ public class FaceShootingTarget extends CommandBase {
     oldOldCheck = false;
     check = false;
     oldCheck = false;
-    driveCommand.cancel();
+    if (driveCommand != null) driveCommand.cancel();
     shooter.vision.setMode(VisionMode.GOALFINDER);
     startingAngle = robotDrive.getHeading();
-    double distance = shooter.vision.getDistance();   
     initialAngleOffset = shooter.vision.getRobotAngle();
     startTime = Robot.time();
     System.out.println("Initial initial heading: " + startingAngle);
@@ -89,10 +88,10 @@ public class FaceShootingTarget extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("FACE SHOOTING FINISHED");
     System.out.println("Current Heading: " + robotDrive.getHeading() + System.getProperty("line.separator") + 
-    "Target Angle: " + (startingAngle - initialAngleOffset));
+        "Target Angle: " + (startingAngle - initialAngleOffset));
+
     robotDrive.allDrive(0, 0, false);
-    // Robot.angleErrorAfterTurn = currentHeading - (startingAngle - initialAngleOffset);
-    driveCommand.schedule(); //TODO comment this back out
+    if (driveCommand != null) driveCommand.schedule();
   }
 
   // Returns true when the command should end.

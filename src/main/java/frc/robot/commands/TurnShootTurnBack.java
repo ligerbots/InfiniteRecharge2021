@@ -7,24 +7,38 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class TurnShootTurnBack extends SequentialCommandGroup {
-  /**
-   * Creates a new TurnAndShoot.
-   */
-  public TurnShootTurnBack(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
-    double originalHeading = robotDrive.getHeading();
-    addCommands(new FaceShootingTarget(robotDrive, 1.5, driveCommand, shooter),
-               new ShooterCommand(shooter, carousel, robotDrive,/* 0,*/ carouselCommand,/* driveCommand,*/ false),
-               new TurnToHeading(robotDrive, 1.5, driveCommand, originalHeading));
-  }
+    /**
+     * Creates a new TurnAndShoot.
+     */
+    Command m_driveCommand;
+
+    public TurnShootTurnBack(DriveTrain driveTrain, Shooter shooter, Carousel carousel, 
+            CarouselCommand carouselCommand, DriveCommand driveCommand) 
+    {
+        // We don't want the drive command turned on and off in the middle, so handle it here
+        m_driveCommand = driveCommand;
+        
+        double originalHeading = driveTrain.getHeading();
+        addCommands(new FaceShootingTarget(driveTrain, 1.5, null, shooter),
+                    new ShooterCommand(shooter, carousel, driveTrain, carouselCommand, false),
+                    new TurnToHeading(driveTrain, null, originalHeading, 1.5));
+    }
+
+    @Override
+    public void initialize() {
+        if (m_driveCommand != null) m_driveCommand.cancel();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (m_driveCommand != null) m_driveCommand.schedule();
+    }
 }
