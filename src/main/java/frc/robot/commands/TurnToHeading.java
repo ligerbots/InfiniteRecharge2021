@@ -15,15 +15,14 @@ public class TurnToHeading extends CommandBase {
    * Creates a new FaceShootingTarget.
    */
   DriveTrain driveTrain;
-  DriveCommand driveCommand;
+
   double acceptableError;
   double targetHeading;
   double deltaAngle;
 
-  public TurnToHeading(DriveTrain driveTrain, DriveCommand driveCommand, double targetHeading, double acceptableError) {
+  public TurnToHeading(DriveTrain driveTrain, double targetHeading, double acceptableError) {
     this.driveTrain = driveTrain;
     this.acceptableError = acceptableError;
-    this.driveCommand = driveCommand;
     this.targetHeading = targetHeading;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,8 +30,6 @@ public class TurnToHeading extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (driveCommand != null) driveCommand.cancel();
-
     // set deltaAngle high to make sure it does at least one loop 
     deltaAngle = Math.PI;
   }
@@ -55,7 +52,6 @@ public class TurnToHeading extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveTrain.allDrive(0, 0, false);
-    if (driveCommand != null) driveCommand.schedule();
   }
 
   // Returns true when the command should end.
