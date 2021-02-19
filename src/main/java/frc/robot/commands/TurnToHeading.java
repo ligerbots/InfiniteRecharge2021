@@ -14,7 +14,6 @@ public class TurnToHeading extends CommandBase {
   /**
    * Creates a new FaceShootingTarget.
    */
-  double initialAngleOffset;
   double acceptableError;
 
   double targetHeading;
