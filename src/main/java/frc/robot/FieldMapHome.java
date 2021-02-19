@@ -43,4 +43,13 @@ public class FieldMapHome {
         Translation2d translation = gridPoint(row,col);
         return new Translation2d(translation.getX() + Units.inchesToMeters(x), translation.getY() + Units.inchesToMeters(y));
     }
+
+    // returns a waypoint that has x and y offsets determined by radius and angle
+    //angle is in degrees, 0 angle = 0 degrees
+    //clockwise = negative angle, counterclockwise = positive angle
+
+    public static Translation2d gridpointPolar(char row, int col, double radius, double angle){
+        double radian = Units.degreesToRadians(angle);
+        return gridPoint(row, col, radius * Math.cos(radian), radius*Math.sin(radian));
+    }
 }
