@@ -7,13 +7,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision.VisionMode;
 
 public class TurnToHeading extends CommandBase {
   /**
@@ -41,6 +36,7 @@ public class TurnToHeading extends CommandBase {
   public void initialize() {
     driveCommand.cancel();   
     deltaAngle = Math.PI;
+    System.out.println("RUNNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,9 +47,12 @@ public class TurnToHeading extends CommandBase {
       deltaAngle = currentHeading - targetHeading;
       if(deltaAngle > 180)  deltaAngle-= 360;
       if(deltaAngle < -180)  deltaAngle+= 360;
-      
+      double turnspeed=robotDrive.turnSpeedCalc(deltaAngle);
+      System.out.println(turnspeed);
+
       // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
-      robotDrive.allDrive(0, robotDrive.turnSpeedCalc(deltaAngle), false);
+      // curvature drive doesn't work so use arcade drive
+      robotDrive.arcadeDrive(0, turnspeed);
 
   }
 

@@ -72,7 +72,7 @@ public class FaceShootingTarget extends CommandBase {
       currentHeading = robotDrive.getHeading();
       check = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldCheck;
       // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
-      robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)), false);
+      robotDrive.arcadeDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)));
 
       oldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldOldCheck;
 
