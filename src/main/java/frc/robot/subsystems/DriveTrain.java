@@ -221,6 +221,11 @@ public class DriveTrain extends SubsystemBase {
         differentialDrive.curvatureDrive(throttle, -rotate, false);
     }
 
+    // Raw access to arcade drive (use only for auto routines)
+    public void arcadeDrive(double throttle, double rotate) {
+        differentialDrive.arcadeDrive(throttle, -rotate, false);
+    }
+
     public int getLeftEncoderTicks () {
         return leftEncoder.get();
     }
