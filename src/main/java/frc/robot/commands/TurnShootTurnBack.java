@@ -29,7 +29,7 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
         double originalHeading = driveTrain.getHeading();
         addCommands(new FaceShootingTarget(driveTrain, 1.5, null, shooter),
                     new ShooterCommand(shooter, carousel, driveTrain, carouselCommand, false),
-                    new TurnToHeading(driveTrain, null, originalHeading, 1.5));
+                    new TurnToHeading(driveTrain, originalHeading, 1.5));
     }
 
     @Override
