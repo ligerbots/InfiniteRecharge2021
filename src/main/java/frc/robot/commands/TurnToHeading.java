@@ -36,7 +36,6 @@ public class TurnToHeading extends CommandBase {
   public void initialize() {
     driveCommand.cancel();   
     deltaAngle = Math.PI;
-    System.out.println("RUNNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,7 +47,6 @@ public class TurnToHeading extends CommandBase {
       if(deltaAngle > 180)  deltaAngle-= 360;
       if(deltaAngle < -180)  deltaAngle+= 360;
       double turnspeed=robotDrive.turnSpeedCalc(deltaAngle);
-      System.out.println(turnspeed);
 
       // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
       // curvature drive doesn't work so use arcade drive
