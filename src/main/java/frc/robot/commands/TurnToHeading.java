@@ -40,12 +40,14 @@ public class TurnToHeading extends CommandBase {
   public void initialize() {
     // set deltaAngle high to make sure it does at least one loop 
     deltaAngle = Math.PI;
+    System.out.println("TurnToHeading initHeading " + driveTrain.getHeading() + " targetHeading " + targetHeading);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
 
   @Override
   public void execute() {
+      // System.out.println("TurnToHeading.exec heading" + driveTrain.getHeading());
       double currentHeading = driveTrain.getHeading();
       deltaAngle = currentHeading - targetHeading;
       if (deltaAngle > 180.0)  deltaAngle -= 360.0;
@@ -65,6 +67,7 @@ public class TurnToHeading extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // System.out.println("Turn.isFinished " + deltaAngle);
     return Math.abs(deltaAngle) < acceptableError;
   }
 }

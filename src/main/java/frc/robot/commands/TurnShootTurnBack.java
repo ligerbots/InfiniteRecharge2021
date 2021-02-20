@@ -41,11 +41,20 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
         if (m_driveCommand != null) m_driveCommand.cancel();
 
         double originalHeading = m_driveTrain.getHeading();
+        System.out.println("TurnShootTurnBack origHeading = " + originalHeading);
         m_turnCmd.setTargetHeading(originalHeading);
+
+        // SeqCommandGroup has an initialize() method, which has to be called.
+        // This initializes the first command (FaceShooter), so do this after my init stuff.
+        super.initialize();
     }
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
+
+        if (interrupted)
+            System.out.println("*** TurnShootTurnBack interrupted");
         if (m_driveCommand != null) m_driveCommand.schedule();
     }
 }
