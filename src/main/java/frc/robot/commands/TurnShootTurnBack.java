@@ -29,9 +29,9 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
         m_driveCommand = driveCommand;
         m_driveTrain = driveTrain;
 
-        m_turnCmd = new TurnToHeading(driveTrain, 1.5);
+        m_turnCmd = new TurnToHeading(driveTrain, 1.0);
 
-        addCommands(new FaceShootingTarget(driveTrain, 1.5, null, shooter),
+        addCommands(new FaceShootingTarget(driveTrain, 3.0, null, shooter),
                     new ShooterCommand(shooter, carousel, driveTrain, carouselCommand, false),
                     m_turnCmd);
     }
