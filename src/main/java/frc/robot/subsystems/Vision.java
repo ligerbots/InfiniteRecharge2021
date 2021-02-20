@@ -16,7 +16,8 @@ public class Vision extends SubsystemBase {
         SHOOTER,                // driver view through Shooter camera
         GOALFINDER,
         BALLFINDER,
-        HOPPERFINDER
+        HOPPERFINDER,
+        GALACTIC_SEARCH_PATH_CHOOSER,
     }
 
     private static final double[] EMPTY_TARGET_INFO = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -67,6 +68,11 @@ public class Vision extends SubsystemBase {
                 targetInfoSim[3] = 0;
                 targetInfoSim[4] = 0;
             }
+        } else if(getMode() == VisionMode.GALACTIC_SEARCH_PATH_CHOOSER) {
+            // for now assume always a-red path
+
+            SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");
+            targetInfoSim[1] = 1;
         } else {
             targetInfoSim[1] = 1;
             targetInfoSim[3] = 0;
@@ -116,6 +122,31 @@ public class Vision extends SubsystemBase {
     public double getRobotAngle() {
         double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
         return Math.toDegrees(visionData[4]);
+    }
+
+
+    public enum GalacticSearchChooserResult{
+        A_RED,
+        A_BLUE,
+        B_RED,
+        B_BLUE,
+        NONE,
+    }
+
+    public void resetGalacticSearchChooserResult(){
+        SmartDashboard.putString("vision/galactic_search_path_chooser/result", ""); //ensure that old results are not used
+    }
+    public GalacticSearchChooserResult getGalacticSearchChooserResult(){
+        if(!getStatus())return GalacticSearchChooserResult.NONE;
+
+        String result = SmartDashboard.getString("vision/galactic_search_path_chooser/result", "");
+
+        try {
+            return GalacticSearchChooserResult.valueOf(result.toUpperCase().replace('-', '_'));
+        } catch(Exception e) {
+            if(!result.equals("")) System.out.println("unknown result "+result);
+        }
+        return GalacticSearchChooserResult.NONE;
     }
 
     public void setLedRing (boolean on) {
