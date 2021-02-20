@@ -19,22 +19,29 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
      * Creates a new TurnAndShoot.
      */
     Command m_driveCommand;
+    DriveTrain m_driveTrain;
+    TurnToHeading m_turnCmd;
 
     public TurnShootTurnBack(DriveTrain driveTrain, Shooter shooter, Carousel carousel, 
             CarouselCommand carouselCommand, DriveCommand driveCommand) 
     {
         // We don't want the drive command turned on and off in the middle, so handle it here
         m_driveCommand = driveCommand;
-        
-        double originalHeading = driveTrain.getHeading();
+        m_driveTrain = driveTrain;
+
+        m_turnCmd = new TurnToHeading(driveTrain, 1.5);
+
         addCommands(new FaceShootingTarget(driveTrain, 1.5, null, shooter),
                     new ShooterCommand(shooter, carousel, driveTrain, carouselCommand, false),
-                    new TurnToHeading(driveTrain, originalHeading, 1.5));
+                    m_turnCmd);
     }
 
     @Override
     public void initialize() {
         if (m_driveCommand != null) m_driveCommand.cancel();
+
+        double originalHeading = m_driveTrain.getHeading();
+        m_turnCmd.setTargetHeading(originalHeading);
     }
 
     @Override

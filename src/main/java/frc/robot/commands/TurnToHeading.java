@@ -27,6 +27,14 @@ public class TurnToHeading extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  public TurnToHeading(DriveTrain driveTrain, double acceptableError) {
+    this(driveTrain, 0, acceptableError);
+  }
+
+  public void setTargetHeading(double targetHeading) {
+    this.targetHeading = targetHeading;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
