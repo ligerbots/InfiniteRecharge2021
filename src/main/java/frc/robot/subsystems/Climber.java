@@ -251,7 +251,7 @@ public class Climber extends SubsystemBase {
        return shoulderEncoder.get();
    }
 
-   public boolean shoulderAtMinHeight(){
+   public boolean shoulderBelowMinHeight(){
        return shoulderEncoder.get() < Constants.SHOULDER_MIN_VELOCITY_HEIGHT;
    }
 
