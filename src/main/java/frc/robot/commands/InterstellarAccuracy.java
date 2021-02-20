@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -30,21 +32,33 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
+    private Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, 0), rotation180);
     // Center of robot is 69" from wall
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 9, 0), rotation180);
+    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation180);
 
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
         SmartDashboard.putBoolean("Interstellar", false);
         drivecommand.cancel();
 
+        double maxSpeed = 1.5;
+        double maxAccel = 1.0;
+
+        // This will make the robot slow down around turns. Probably not necessary for this Auto, but can't hurt.
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
+
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
-        TrajectoryConfig configForward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
-        TrajectoryConfig configBackward = new TrajectoryConfig(SmartDashboard.getNumber("AutoMaxSpeed",1.75), SmartDashboard.getNumber("AutoMaxAcceleration",1.5))
-                .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
+        TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
+            .setKinematics(Constants.kDriveKinematics)
+            .addConstraint(autoVoltageConstraint)
+            .addConstraint(centripetalAccelerationConstraint)
+            .setReversed(false);
+        TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
+            .setKinematics(Constants.kDriveKinematics)
+            .addConstraint(autoVoltageConstraint)
+            .addConstraint(centripetalAccelerationConstraint)
+            .setReversed(true);
 
     
         // RamseteCommand ramsete1forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), configForward, robotDrive);

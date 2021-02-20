@@ -64,7 +64,7 @@ public class ShooterCommand extends CommandBase {
 
   public void rapidFire() {
     shooter.shoot();
-    carousel.spin(0.8);
+    carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
   }
 
   // Called when the command is initially scheduled.
