@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -17,7 +18,8 @@ public class CarouselCommand extends CommandBase {
   
   final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
-  final double earlySlotStopDelta = 0.04;
+  // must be the carousel's overshoot ticks divided by the ticks in one fith of a rotation
+  final double earlySlotStopDelta = 1830.0/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   
   private static enum State {
     // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
@@ -35,14 +37,25 @@ public class CarouselCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // every time the command is remade, the robot sets its state to waiting for ball
-    state = State.WaitingForBall;
+    // check the carousel is on the center of a slot
+    double slotError = Math.abs(Math.round(carousel.getSlot()) - carousel.getSlot());
+    if (slotError <= 0.1){
+      // carousel is aligned, wait for ball
+      state = State.WaitingForBall;
+    }
+    else{
+      // carousel not aligned, rotate to the next slot
+      moveToNextSlot();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
   
+    // Print state value to smart dashboard
+    SmartDashboard.putString("Carousel/state", state.toString());
+
     if (state == State.Full) {
       // if we have a full carousel, we do nothing and wait for a shooting command
       return;
@@ -65,11 +78,9 @@ public class CarouselCommand extends CommandBase {
         // if there are 3 or more balls in the carousel
         if (carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS) {
           state = State.Full;
-        } else {
-          // remembers the position of the next slot we are aiming for
-          targetSlot = Math.round(carousel.getSlot()) + 1.0;
-          carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
-          state = State.Rotating;
+        } 
+        else {
+          moveToNextSlot();
         }
       }
     }
@@ -77,13 +88,20 @@ public class CarouselCommand extends CommandBase {
     if (state == State.Rotating) {
       // checks if we have rotated to a position just ahead of the next slot
       // this allows the carousel to coast to a stop and still land at the right spot
-      if (carousel.getSlot() >= targetSlot - earlySlotStopDelta) {
+      if (carousel.getSlot() >= targetSlot) {
         // remembers the time that we started to stop
         sensorStartTime = Robot.time();
         carousel.spin(0.0);
         state = State.WaitingForSensor;
       }
     }   
+  }
+
+  private void moveToNextSlot(){
+    // remembers the position of the next slot we are aiming for
+    targetSlot = Math.round(carousel.getSlot()) + 1.0 - earlySlotStopDelta;
+    carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+    state = State.Rotating;
   }
 
   // Called once the command ends or is interrupted.

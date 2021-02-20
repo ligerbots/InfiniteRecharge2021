@@ -51,10 +51,11 @@ public class ShooterCommand extends CommandBase {
     addRequirements(shooter);
     this.carousel = carousel;
     // The following statement will cause the CarouselCommand to be interrupted. This is good.
-    addRequirements(carousel);
+    // addRequirements(carousel);
     this.robotDrive = robotDrive;
     // this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
+    // System.out.println("Shooter.carouselCommand = " + this.carouselCommand);
     // this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
@@ -63,12 +64,15 @@ public class ShooterCommand extends CommandBase {
 
   public void rapidFire() {
     shooter.shoot();
-    carousel.spin(0.8);
+    carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    SmartDashboard.putString("shooter/Shooting", "Shoot");
+
     foundTarget = false;
     shooterTargetSpeed = 0.0;
     // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
@@ -78,7 +82,7 @@ public class ShooterCommand extends CommandBase {
     // driveCommand.cancel();
     startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
-    // carouselCommand.cancel();
+    carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
     pidTuner.spinUpTune();
@@ -128,8 +132,7 @@ public class ShooterCommand extends CommandBase {
           if (Robot.time() - stableRPMTime > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
-        }
-        else {
+        } else {
           stableRPMTime = Robot.time();
           startedTimerFlag = true;
         }
@@ -164,12 +167,15 @@ public class ShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     shooter.vision.setMode(VisionMode.INTAKE);
-    carousel.resetBallCount();
     carousel.spin(0.0);
+    carousel.resetBallCount();
     carouselCommand.schedule();
+    System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
     //}
+    SmartDashboard.putString("shooter/Shooting", "Idle");
+    
   }
 
   // Returns true when the command should end.

@@ -38,8 +38,8 @@ public class Shooter extends SubsystemBase {
     CANPIDController pidController;
 
     public Vision vision;
-    public int RPMAdjustment = 0;
-    public int HoodAdjustment = 0;
+    public int rpmAdjustment = 0;
+    public int hoodAdjustment = 0;
     public double angleErrorAfterTurn = 0;
 
     public Shooter(Vision vision) {
@@ -74,32 +74,33 @@ public class Shooter extends SubsystemBase {
         // Reset Smart Dashboard for shooter test
         SmartDashboard.putString("shooter/Status", "Idle");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().length() == 0) continue;
-                String values_str[] = line.split(",");
+        // try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
+        //     String line;
+        //     while ((line = br.readLine()) != null) {
+        //         if (line.trim().length() == 0) continue;
+        //         String values_str[] = line.split(",");
 
-                double values[] = new double[values_str.length];
-                for (int i = 0; i < values.length; i++) {
-                    values[i] = Double.parseDouble(values_str[i].trim());
-                }               
+        //         double values[] = new double[values_str.length];
+        //         for (int i = 0; i < values.length; i++) {
+        //             values[i] = Double.parseDouble(values_str[i].trim());
+        //         }               
 
-                distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
-            }
-        }
-        catch (Exception e) {
-            System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
-            System.err.println("Using original hard-coded table instead");
+        //         distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
+        //     }
+        // }
+        // catch (Exception e) {
+            // System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
+            // System.err.println("Using original hard-coded table instead");
 
-            distanceLookUp.put(112.6, new Double[] {5500.0, 90.0});
-            distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
-            distanceLookUp.put(168.9, new Double[] {6000.0, 70.0});
-            distanceLookUp.put(227.0, new Double[] {7000.0, 65.0});
-            distanceLookUp.put(235.2, new Double[] {7500.0, 55.0});            
-            distanceLookUp.put(253.4, new Double[] {7500.0, 60.0});
-            distanceLookUp.put(318.1, new Double[] {8000.0, 60.0});
-        }
+            distanceLookUp.put(74.0, new Double[] {5500.0, 100.0});
+            distanceLookUp.put(123.6, new Double[] {6000.0, 80.0});
+            // distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
+            distanceLookUp.put(174.9, new Double[] {7500.0, 65.0});
+            distanceLookUp.put(227.0, new Double[] {8000.0, 60.0});
+            distanceLookUp.put(235.2, new Double[] {8500.0, 55.0});            
+            distanceLookUp.put(253.4, new Double[] {8500.0, 60.0});
+            distanceLookUp.put(318.1, new Double[] {9000.0, 60.0});
+        // }
       
         // The relative setting for non-zero angles needs to be recomputed if the zero setting chenges,
         // but at least we'll be close
@@ -126,8 +127,9 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("shooter/RPM", getSpeed());
         SmartDashboard.putNumber("shooter/current", motor2.getOutputCurrent());
-        SmartDashboard.putNumber("shooter/Hood_Adjustment", HoodAdjustment);
-        SmartDashboard.putNumber("shooter/RPM_Adjustment", RPMAdjustment);
+        SmartDashboard.putNumber("shooter/distance", vision.getDistance());
+        SmartDashboard.putNumber("shooter/Hood_Adjustment", hoodAdjustment);
+        SmartDashboard.putNumber("shooter/RPM_Adjustment", rpmAdjustment);
         SmartDashboard.putNumber("shooter/Output_Voltage", motor2.getAppliedOutput());
     }
 
@@ -189,11 +191,11 @@ public class Shooter extends SubsystemBase {
 
             // Charles' calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+            double rpmAdjustment = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
 
             System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
-                ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), result);
-            return result/* + Robot.RPMAdjustment*/;
+                ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), rpmAdjustment);
+            return rpmAdjustment;
         }
         else {
             System.out.println("Shooter: floorEntry or ceilingEntry was null");
@@ -209,10 +211,10 @@ public class Shooter extends SubsystemBase {
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
-            System.out.format(" hood %3.0f%n", result);
+            double hoodAdjustment = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+            System.out.format(" hood %3.0f%n", hoodAdjustment);
 
-            return result + HoodAdjustment;
+            return hoodAdjustment;
         }
         else {
             return 60;
