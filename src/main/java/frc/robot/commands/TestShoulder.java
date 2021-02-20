@@ -25,8 +25,11 @@ public class TestShoulder extends CommandBase {
 
   @Override
   public void execute() {
-    if(!climber.shoulderBelowMinHeight()) {
-      climber.shoulder.setVoltage(-0.1);
+    if(!climber.shoulderBelowHeight(15.0)) {
+      climber.shoulder.setVoltage(-3.0);
+    }
+    else {
+      climber.shoulder.setVoltage(-0.3);
     }
   }
     
@@ -34,6 +37,7 @@ public class TestShoulder extends CommandBase {
   public void end(boolean interrupted) {
       climber.shoulder.setVoltage(0.0);
       climber.shoulder.setIdleMode(IdleMode.kCoast);
+      System.out.println("Test Shoulder ended");
   }
   // Returns true when the command should end.
   @Override
