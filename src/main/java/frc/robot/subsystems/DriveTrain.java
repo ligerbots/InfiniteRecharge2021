@@ -221,6 +221,11 @@ public class DriveTrain extends SubsystemBase {
         differentialDrive.curvatureDrive(throttle, -rotate, false);
     }
 
+    // Raw access to arcade drive (use only for auto routines)
+    public void arcadeDrive(double throttle, double rotate) {
+        differentialDrive.arcadeDrive(throttle, -rotate, false);
+    }
+
     public int getLeftEncoderTicks () {
         return leftEncoder.get();
     }
@@ -242,10 +247,10 @@ public class DriveTrain extends SubsystemBase {
             turnSpeed = 0.13;
         }
         else if (absErr > 5.0) {
-            turnSpeed = 0.07;
+            turnSpeed = 0.1; //0.07;
         }
         else {
-            turnSpeed = 0.065;
+            turnSpeed = 0.1; //0.065;
         }
 
         return turnSpeed * Math.signum(angleError);
