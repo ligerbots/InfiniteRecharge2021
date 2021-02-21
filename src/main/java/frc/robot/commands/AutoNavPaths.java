@@ -108,14 +108,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
-
         if (Robot.isSimulation()) {
-            System.out.println("DEBUG: AutoNav path " + autoID.name());
-            System.out.println("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel);
-            // for (State state : backTrajectory.getStates()) {
-            // System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-            // }
-            System.out.println("DEBUG: AutoNav path time = " + forwardTrajectory.getTotalTimeSeconds());
             TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
             writer.WriteTrajectory(forwardTrajectory);
             writer.WriteWaypoints(initialPose, waypointList, endPose);
