@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -105,6 +106,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + backTrajectory.getTotalTimeSeconds());
+        if ( Robot.isSimulation() ) {
+            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+            writer.WriteTrajectory(backTrajectory);
+            writer.WriteWaypoints(initialPose, waypointList, endPose);
+        }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

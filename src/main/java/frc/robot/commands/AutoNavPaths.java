@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
@@ -107,6 +108,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
+        if (Robot.isSimulation()) {
+            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+            writer.WriteTrajectory(forwardTrajectory);
+            writer.WriteWaypoints(initialPose, waypointList, endPose);
+        }
 
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,

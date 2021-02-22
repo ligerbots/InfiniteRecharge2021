@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class BounceAuto extends SequentialCommandGroup implements AutoCommandInterface {
@@ -98,7 +99,14 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
         System.out.println("Path time = " + pathTime);
-        
+        if (Robot.isSimulation()) {
+            TrajectoryWriter writer = new TrajectoryWriter("Bounce");
+            writer.WriteTrajectory(backTrajectory1);
+            writer.WriteTrajectory(forwardTrajectory1);
+            writer.WriteTrajectory(backTrajectory2);
+            writer.WriteTrajectory(forwardTrajectory2);
+        }
+
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
             robotDrive::getPose,
