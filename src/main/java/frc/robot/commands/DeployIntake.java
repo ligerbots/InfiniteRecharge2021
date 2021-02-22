@@ -11,17 +11,20 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 public class DeployIntake extends CommandBase {
-    Climber climber;
-  //tests to see if we have started deploying the robot yet ;P
-    boolean started = false;
-    public DeployIntake(Climber climber){
-      this.climber = climber;
-    }
+  Climber climber;
+  boolean started;
+  final static double unhookIntakeSpeed = 0.5;
+  final static double lowerIntakeSpeed = -0.1;
+
+  public DeployIntake(Climber climber){
+    this.climber = climber;
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.shoulder.setVoltage(Constants.SHOULDER_SPEED_HOLD);
+    //tests to see if we have started deploying the robot yet ;P
+    started = false;
     climber.shoulder.setIdleMode(IdleMode.kBrake);
   }
 
@@ -29,15 +32,16 @@ public class DeployIntake extends CommandBase {
   public void execute() {
     //raise the shoulder a little so that the intake can unhook at the start of the match
     if(!started){
-      climber.shoulder.setVoltage(0.3);
+      climber.shoulder.setVoltage(unhookIntakeSpeed);
+      //set started to true so that we don't raise the shoulder again.
+      started = true;
     }
-    
-    //set started to true so that we don't raise the shoulder again.
-    started = true;
 
     //slowly lower the shoulder
-    if(!climber.shoulderAtMinHeight()) {
-      climber.shoulder.setVoltage(-0.1);
+    else{
+      if(!climber.shoulderAtMinHeight()) {
+      climber.shoulder.setVoltage(lowerIntakeSpeed);
+      }
     }
   }
     
