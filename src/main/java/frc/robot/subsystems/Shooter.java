@@ -150,10 +150,12 @@ public class Shooter extends SubsystemBase {
         return -shooterEncoder.getVelocity();
     }
 
-    public void prepareShooter(double distance) {
+    public double prepareShooter(double distance) {
         // Set the shooter and hood based on the distance
-        setShooterRpm(calculateShooterSpeed(distance));
+        double shooterSpeed = calculateShooterSpeed(distance);
+        setShooterRpm(shooterSpeed);
         setHood(calculateShooterHood(distance));
+        return -shooterSpeed;
     }
 
     // public void setShooterVoltage (double voltage) {

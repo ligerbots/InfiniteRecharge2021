@@ -58,27 +58,27 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
         addCommands(
             ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, carouselCommand),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, carouselCommand),
             ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, carouselCommand),
             ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, carouselCommand),
             ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new ShooterCommand(shooter, carousel, carouselCommand),
             ramsete1backward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }

@@ -6,63 +6,46 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision.VisionMode;
 
 public class ShooterCommand extends CommandBase {
-  /**
+  /*
    * Creates a new ShooterCommand.
    */
 
-  double waitTime;
-  double startTime;
-
   Shooter shooter;
   Carousel carousel;
-  DriveTrain robotDrive;
+
   ShooterPIDTuner pidTuner;
-  double shooterTargetSpeed;
-
-  boolean startShooting;
-
   CarouselCommand carouselCommand;
-  //DriveCommand driveCommand;
 
-  int initialCarouselTicks;
-
+  double startTime;
+  double shooterTargetSpeed;
+  double initialCarouselSlot;
   double stableRPMTime;
-  boolean startedTimerFlag;
-  boolean foundTarget;
-  boolean setPid;
  
   public enum ControlMethod {
     ACQUIRING, // Acquiring vision target
     SPIN_UP, // PIDF to desired RPM
     WAITING_FOR_STABILITY, //Wait two seconds to shoot
     HOLD, // Keep the shooter wheel at specific RPM, check to see if all systems ready
-    FIRE, //Fire the shooter
+    FIRING, //Fire the shooter
   }
 
   ControlMethod currentControlMode;
-  boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime,*/ CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
+  public ShooterCommand(Shooter shooter, Carousel carousel,  CarouselCommand carouselCommand) {
     this.shooter = shooter;
     addRequirements(shooter);
     this.carousel = carousel;
-    // The following statement will cause the CarouselCommand to be interrupted. This is good.
-    addRequirements(carousel);
-    this.robotDrive = robotDrive;
-    // this.waitTime = waitTime;
+    // need to control carousel manually
+    // addRequirements(carousel);
     this.carouselCommand = carouselCommand;
-    // this.driveCommand = driveCommand;
-    this.rescheduleDriveCommand = rescheduleDriveCommand;
-    startShooting = false;
     pidTuner = new ShooterPIDTuner(shooter);
   }
 
-  public void rapidFire() {
+  private void rapidFire() {
     shooter.shoot();
     carousel.spin(0.8);
   }
@@ -71,73 +54,38 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void initialize() {
 
+    carouselCommand.cancel();
     SmartDashboard.putString("shooter/Shooting", "Shoot");
-
-    foundTarget = false;
     shooterTargetSpeed = 0.0;
-    // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
-    // values  in the execute() method.
-    setPid = true;
-
-    // driveCommand.cancel();
     startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
-    // carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
     pidTuner.spinUpTune();
-    System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // store current carouselTick value
-    initialCarouselTicks = carousel.getTicks();
+    initialCarouselSlot = carousel.getSlot();
 
-    angleError = shooter.vision.getRobotAngle();
-    distance = shooter.vision.getDistance();
-
-    currentControlMode = ControlMethod.SPIN_UP;
-    startedTimerFlag = false;
-    System.out.println("Initial Angle Offset: " + angleError);
-    shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
+    // Do we need this?
+    // shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
   }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  double angleError;
-  double distance;
-
-  boolean speedOnTarget = false;
-  boolean hoodOnTarget = false;
-  boolean angleOnTarget = false;
 
   @Override
   public void execute() {
+    SmartDashboard.putString("shooter/Shooting", currentControlMode.toString());
+
     if (currentControlMode == ControlMethod.ACQUIRING) {
-      distance = shooter.vision.getDistance();
-      if (distance != 0.0) {
-        foundTarget = true; // what is foundTarget used for
-        angleError = shooter.vision.getRobotAngle();
+      // Waiting for vision to acquire target and preparing turret
+      if (shooter.vision.getStatus()) {
+        double distance = shooter.vision.getDistance();
+        double angleError = shooter.vision.getRobotAngle();
         shooter.setTurretAdjusted(angleError);
-        shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
-        shooter.prepareShooter(distance);
+        shooterTargetSpeed = shooter.prepareShooter(distance);
         currentControlMode = ControlMethod.SPIN_UP;
       }
     }
 
-    // if (!foundTarget) {
-    //   distance = shooter.vision.getDistance();
-    //   if (distance != 0.0) {
-    //     // We found the target. Set the turret angle based on the vision system before
-    //     foundTarget = true;
-    //     currentControlMode = ControlMethod.SPIN_UP;
-    //     // adjust the turret and hood to align
-    //     angleError = shooter.vision.getRobotAngle();
-    //     shooter.setTurretAdjusted(angleError);
-    //     shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
-    //     shooter.prepareShooter(distance);
-    //   }
-    // }
-
-    //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
-
     if (currentControlMode == ControlMethod.SPIN_UP) {
+      // Shooter wheel warms up
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         stableRPMTime = Robot.time();
         currentControlMode = ControlMethod.WAITING_FOR_STABILITY;
@@ -145,8 +93,11 @@ public class ShooterCommand extends CommandBase {
     }
 
     if (currentControlMode == ControlMethod.WAITING_FOR_STABILITY) {
+      // Waits for shooter wheel to be in range for 0.2 seconds 
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         if (Robot.time() - stableRPMTime > 0.2) {
+          //locks shooter speed in place
+          pidTuner.HoldTune();
           currentControlMode = ControlMethod.HOLD;
         }
       } else {
@@ -154,55 +105,16 @@ public class ShooterCommand extends CommandBase {
       }
     }
 
-    // if (currentControlMode == ControlMethod.SPIN_UP) {
-    //   // if not in range, then
-    //   if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
-    //     // Timer starts when shooter is in range
-    //     if (startedTimerFlag) {
-    //       // 0.2 seconds after shooter speed is in range
-    //       if (Robot.time() - stableRPMTime > 0.2) {
-    //         currentControlMode = ControlMethod.HOLD;
-    //       }
-    //     // Loops here first in order to 
-    //     } else {
-    //       stableRPMTime = Robot.time();
-    //       startedTimerFlag = true;
-    //     }
-    //   }
-    //   else {
-    //     startedTimerFlag = false;
-    //   }
-    // }
-    // else if (currentControlMode == ControlMethod.HOLD) {
-    //   if(setPid){
-    //     pidTuner.HoldTune();
-    //   }
-    //   setPid = false;
-    // }
-
     if (currentControlMode == ControlMethod.HOLD) {
-      if(setPid) {
-        pidTuner.HoldTune();
-      }
-      setPid = false;
-      speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) || (Robot.time() - startTime > 3.5));
-      hoodOnTarget = Robot.time() - startTime > 0.75;
-      if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
-        currentControlMode = ControlMethod.FIRE;
+      // Checks to see if the robot is ready to fire
+      boolean speedOnTarget = shooter.speedOnTarget(shooterTargetSpeed, 8) || (Robot.time() - startTime > 3.5);
+      boolean hoodOnTarget = Robot.time() - startTime > 0.75;
+      if (speedOnTarget && hoodOnTarget) {
+        rapidFire();
+        currentControlMode = ControlMethod.FIRING;
       }
     }
-
-    // speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
-    // hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
-
-    // // !carousel.backwards will need to be removed when the shooter is re-written
-    // if (speedOnTarget && hoodOnTarget && !carousel.backwards) {
-    //   rapidFire();
-    // }
-
-    if (currentControlMode == ControlMethod.FIRE) {
-      rapidFire();
-    }
+    // Nothing to do in ControlMethod.FIRING
   }
 
   // Called once the command ends or is interrupted.
@@ -213,14 +125,14 @@ public class ShooterCommand extends CommandBase {
     carousel.resetBallCount();
     carousel.spin(0.0);
     carouselCommand.schedule();
-  SmartDashboard.putString("shooter/Shooting", "Idle");
+    SmartDashboard.putString("shooter/Shooting", "Idle");
     
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
+    return (carousel.getSlot() - initialCarouselSlot) > Constants.CAROUSEL_MAX_BALLS ||
+      (currentControlMode == ControlMethod.ACQUIRING && Robot.time() - startTime > 2.0);
   }
 }
