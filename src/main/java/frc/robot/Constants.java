@@ -83,8 +83,8 @@ public final class Constants {
     public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
     public static final double SHOULDER_CLIMB_HEIGHT = 0.62;
-    public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
-    public static final double SHOULDER_START_HEIGHT = 0.59;
+    public static final double SHOULDER_RELEASE_HEIGHT = 0.592;
+    public static final double SHOULDER_START_HEIGHT = .589;
     public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25;
     public static final double SHOULDER_HEIGHT_FOR_RAISE1 = 0.48;
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56 - 2.0/360.0; 

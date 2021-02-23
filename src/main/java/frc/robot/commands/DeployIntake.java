@@ -8,15 +8,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
 
 public class DeployIntake extends CommandBase {
   Climber climber;
   boolean started;
-  final static double unhookIntakeSpeed = 0.5;
+  final static double unhookIntakeSpeed = 4.0;
   final static double lowerIntakeFastSpeed = -3.0;
   final static double lowerIntakeSlowSpeed = -0.3;
-
   public DeployIntake(Climber climber){
     this.climber = climber;
   }
@@ -32,10 +32,10 @@ public class DeployIntake extends CommandBase {
   @Override
   public void execute() {
     //raise the shoulder a little so that the intake can unhook at the start of the match
-    if(!started){
+    if(!started){// .589 = angle with leg
       climber.shoulder.setVoltage(unhookIntakeSpeed);
       //set started to true so that we don't raise the shoulder again.
-      started = true;
+      if(climber.shoulderEncoder.get()>Constants.SHOULDER_RELEASE_HEIGHT) started = true;
     }
 
     //slowly lower the shoulder

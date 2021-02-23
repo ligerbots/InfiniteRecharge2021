@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -21,7 +22,7 @@ public class Climber extends SubsystemBase {
 
     public final CANSparkMax shoulder; // declare new motor
     public final CANSparkMax winch; // declare new motor
-    DutyCycleEncoder shoulderEncoder;
+    public DutyCycleEncoder shoulderEncoder;
 
     boolean deployed = false;
     boolean autoLevel = false;
@@ -45,7 +46,9 @@ public class Climber extends SubsystemBase {
     }
 
     @Override
-    public void periodic(){}
+    public void periodic(){
+        SmartDashboard.putNumber("Shoulder Ticks", shoulderEncoder.get());
+    }
 
     public void moveWinch(double winchHeight) {
         requestedWinchHeight = winchHeight;
