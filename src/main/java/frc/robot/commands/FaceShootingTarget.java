@@ -55,6 +55,7 @@ public class FaceShootingTarget extends CommandBase {
     shooter.vision.setMode(VisionMode.GOALFINDER);
     startingAngle = robotDrive.getHeading();
     startTime = Robot.time();
+    headingError = 100000;
     System.out.println("Initial initial heading: " + startingAngle);
   }
 
@@ -79,6 +80,10 @@ public class FaceShootingTarget extends CommandBase {
     else if (shooter.vision.getStatus())
     {
       headingTarget = startingAngle - shooter.vision.getRobotAngle();
+      System.out.println("STARTING ANGLE "+ startingAngle);
+      System.out.println("GET ROBOT ANGLE "+ shooter.vision.getRobotAngle());
+
+      System.out.println("HEADING TARGET "+headingTarget);
       targetAcquired = true;
     }
   }
