@@ -91,7 +91,7 @@ public class Shooter extends SubsystemBase {
         // catch (Exception e) {
             // System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
             // System.err.println("Using original hard-coded table instead");
-
+            distanceLookUp.put(50.0, new Double[] {5500.0, 115.0});
             distanceLookUp.put(74.0, new Double[] {5500.0, 100.0});
             distanceLookUp.put(123.6, new Double[] {6000.0, 80.0});
             // distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
