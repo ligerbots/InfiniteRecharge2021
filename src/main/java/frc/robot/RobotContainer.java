@@ -98,11 +98,16 @@ public class RobotContainer {
 
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     xboxA.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, true));
+
+    JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+    xboxX.whenPressed(new DeployIntake(climber));
+
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
-    // JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
+    
     // JoystickButton xbox7 = new JoystickButton(xbox, Constants.XBOX_BACK);
     // JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
 

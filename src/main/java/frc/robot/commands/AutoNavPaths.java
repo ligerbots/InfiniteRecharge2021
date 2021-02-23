@@ -15,11 +15,14 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
+import frc.robot.Robot;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
@@ -32,7 +35,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID) {
+    public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID, Climber climber) {
         final Rotation2d rotation = Rotation2d.fromDegrees(0.0);
         
         List<Translation2d> waypointList = null;    // set to null to suppress warning
@@ -107,6 +110,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
+        if (Robot.isSimulation()) {
+            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+            writer.WriteTrajectory(forwardTrajectory);
+            writer.WriteWaypoints(initialPose, waypointList, endPose);
+        }
 
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,
@@ -125,7 +133,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
         addCommands(
             // Run the backward trajectory and then stop when we get to the end
-            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            new ParallelCommandGroup(new DeployIntake(climber),ramseteForward).andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 

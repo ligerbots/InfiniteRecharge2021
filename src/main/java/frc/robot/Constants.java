@@ -76,7 +76,7 @@ public final class Constants {
     
     // Set Shoulder parameters
     public static final int SHOULDER_MOTOR_CAN_ID = 11;; // shoulder for the climber
-    public static final double SHOULDER_MIN_HEIGHT = 0.44;
+    public static final double SHOULDER_MIN_HEIGHT = 0.4418;
     // If arm gets below 10 degrees above min height, we'll either stop the motor and let if fall in brake mode
     // or we'll just move t down really slowly.
     public static final double SHOULDER_MIN_VELOCITY_BUFFER = 2.0/360.0; // 2 degrees;
