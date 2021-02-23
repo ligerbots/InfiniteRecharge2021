@@ -14,7 +14,8 @@ public class DeployIntake extends CommandBase {
   Climber climber;
   boolean started;
   final static double unhookIntakeSpeed = 0.5;
-  final static double lowerIntakeSpeed = -0.1;
+  final static double lowerIntakeFastSpeed = -3.0;
+  final static double lowerIntakeSlowSpeed = -0.3;
 
   public DeployIntake(Climber climber){
     this.climber = climber;
@@ -39,8 +40,11 @@ public class DeployIntake extends CommandBase {
 
     //slowly lower the shoulder
     else{
-      if(!climber.shoulderAtMinHeight()) {
-      climber.shoulder.setVoltage(lowerIntakeSpeed);
+      if(!climber.shoulderBelowHeight(15.0)) {
+        climber.shoulder.setVoltage(lowerIntakeFastSpeed);
+      }
+      else {
+        climber.shoulder.setVoltage(lowerIntakeSlowSpeed);
       }
     }
   }
@@ -49,6 +53,7 @@ public class DeployIntake extends CommandBase {
   public void end(boolean interrupted) {
       climber.shoulder.setVoltage(0.0);
       climber.shoulder.setIdleMode(IdleMode.kCoast);
+      System.out.println("Test Shoulder ended");
   }
   // Returns true when the command should end.
   @Override

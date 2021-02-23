@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.Robot;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
 public class BounceAuto extends SequentialCommandGroup implements AutoCommandInterface {
@@ -30,7 +32,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     // and will allow the system to query for it
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
 
-    public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand) {
+    public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
         drivecommand.cancel();
 
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
@@ -167,8 +169,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             robotDrive
         );
         
-        addCommands(
-            ramseteBackward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+        addCommands(            
+            new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward1).andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteForward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteBackward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteForward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))

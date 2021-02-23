@@ -19,11 +19,13 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 public class InterstellarAccuracy extends SequentialCommandGroup implements AutoCommandInterface {
@@ -36,7 +38,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     // Center of robot is 69" from wall
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation180);
 
-    public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
+    public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
         drivecommand.cancel();
 
@@ -74,7 +76,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
         addCommands(
             // ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            
+            new ParallelCommandGroup(new DeployIntake(climber),new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false)),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 // import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -22,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.FieldMapHome;
 import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 
@@ -35,7 +37,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Path autoID) {
+    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Path autoID, Climber climber) {
         final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
 
         // Need to run the intake and Carousel for picking up the balls
@@ -132,7 +134,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             // with the ramseteBackward command.
             carouselCommand.alongWith(intakeCommand, 
                                       // At the end of the remsete trajectory, stop the motors.
-                                      ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)))
+                                      new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward)
+                                      .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
         );
     }
 
