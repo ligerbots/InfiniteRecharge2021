@@ -77,27 +77,32 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         addCommands(
             // ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             
-            new ParallelCommandGroup(new DeployIntake(climber),new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false)),
+            new ParallelCommandGroup(new DeployIntake(climber),new TurnShootTurnBack(robotDrive, shooter, carousel, 
+            carouselCommand, drivecommand, 180)),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, 
+            carouselCommand, drivecommand, 180),
             ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, 
+            carouselCommand, drivecommand, 180),
             ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, 
+            carouselCommand, drivecommand, 180),
             ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false)
+            new TurnShootTurnBack(robotDrive, shooter, carousel, 
+            carouselCommand, drivecommand, 180)
         );
     }
 
