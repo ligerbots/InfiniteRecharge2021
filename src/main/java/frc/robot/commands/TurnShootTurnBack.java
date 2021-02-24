@@ -49,5 +49,6 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
             System.out.println("*** TurnShootTurnBack interrupted ***");
 
         if (m_driveCommand != null) m_driveCommand.schedule();
+        System.out.println("TurnShootTurnBack ended. interrupted = " + interrupted );
     }
 }

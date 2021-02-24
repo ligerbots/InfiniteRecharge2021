@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,16 +27,18 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+
 public class InterstellarAccuracy extends SequentialCommandGroup implements AutoCommandInterface {
     
     final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
     
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, 0), rotation180);
-    // Center of robot is 69" from wall
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation180);
+    private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, 0), rotation180);
 
+    // Center of robot is 69" from wall
+    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation180);
+    
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
         drivecommand.cancel();
@@ -62,8 +63,6 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             .addConstraint(centripetalAccelerationConstraint)
             .setReversed(true);
 
-    
-        // RamseteCommand ramsete1forward = createRamseteCommand(initialPose, new Pose2d(FieldMapHome.gridPoint('C', 9), rotation180), configForward, robotDrive);
         RamseteCommand ramsete1backward = createRamseteCommand(initialPose, reintroductionPose, configBackward, robotDrive);
         RamseteCommand ramsete2forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 4), rotation180), configForward, robotDrive);
         RamseteCommand ramsete2backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 4), rotation180), reintroductionPose, configBackward, robotDrive);
@@ -72,37 +71,30 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         RamseteCommand ramsete4forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), configForward, robotDrive);
         RamseteCommand ramsete4backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), reintroductionPose, configBackward, robotDrive);
         RamseteCommand ramsete1forward2 = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), configForward, robotDrive);
-        // RamseteCommand ramsete1backward2 = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), reintroductionPose, configBackward, robotDrive);
 
         addCommands(
-            // ramsete1forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            
-            new ParallelCommandGroup(new DeployIntake(climber),new TurnShootTurnBack(robotDrive, shooter, carousel, 
-            carouselCommand, drivecommand, 180)),
+            new ParallelCommandGroup(new DeployIntake(climber),
+                        new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, 
-            carouselCommand, drivecommand, 180),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, 
-            carouselCommand, drivecommand, 180),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, 
-            carouselCommand, drivecommand, 180),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new WaitForSmartDashboard(),
 
             ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, 
-            carouselCommand, drivecommand, 180)
+            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
         );
     }
 
@@ -130,7 +122,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     }
 
     public void end(boolean interrupted){
-        SmartDashboard.putBoolean("Interstellar", interrupted);
+        SmartDashboard.putBoolean("InterstellarAccuracy", interrupted);
+        System.out.println("InterstellarAccuracy ended. interrupted = " + interrupted);
     }
 
     // Allows the system to get the initial pose of this command
@@ -147,11 +140,13 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         public WaitForSmartDashboard() {}
         @Override
         public void initialize() {
+            System.out.println("Waiting for dashboard");
             ballsLoadedEntry.setBoolean(false);
         }
         @Override
         public void end(boolean interrupted) {
             ballsLoadedEntry.setBoolean(false);
+            System.out.println("WaitForSmartDashboard ended");
         }
         @Override
         public boolean isFinished() {

@@ -14,9 +14,12 @@ import frc.robot.subsystems.Climber;
 public class DeployIntake extends CommandBase {
   Climber climber;
   boolean started;
+  double startTime;
+
   final static double unhookIntakeSpeed = 4.0;
   final static double lowerIntakeFastSpeed = -3.0;
   final static double lowerIntakeSlowSpeed = -0.3;
+
   public DeployIntake(Climber climber){
     this.climber = climber;
   }
@@ -27,6 +30,7 @@ public class DeployIntake extends CommandBase {
     //tests to see if we have started deploying the robot yet ;P
     started = false;
     climber.shoulder.setIdleMode(IdleMode.kBrake);
+    startTime = Robot.time();
   }
 
   @Override
@@ -53,11 +57,12 @@ public class DeployIntake extends CommandBase {
   public void end(boolean interrupted) {
       climber.shoulder.setVoltage(0.0);
       climber.shoulder.setIdleMode(IdleMode.kCoast);
-      System.out.println("Test Shoulder ended");
+      System.out.println("DeployIntake ended. interrupted = " + interrupted);
   }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getShoulderPosition() <= Constants.SHOULDER_MIN_VELOCITY_HEIGHT;
+    return climber.getShoulderPosition() <= Constants.SHOULDER_MIN_VELOCITY_HEIGHT
+        || Robot.time() - startTime > 2.0;
   }
 }
