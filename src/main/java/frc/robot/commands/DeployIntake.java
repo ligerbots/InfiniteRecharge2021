@@ -27,7 +27,7 @@ public class DeployIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //tests to see if we have started deploying the robot yet ;P
+    // tests to see if we have started deploying the robot yet ;P
     started = false;
     climber.shoulder.setIdleMode(IdleMode.kBrake);
     startTime = Robot.time();
@@ -35,16 +35,16 @@ public class DeployIntake extends CommandBase {
 
   @Override
   public void execute() {
-    //raise the shoulder a little so that the intake can unhook at the start of the match
-    if(!started){// .589 = angle with leg
+    // raise the shoulder a little so that the intake can unhook at the start of the match
+    if (!started) {    // .589 = angle with leg
       climber.shoulder.setVoltage(unhookIntakeSpeed);
-      //set started to true so that we don't raise the shoulder again.
-      if(climber.shoulderEncoder.get()>Constants.SHOULDER_RELEASE_HEIGHT) started = true;
+      // set started to true so that we don't raise the shoulder again.
+      if (climber.shoulderEncoder.get() > Constants.SHOULDER_RELEASE_HEIGHT) started = true;
     }
 
-    //slowly lower the shoulder
-    else{
-      if(!climber.shoulderBelowHeight(15.0)) {
+    // slowly lower the shoulder
+    else {
+      if ( !climber.shoulderBelowHeight(15.0) ) {
         climber.shoulder.setVoltage(lowerIntakeFastSpeed);
       }
       else {
