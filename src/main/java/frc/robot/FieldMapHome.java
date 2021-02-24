@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.util.Units;
 //Class for the Infinate Recharge At Home challanges Field Map
 public class FieldMapHome {
 
-    public static double fieldLength = 360.0;
-    public static double fieldWidth = 180.0;
+    public static double fieldLength = Units.inchesToMeters(360.0);
+    public static double fieldWidth = Units.inchesToMeters(180.0);
 
     public FieldMapHome(){
 

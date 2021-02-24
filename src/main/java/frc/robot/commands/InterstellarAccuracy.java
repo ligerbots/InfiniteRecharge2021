@@ -32,12 +32,15 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     
     final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
     
+    // add a yOffset variable. make simulation testing much easier
+    final double yOffset = 10.0;
+
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, 0), rotation180);
+    private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, yOffset), rotation180);
 
     // Center of robot is 69" from wall
-    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2), rotation180);
+    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, yOffset), rotation180);
     
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
@@ -64,13 +67,13 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             .setReversed(true);
 
         RamseteCommand ramsete1backward = createRamseteCommand(initialPose, reintroductionPose, configBackward, robotDrive);
-        RamseteCommand ramsete2forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 4), rotation180), configForward, robotDrive);
-        RamseteCommand ramsete2backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 4), rotation180), reintroductionPose, configBackward, robotDrive);
-        RamseteCommand ramsete3forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 6), rotation180), configForward, robotDrive);
-        RamseteCommand ramsete3backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 6), rotation180), reintroductionPose, configBackward, robotDrive);
-        RamseteCommand ramsete4forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), configForward, robotDrive);
-        RamseteCommand ramsete4backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), reintroductionPose, configBackward, robotDrive);
-        RamseteCommand ramsete1forward2 = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete2forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 4, 0, yOffset), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete2backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 4, 0, yOffset), rotation180), reintroductionPose, configBackward, robotDrive);
+        RamseteCommand ramsete3forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 6, 0, yOffset), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete3backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 6, 0, yOffset), rotation180), reintroductionPose, configBackward, robotDrive);
+        RamseteCommand ramsete4forward = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8, 0, yOffset), rotation180), configForward, robotDrive);
+        RamseteCommand ramsete4backward = createRamseteCommand(new Pose2d(FieldMapHome.gridPoint('C', 8, 0, yOffset), rotation180), reintroductionPose, configBackward, robotDrive);
+        RamseteCommand ramsete1forward2 = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 8, 0, yOffset), rotation180), configForward, robotDrive);
 
         addCommands(
             new ParallelCommandGroup(new DeployIntake(climber),
