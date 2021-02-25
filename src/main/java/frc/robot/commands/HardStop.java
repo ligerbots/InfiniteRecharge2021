@@ -13,7 +13,7 @@ public class HardStop extends CommandBase {
 
   DriveTrain driveTrain;
 
-  private final double driveTime = 0.035; 
+  private final double driveTime = 0.055; 
   private double startTime;
 
   public HardStop(DriveTrain driveTrain) {
@@ -26,7 +26,7 @@ public class HardStop extends CommandBase {
   @Override
   public void initialize() {
     // sets the motors to the opposte direction and half speed 
-    driveTrain.tankDriveVolts(-0.5 * driveTrain.getLeftSpeed(), -0.5 * driveTrain.getRightSpeed()); 
+    driveTrain.tankDriveVolts(-2. * Math.signum(driveTrain.getLeftSpeed()), -2. * Math.signum(driveTrain.getRightSpeed())); 
     startTime = Robot.time();
   }
 

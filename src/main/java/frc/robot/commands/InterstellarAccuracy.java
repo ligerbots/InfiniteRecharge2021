@@ -77,25 +77,33 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         addCommands(
             new ParallelCommandGroup(new DeployIntake(climber),
                         new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
-            ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete1backward,
+            new HardStop(robotDrive),
             new WaitForFullCarousel(carousel),
 
-            ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete2forward,
+            new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
-            ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete2backward,
+            new HardStop(robotDrive),
             new WaitForFullCarousel(carousel),
 
-            ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete3forward,
+            new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
-            ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete3backward,
+            new HardStop(robotDrive),
             new WaitForFullCarousel(carousel),
 
-            ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete4forward,
+            new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
-            ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete4backward,
+            new HardStop(robotDrive),
             new WaitForFullCarousel(carousel),
 
-            ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramsete1forward2,
+            new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
         );
     }
