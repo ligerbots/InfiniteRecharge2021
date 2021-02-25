@@ -27,8 +27,8 @@ public class WaitForFullCarousel extends CommandBase {
     }
 
     void initSmartDashboard() {
-        // Use a tab with a button. If for a real competition, a button would be better.
-        ShuffleboardTab tab = Shuffleboard.getTab("Interstellar Accurracy Shooter");
+        // Use a tab with a button. If for a real competition, a controller button would be better.
+        ShuffleboardTab tab = Shuffleboard.getTab("Interstellar Accuracy Shooter");
         s_ballsLoadedEntry = tab.add("Balls loaded", false).withWidget("Toggle Button").getEntry();    
     }
     
