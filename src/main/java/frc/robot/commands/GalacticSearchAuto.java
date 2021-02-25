@@ -37,7 +37,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public GalacticSearchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Path autoID, Climber climber) {
+    public GalacticSearchAuto(DriveTrain robotDrive, Carousel carousel, Intake intake, Path autoID, Climber climber) {
         final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
 
         // Need to run the intake and Carousel for picking up the balls

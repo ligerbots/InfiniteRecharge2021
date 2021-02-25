@@ -37,18 +37,17 @@ public class GalacticSearchAutoSelector extends CommandBase implements AutoComma
   Pose2d initialPose = new Pose2d();
   Vision.GalacticSearchChooserResult result = GalacticSearchChooserResult.NONE;
   HashMap<GalacticSearchChooserResult, GalacticSearchAuto> galacticSearchAutos;
-  public GalacticSearchAutoSelector(DriveTrain robotDrive, DriveCommand drivecommand, Carousel carousel, Intake intake, Vision vision, Climber climber) {
+  public GalacticSearchAutoSelector(DriveTrain robotDrive, Carousel carousel, Intake intake, Vision vision, Climber climber) {
     this.vision = vision;
     this.robotDrive = robotDrive;
-    this.drivecommand = drivecommand;
     this.carousel = carousel;
     this.intake = intake;
 
     galacticSearchAutos = new HashMap<>();
-    galacticSearchAutos.put(GalacticSearchChooserResult.A_RED, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedA, climber));
-    galacticSearchAutos.put(GalacticSearchChooserResult.A_BLUE, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueA, climber));
-    galacticSearchAutos.put(GalacticSearchChooserResult.B_RED, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.RedB, climber));
-    galacticSearchAutos.put(GalacticSearchChooserResult.B_BLUE, new GalacticSearchAuto(robotDrive, drivecommand, carousel, intake, Path.BlueB, climber));
+    galacticSearchAutos.put(GalacticSearchChooserResult.A_RED, new GalacticSearchAuto(robotDrive, carousel, intake, Path.RedA, climber));
+    galacticSearchAutos.put(GalacticSearchChooserResult.A_BLUE, new GalacticSearchAuto(robotDrive, carousel, intake, Path.BlueA, climber));
+    galacticSearchAutos.put(GalacticSearchChooserResult.B_RED, new GalacticSearchAuto(robotDrive, carousel, intake, Path.RedB, climber));
+    galacticSearchAutos.put(GalacticSearchChooserResult.B_BLUE, new GalacticSearchAuto(robotDrive, carousel, intake, Path.BlueB, climber));
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

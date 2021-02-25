@@ -44,8 +44,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     
     public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
-        drivecommand.cancel();
-
+        
         double maxSpeed = 1.5;
         double maxAccel = 1.0;
 
