@@ -128,15 +128,25 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             robotDrive::tankDriveVolts,
             robotDrive
         );
-
-        addCommands(
-            // We need to start both the carousel command and the intake command in parallel
-            // with the ramseteBackward command.
-            carouselCommand.alongWith(intakeCommand, 
-                                      // At the end of the remsete trajectory, stop the motors.
-                                      new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward)
-                                      .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
-        );
+        if(autoID == Path.RedA|| autoID == Path.RedB){
+            addCommands(
+                // We need to start both the carousel command and the intake command in parallel
+                // with the ramseteBackward command.
+                carouselCommand.alongWith(intakeCommand, 
+                                          // At the end of the remsete trajectory, stop the motors.
+                                          new SequentialCommandGroup(new DeployIntake(climber),ramseteBackward)
+                                          .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
+            );
+        }else{
+            addCommands(
+                // We need to start both the carousel command and the intake command in parallel
+                // with the ramseteBackward command.
+                carouselCommand.alongWith(intakeCommand, 
+                                        // At the end of the remsete trajectory, stop the motors.
+                                        new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward)
+                                        .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
+            );
+        }
     }
 
     // Allows the system to get the initial pose of this command
