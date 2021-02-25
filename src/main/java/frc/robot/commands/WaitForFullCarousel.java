@@ -23,10 +23,10 @@ public class WaitForFullCarousel extends CommandBase {
 
     public WaitForFullCarousel(Carousel carousel){
         m_carousel = carousel;
-        if (s_ballsLoadedEntry == null) InitSmartDashboard();
+        if (s_ballsLoadedEntry == null) initSmartDashboard();
     }
 
-    void InitSmartDashboard() {
+    void initSmartDashboard() {
         // Use a tab with a button. If for a real competition, a button would be better.
         ShuffleboardTab tab = Shuffleboard.getTab("Interstellar Accurracy Shooter");
         s_ballsLoadedEntry = tab.add("Balls loaded", false).withWidget("Toggle Button").getEntry();    
