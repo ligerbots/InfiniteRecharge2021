@@ -50,7 +50,7 @@ public class WaitForFullCarousel extends CommandBase {
     @Override
     public boolean isFinished() {
         // End if SD value is True 
-        return s_ballsLoadedEntry.getBoolean(false);
-        // || m_carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS;
+        return s_ballsLoadedEntry.getBoolean(false)
+          || m_carousel.getBallCount() >= Constants.CAROUSEL_MAX_BALLS;
     }
 }
