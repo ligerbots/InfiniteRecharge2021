@@ -97,7 +97,8 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision));
     chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.driveCommand,
         m_robotContainer.shooter, m_robotContainer.carousel, m_robotContainer.carouselCommand));
-
+    chosenAuto.addOption("MarkerFinder", new MarkerFinderTestAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand,
+    m_robotContainer.vision));
         SmartDashboard.putData("Chosen Auto", chosenAuto);
     WaitForSmartDashboard.initSmartDashboard();
   }

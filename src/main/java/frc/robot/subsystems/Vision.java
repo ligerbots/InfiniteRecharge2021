@@ -2,8 +2,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -18,6 +21,7 @@ public class Vision extends SubsystemBase {
         BALLFINDER,
         HOPPERFINDER,
         GALACTIC_SEARCH_PATH_CHOOSER,
+        MARKERFINDER_INTAKE,
     }
 
     private static final double[] EMPTY_TARGET_INFO = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -73,6 +77,13 @@ public class Vision extends SubsystemBase {
 
             SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");
             targetInfoSim[1] = 1;
+        } else if (getMode() == VisionMode.MARKERFINDER_INTAKE){
+            Pose2d pose = driveTrain.getPose();
+            targetInfoSim[1] =1;
+            targetInfoSim[3] = Units.metersToInches(pose.getX());
+            targetInfoSim[4] = Units.metersToInches(pose.getY());
+            targetInfoSim[5] = pose.getRotation().getRadians();
+            
         } else {
             targetInfoSim[1] = 1;
             targetInfoSim[3] = 0;
@@ -149,6 +160,16 @@ public class Vision extends SubsystemBase {
         return GalacticSearchChooserResult.NONE;
     }
 
+    public Pose2d getMarkerfinderPosition(){
+        if(!getStatus()) return null;
+        double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
+
+        return(new Pose2d(
+            Units.inchesToMeters(visionData[3]),
+            Units.inchesToMeters(visionData[4]),
+            new Rotation2d(visionData[5])
+        ));
+    }
     public void setLedRing (boolean on) {
         spike.set(on ? Value.kReverse : Value.kOff);
     }
