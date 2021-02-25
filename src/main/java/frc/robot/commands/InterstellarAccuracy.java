@@ -78,22 +78,22 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
             new ParallelCommandGroup(new DeployIntake(climber),
                         new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
             ramsete1backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new WaitForSmartDashboard(),
+            new WaitForFullCarousel(carousel),
 
             ramsete2forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete2backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new WaitForSmartDashboard(),
+            new WaitForFullCarousel(carousel),
 
             ramsete3forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete3backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new WaitForSmartDashboard(),
+            new WaitForFullCarousel(carousel),
 
             ramsete4forward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete4backward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            new WaitForSmartDashboard(),
+            new WaitForFullCarousel(carousel),
 
             ramsete1forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
@@ -131,29 +131,6 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
-    }
-
-    static public class WaitForSmartDashboard extends CommandBase {
-        static NetworkTableEntry ballsLoadedEntry;
-        static public void initSmartDashboard() {
-            ShuffleboardTab tab =Shuffleboard.getTab("Interstellar Accurracy Shooter");
-            ballsLoadedEntry=tab.add("Balls loaded", false).withWidget("Toggle Button").getEntry();    
-        }
-        public WaitForSmartDashboard() {}
-        @Override
-        public void initialize() {
-            System.out.println("Waiting for dashboard");
-            ballsLoadedEntry.setBoolean(false);
-        }
-        @Override
-        public void end(boolean interrupted) {
-            ballsLoadedEntry.setBoolean(false);
-            System.out.println("WaitForSmartDashboard ended");
-        }
-        @Override
-        public boolean isFinished() {
-            return(ballsLoadedEntry.getBoolean(false));
-        }
     }
 }
 
