@@ -35,7 +35,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public AutoNavPaths(DriveTrain robotDrive, DriveCommand drivecommand, Path autoID, Climber climber) {
+    public AutoNavPaths(DriveTrain robotDrive, Path autoID, Climber climber) {
         final Rotation2d rotation = Rotation2d.fromDegrees(0.0);
         
         List<Translation2d> waypointList = null;    // set to null to suppress warning

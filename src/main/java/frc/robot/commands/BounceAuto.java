@@ -32,8 +32,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     // and will allow the system to query for it
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
 
-    public BounceAuto(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
-        drivecommand.cancel();
+    public BounceAuto(DriveTrain robotDrive, Climber climber) {
 
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(Constants.ksVolts,
