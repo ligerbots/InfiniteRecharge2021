@@ -42,7 +42,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     // Center of robot is 69" from wall
     private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, yOffset), rotation180);
     
-    public InterstellarAccuracy(DriveTrain robotDrive, DriveCommand drivecommand, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
+    public InterstellarAccuracy(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
         
         double maxSpeed = 1.5;
