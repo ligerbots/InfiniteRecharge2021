@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-import frc.robot.FieldMap;
+// import frc.robot.FieldMap;
+import frc.robot.FieldMapHome;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
@@ -52,11 +53,19 @@ public class Vision extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         if (getMode() == VisionMode.GOALFINDER) {
-            Translation2d goalDiff = FieldMap.goalCenterPoint.minus(driveTrain.getPose().getTranslation());
+            // Competition field value
+            // Translation2d goalPos = FieldMap.goalCenterPoint;
+
+            // Shed value
+            Translation2d goalPos = new Translation2d(0.0, FieldMapHome.fieldWidth/2.0);
+  
+            Translation2d goalDiff = goalPos.minus(driveTrain.getPose().getTranslation());
             double distance = goalDiff.getNorm() / Constants.inchToMetersConversionFactor;
 
             double angleRobotGoal = Math.atan2(goalDiff.getY(), goalDiff.getX());
             double visionAngle = Math.toRadians(driveTrain.getHeading()) - angleRobotGoal;
+            while (visionAngle > Math.PI) visionAngle -= 2.0*Math.PI;
+            while (visionAngle < -Math.PI) visionAngle += 2.0*Math.PI;
 
             if ( distance < MAX_DISTANCE && Math.abs(visionAngle) < HORIZONTAL_HALF_FOV) {
                 // target should be visible to the robot
@@ -68,7 +77,7 @@ public class Vision extends SubsystemBase {
                 targetInfoSim[3] = 0;
                 targetInfoSim[4] = 0;
             }
-        } else if(getMode() == VisionMode.GALACTIC_SEARCH_PATH_CHOOSER) {
+        } else if (getMode() == VisionMode.GALACTIC_SEARCH_PATH_CHOOSER) {
             // for now assume always a-red path
 
             SmartDashboard.putString("vision/galactic_search_path_chooser/result", "a-red");

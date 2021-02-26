@@ -9,29 +9,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision.VisionMode;
+import frc.robot.subsystems.Vision;
 
 public class FaceShootingTarget extends CommandBase {
   /**
    * Creates a new FaceShootingTarget.
    */
-  double initialAngleOffset;
-  double startingAngle;
-  double acceptableError;
-  double currentHeading;
+  // double startingAngle;
   DriveTrain robotDrive;
   DriveCommand driveCommand;
   Shooter shooter;
+  double acceptableError;
 
   boolean oldOldCheck;
   boolean oldCheck;
   boolean check;
 
   boolean targetAcquired;
+  double headingError;
+  double headingTarget;
 
   double startTime;
 
@@ -46,49 +46,54 @@ public class FaceShootingTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setTurretAdjusted(Constants.TURRET_ANGLE_ZERO_SETTING);
+    if (driveCommand != null) driveCommand.cancel();
+
+    shooter.vision.setMode(Vision.VisionMode.GOALFINDER);
+
+    //shooter.setTurretAdjusted(Constants.TURRET_ANGLE_ZERO_SETTING);
     targetAcquired = false;
     oldOldCheck = false;
     check = false;
     oldCheck = false;
-    if (driveCommand != null) driveCommand.cancel();
-    shooter.vision.setMode(VisionMode.GOALFINDER);
-    startingAngle = robotDrive.getHeading();
-    initialAngleOffset = shooter.vision.getRobotAngle();
     startTime = Robot.time();
-    System.out.println("Initial initial heading: " + startingAngle);
-    System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
+    //headingError = 100000;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    SmartDashboard.putNumber("starting angle", startingAngle);
-    SmartDashboard.putNumber("initialAngleOffset", initialAngleOffset);
-
     if (targetAcquired) {
-      currentHeading = robotDrive.getHeading();
-      check = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldCheck;
+      headingError = robotDrive.getHeading() - headingTarget;
+      while ( headingError > 180.0) headingError -= 360.0;
+      while ( headingError < -180.0) headingError += 360.0;
+      SmartDashboard.putNumber("shooter/HeadingError", headingError);
+      System.out.println("FaceShooter headingError = " + headingError);
+
+      check = Math.abs(headingError) < acceptableError && oldCheck;
       // System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
-      robotDrive.arcadeDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)));
+      robotDrive.arcadeDrive(0, robotDrive.turnSpeedCalc(headingError));
 
-      oldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldOldCheck;
+      oldCheck = Math.abs(headingError) < acceptableError && oldOldCheck;
 
-      oldOldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError;
+      oldOldCheck = Math.abs(headingError) < acceptableError;
     }
-    else {
-      initialAngleOffset = shooter.vision.getRobotAngle();
-      targetAcquired = initialAngleOffset != 0.0;
+    else if (shooter.vision.getStatus())
+    {
+      double startAngle = robotDrive.getHeading();
+      double visionAngle = shooter.vision.getRobotAngle();
+      headingTarget = startAngle - visionAngle;
+      System.out.format("FaceShooter acquired: heading = %3.1f visionAngle = %3.1f targetHeading = %3.2f%n",
+                        startAngle, visionAngle, headingTarget);
+      targetAcquired = true;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("FACE SHOOTING FINISHED");
-    System.out.println("Current Heading: " + robotDrive.getHeading() + System.getProperty("line.separator") + 
-        "Target Angle: " + (startingAngle - initialAngleOffset));
+    System.out.format("FaceShooter finished: currentHeading = %3.1f targetHeading = %3.2f%n",
+        robotDrive.getHeading(), headingTarget);
 
     robotDrive.allDrive(0, 0, false);
     if (driveCommand != null) driveCommand.schedule();
@@ -97,7 +102,7 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(robotDrive.getHeading() - (startingAngle - initialAngleOffset)) < acceptableError && check) 
-        || (initialAngleOffset == 0.0 && (Robot.time() - startTime) > 0.5);
+    return (Math.abs(headingError) < acceptableError && check) 
+        || (!targetAcquired && (Robot.time() - startTime) > 0.5);
   }
 }

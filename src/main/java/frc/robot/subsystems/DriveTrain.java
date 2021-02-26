@@ -150,6 +150,14 @@ public class DriveTrain extends SubsystemBase {
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         differentialDrive.feed();
     }
+
+    public double getRightSpeed() {
+        return rightMotors.get();
+    }
+
+    public double getLeftSpeed() {
+        return leftMotors.get();
+    }
     
     public double getAverageEncoderDistance() {
         return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
@@ -241,7 +249,7 @@ public class DriveTrain extends SubsystemBase {
             turnSpeed = 0.8;
         }
         else if (absErr > 30.0) {
-            turnSpeed = 0.4;
+            turnSpeed = 0.2; //0.4;
         }
         else if (absErr > 10.0) {
             turnSpeed = 0.13;

@@ -181,6 +181,8 @@ public class ShooterCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Robot.isSimulation()) return (Robot.time() - startTime) > 2.0;
+
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
     return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/

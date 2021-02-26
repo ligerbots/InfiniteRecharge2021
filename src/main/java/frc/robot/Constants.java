@@ -61,7 +61,7 @@ public final class Constants {
     public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
     public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
     public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
-    public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
+    public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to control hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
     public static final double TURRET_ANGLE_ZERO_SETTING = 135.0;
@@ -70,7 +70,7 @@ public final class Constants {
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
-    public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
+    public static final double WARM_UP_RPM = 3000; // TODO: find a good value
 
     public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
     
@@ -83,16 +83,15 @@ public final class Constants {
     public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
     public static final double SHOULDER_CLIMB_HEIGHT = 0.62;
-    public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
-    public static final double SHOULDER_START_HEIGHT = 0.59;
+    public static final double SHOULDER_RELEASE_HEIGHT = 0.592;
+    public static final double SHOULDER_START_HEIGHT = 0.589;
     public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25;
     public static final double SHOULDER_HEIGHT_FOR_RAISE1 = 0.48;
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56 - 2.0/360.0; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
 
-    public static final double SHOULDER_SPEED_UP = 4.0; //VOLTAGE~!!!!!
-    public static final double SHOULDER_SPEED_HOLD = 0.3
-    ;
+    public static final double SHOULDER_SPEED_UP = 4.0;   // VOLTAGE!!!!!
+    public static final double SHOULDER_SPEED_HOLD = 0.3;
     public static final double SHOULDER_RATE_DOWN = 40.0/360.0 * 12;
     // NOTE: This has to be negative to keep the robot level during climb
     public static final double SHOULDER_SPEED_LEVEL = -5.5;

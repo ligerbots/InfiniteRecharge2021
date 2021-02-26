@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
-import frc.robot.commands.InterstellarAccuracy.WaitForSmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -99,7 +98,6 @@ public class Robot extends TimedRobot {
          m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.climber));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
-    WaitForSmartDashboard.initSmartDashboard();
   }
 
   /**
