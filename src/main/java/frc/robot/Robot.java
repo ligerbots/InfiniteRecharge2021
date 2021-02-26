@@ -128,6 +128,10 @@ public class Robot extends TimedRobot {
       m_robotContainer.robotDrive.setRobotFromFieldPose();
     }
 
+    // Maintain a SD value to know if the robot is enabled
+    // Used for timing the 2021 At Home Skills
+    SmartDashboard.putBoolean("Enabled", false);
+
     if (Robot.isReal()) {
       m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
       m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
@@ -156,6 +160,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    // Maintain a SD value to know if the robot is enabled
+    SmartDashboard.putBoolean("Enabled", true);
+    // For At Home Skills, we want to know when the auto starts, so flush for fast response.
+    NetworkTableInstance.getDefault().flush();
+
     if (RobotBase.isSimulation()) {
       m_robotContainer.robotDrive.setRobotFromFieldPose();
     }
@@ -186,6 +195,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // Maintain a SD value to know if the robot is enabled
+    SmartDashboard.putBoolean("Enabled", true);
+
     if (RobotBase.isSimulation()) {
       m_robotContainer.robotDrive.setRobotFromFieldPose();
     }
@@ -235,6 +247,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    // Maintain a SD value to know if the robot is enabled
+    SmartDashboard.putBoolean("Enabled", false);
+
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
