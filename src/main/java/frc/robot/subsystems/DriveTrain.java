@@ -152,7 +152,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getRightSpeed() {
-        return rightMotors.get();
+        return -rightMotors.get();
     }
 
     public double getLeftSpeed() {
