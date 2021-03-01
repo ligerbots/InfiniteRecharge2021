@@ -41,7 +41,7 @@ public class PowerPort extends SequentialCommandGroup {
     private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, yOffset), rotation180);
 
     // sets the position that the robot starts in and shoots in
-    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, yOffset), rotation180);
+    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 5, 0, yOffset), rotation180);
 
     public PowerPort(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
 
