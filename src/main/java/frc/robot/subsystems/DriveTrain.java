@@ -218,15 +218,18 @@ public class DriveTrain extends SubsystemBase {
       fieldSim.setRobotPose(getPose());
     }
 
-    public void allDrive(double throttle, double rotate, boolean squaredInputs) {
+    public void allDrive(double throttle, double rotate, boolean squaredInputs, boolean driveSwitch) {
         if (squaredInputs) {
             if (Math.abs(throttle) < 0.1)
                 throttle = 0;
             if (Math.abs(rotate) < 0.1) 
                 rotate = 0;
         }
-        // differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
-        differentialDrive.curvatureDrive(throttle, -rotate, false);
+        // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
+        // if (driveSwitch) {  
+        //     differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+        // } else {
+        differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
     }
 
     // Raw access to arcade drive (use only for auto routines)
