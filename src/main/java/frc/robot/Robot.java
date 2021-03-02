@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.climber));
     chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision, m_robotContainer.climber));
     chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.shooter,
-         m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.climber));
+         m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.intake, m_robotContainer.climber));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

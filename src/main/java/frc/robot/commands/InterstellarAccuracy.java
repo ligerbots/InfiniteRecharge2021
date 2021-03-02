@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -26,6 +27,7 @@ import frc.robot.FieldMapHome;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class InterstellarAccuracy extends SequentialCommandGroup implements AutoCommandInterface {
@@ -42,9 +44,13 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
     // Center of robot is 69" from wall
     private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, yOffset), rotation180);
     
-    public InterstellarAccuracy(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Climber climber) {
+    public InterstellarAccuracy(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Intake intake, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
-        
+        IntakeCommand intakeCommand1 = new IntakeCommand(intake, Constants.INTAKE_SPEED);
+        IntakeCommand intakeCommand2 = new IntakeCommand(intake, Constants.INTAKE_SPEED);
+        IntakeCommand intakeCommand3 = new IntakeCommand(intake, Constants.INTAKE_SPEED);
+        IntakeCommand intakeCommand4 = new IntakeCommand(intake, Constants.INTAKE_SPEED);
+
         double maxSpeed = 1.5;
         double maxAccel = 1.0;
 
@@ -79,28 +85,28 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                         new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
             ramsete1backward,
             new HardStop(robotDrive),
-            new WaitForFullCarousel(carousel),
+            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand1),
 
             ramsete2forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete2backward,
             new HardStop(robotDrive),
-            new WaitForFullCarousel(carousel),
+            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand2),
 
             ramsete3forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete3backward,
             new HardStop(robotDrive),
-            new WaitForFullCarousel(carousel),
+            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand3),
 
             ramsete4forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete4backward,
             new HardStop(robotDrive),
-            new WaitForFullCarousel(carousel),
+            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand4),
 
             ramsete1forward2,
             new HardStop(robotDrive),
