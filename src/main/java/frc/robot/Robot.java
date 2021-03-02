@@ -94,8 +94,8 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Slalom, m_robotContainer.climber));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.climber));
     chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision, m_robotContainer.climber));
-    chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.shooter,
-         m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.climber));
+    chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.shooter, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.climber));
+    chosenAuto.addoption("PowerPort", new PowerPort(m_robotContainer.robotDrive, m_robotContainer.shooter, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.climber));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

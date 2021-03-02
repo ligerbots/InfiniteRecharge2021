@@ -30,7 +30,7 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PowerPort extends SequentialCommandGroup {
+public class PowerPort extends SequentialCommandGroup implements AutoCommandInterface {
     /** Creates a new PowerPort. */
   
     // add a yOffset variable. make simulation testing much easier
@@ -110,5 +110,9 @@ public class PowerPort extends SequentialCommandGroup {
             robotDrive::tankDriveVolts,
             robotDrive
         );
+    }
+
+    public Pose2d getInitialPose() {
+        return initialPose;
     }
 }
