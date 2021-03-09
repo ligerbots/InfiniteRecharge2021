@@ -96,7 +96,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
-
+        /*
         Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
@@ -130,10 +130,17 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
             robotDrive::tankDriveVolts,
             robotDrive
         );
-
+        */
+        CorrectDriftCommand correctDriftAndRunRamsete = new CorrectDriftCommand(robotDrive, 
+                                                                                autoID == Path.Barrel ? "barrel" : "slalom",
+                                                                                initialPose,
+                                                                                waypointList, 
+                                                                                endPose, 
+                                                                                configForward);
+                                                                                
         addCommands(
             // Run the backward trajectory and then stop when we get to the end
-            new ParallelCommandGroup(new DeployIntake(climber),ramseteForward).andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            new ParallelCommandGroup(new DeployIntake(climber),correctDriftAndRunRamsete).andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 

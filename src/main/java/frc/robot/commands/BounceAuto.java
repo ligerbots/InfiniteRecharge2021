@@ -57,8 +57,9 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                     .addConstraint(centripetalAccelerationConstraint)
                     .setReversed(true);
       
-        Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
+
+        CorrectDriftCommand correctDriftAndRunRamsete_backward1 = new CorrectDriftCommand(robotDrive, 
+                "bounce",
                 initialPose,
                 List.of( 
                     FieldMapHome.gridPoint('C', 2, 20, 15)
@@ -66,8 +67,9 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 configBackward);
 
-        Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
 
+        CorrectDriftCommand correctDriftAndRunRamsete_forward1 = new CorrectDriftCommand(robotDrive, 
+                "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 List.of(
                     FieldMapHome.gridPoint('C', 4, -20, 0),
@@ -76,7 +78,9 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 configForward);
 
-        Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
+
+        CorrectDriftCommand correctDriftAndRunRamsete_backward2 = new CorrectDriftCommand(robotDrive, 
+                "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 List.of(
                         FieldMapHome.gridPoint('D', 7, -27, 0),
@@ -87,14 +91,17 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
                 configBackward);
 
-        Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
+                  
+        CorrectDriftCommand correctDriftAndRunRamsete_forward2 = new CorrectDriftCommand(robotDrive, 
+                "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
                 List.of(
                         FieldMapHome.gridPoint('B', 10, -20, -20)
                 ),
                 new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
                 configForward);
-                  
+
+        /*
         System.out.println("DEBUG: Bounce path");
         System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
@@ -167,12 +174,12 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             robotDrive::tankDriveVolts,
             robotDrive
         );
-        
+        */
         addCommands(            
-            new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward1).andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteBackward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            new ParallelCommandGroup(new DeployIntake(climber),correctDriftAndRunRamsete_backward1).andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            correctDriftAndRunRamsete_forward1.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            correctDriftAndRunRamsete_backward2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            correctDriftAndRunRamsete_forward2.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 

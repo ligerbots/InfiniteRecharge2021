@@ -94,7 +94,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
 
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(true);
-
+        
+        /*
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
@@ -113,7 +114,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             writer.WriteTrajectory(backTrajectory);
             writer.WriteWaypoints(initialPose, waypointList, endPose);
         }
-
+        
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
             robotDrive::getPose,
@@ -127,14 +128,20 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             new PIDController(Constants.kPDriveVel, 0, 0),
             robotDrive::tankDriveVolts,
             robotDrive
-        );
+        );*/
+        CorrectDriftCommand correctDriftAndRunRamsete = new CorrectDriftCommand(robotDrive, 
+                                                                                (autoID == Path.RedA || autoID == Path.BlueA) ? "pathA" : "pathB",
+                                                                                initialPose,
+                                                                                waypointList, 
+                                                                                endPose, 
+                                                                                configBackward);
         if(autoID == Path.RedA|| autoID == Path.RedB){
             addCommands(
                 // We need to start both the carousel command and the intake command in parallel
                 // with the ramseteBackward command.
                 carouselCommand.alongWith(intakeCommand, 
                                           // At the end of the remsete trajectory, stop the motors.
-                                          new SequentialCommandGroup(new DeployIntake(climber),ramseteBackward)
+                                          new SequentialCommandGroup(new DeployIntake(climber),correctDriftAndRunRamsete)
                                           .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
             );
         }else{
@@ -143,7 +150,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 // with the ramseteBackward command.
                 carouselCommand.alongWith(intakeCommand, 
                                         // At the end of the remsete trajectory, stop the motors.
-                                        new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward)
+                                        new ParallelCommandGroup(new DeployIntake(climber),correctDriftAndRunRamsete)
                                         .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
             );
         }
