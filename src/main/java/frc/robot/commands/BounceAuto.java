@@ -59,6 +59,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
       
 
         CorrectDriftCommand correctDriftAndRunRamsete_backward1 = new CorrectDriftCommand(robotDrive, 
+                true,
                 "bounce",
                 initialPose,
                 List.of( 
@@ -69,6 +70,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
 
         CorrectDriftCommand correctDriftAndRunRamsete_forward1 = new CorrectDriftCommand(robotDrive, 
+                false,
                 "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 List.of(
@@ -80,6 +82,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
 
         CorrectDriftCommand correctDriftAndRunRamsete_backward2 = new CorrectDriftCommand(robotDrive, 
+                false,
                 "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 List.of(
@@ -93,6 +96,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
                   
         CorrectDriftCommand correctDriftAndRunRamsete_forward2 = new CorrectDriftCommand(robotDrive, 
+                false,
                 "bounce",
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
                 List.of(

@@ -22,17 +22,14 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
-public class CorrectDriftCommand extends CommandBase implements AutoCommandInterface {
-
-    private final Pose2d initialPose = new Pose2d(0,0, new Rotation2d(0,0));
-    
+public class CorrectDriftCommand extends CommandBase {    
     String pathName;
     TrajectoryConfig traj_config;
     double[] emptyArray = new double[0];
     Pose2d traj_start; 
     List<Translation2d> traj_interiorWaypoints; 
     Pose2d traj_end;
-
+    boolean resetPosition;
     double[] makePoints(Pose2d start, List<Translation2d> waypoints, Pose2d end){
         double[] res =new double[3+waypoints.size()*2+3];
         res[0]=start.getX();
@@ -60,8 +57,9 @@ public class CorrectDriftCommand extends CommandBase implements AutoCommandInter
 
     DriveTrain driveTrain;
     RamseteCommand ramsete;
-    public CorrectDriftCommand(DriveTrain robotDrive, String pathName, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end, TrajectoryConfig config){
+    public CorrectDriftCommand(DriveTrain robotDrive, boolean resetPosition, String pathName, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end, TrajectoryConfig config){
         driveTrain=robotDrive;
+        this.resetPosition=resetPosition;
         this.pathName = pathName;
         traj_start=start;
         traj_interiorWaypoints = interiorWaypoints;
@@ -87,9 +85,9 @@ public class CorrectDriftCommand extends CommandBase implements AutoCommandInter
 
                 if(traj != null){
                     Pose2d init = traj.getInitialPose();
-                    System.out.println("from "+driveTrain.getPose().getRotation().getDegrees());
-                    driveTrain.setPose(init);
-                    System.out.println("to "+driveTrain.getPose().getRotation().getDegrees());
+
+                    if(resetPosition) driveTrain.setPose(init);
+                    
                     ramsete = new RamseteCommand(
                         traj,
                         driveTrain::getPose,
@@ -105,9 +103,11 @@ public class CorrectDriftCommand extends CommandBase implements AutoCommandInter
                         driveTrain
                     );
                     ramsete.initialize();
+
                 }
             }
         }else{
+
             ramsete.execute();
         }
     }
@@ -119,10 +119,6 @@ public class CorrectDriftCommand extends CommandBase implements AutoCommandInter
     public boolean isFinished() {
         if(ramsete == null) return false;
         return ramsete.isFinished();
-    }
-    @Override
-    public Pose2d getInitialPose() {
-        return initialPose;
     }
     
 }

@@ -132,6 +132,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         );
         */
         CorrectDriftCommand correctDriftAndRunRamsete = new CorrectDriftCommand(robotDrive, 
+                                                                                true,
                                                                                 autoID == Path.Barrel ? "barrel" : "slalom",
                                                                                 initialPose,
                                                                                 waypointList, 

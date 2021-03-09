@@ -130,6 +130,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             robotDrive
         );*/
         CorrectDriftCommand correctDriftAndRunRamsete = new CorrectDriftCommand(robotDrive, 
+                                                                                true,
                                                                                 (autoID == Path.RedA || autoID == Path.BlueA) ? "pathA" : "pathB",
                                                                                 initialPose,
                                                                                 waypointList, 
