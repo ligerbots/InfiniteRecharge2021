@@ -43,35 +43,36 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
         // Define these here, but we may override them within the case statement so we can tune each
         // path individually
-        double maxSpeed = 1.5;
-        double maxAccel = 1.0;
-
-        // This will make the robot slow down around turns
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
+        double maxSpeed = 2.0;
+        double maxAccel = 1.5;
+        double maxCentripetal = 2.0;
 
         switch (autoID) {
             case Barrel:
+                maxSpeed = 5.0;
+                maxAccel = 2.5;
+                maxCentripetal = 3.0;
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 5),
                                        FieldMapHome.gridPoint('D', 6, -5, 0),
                                        FieldMapHome.gridPoint('E', 5, 0, 5),
                                        FieldMapHome.gridPoint('D', 4, 5, 0),
                                        FieldMapHome.gridPoint('C', 5, 0, -5),
-                                       FieldMapHome.gridPoint('C', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 9, -5, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 7, 5, 0),
+                                       FieldMapHome.gridPoint('C', 8, 0, 20),
+                                       FieldMapHome.gridPoint('B', 9, -5, 15),
+                                       FieldMapHome.gridPoint('A', 8, 0, 10),
+                                       FieldMapHome.gridPoint('B', 7, 15, 5),
                                     //    FieldMapHome.gridPoint('D', 9, -15, 0),
                                     //    FieldMapHome.gridPoint('D', 10, -15, 0),
-                                       FieldMapHome.gridPoint('D', 10, -20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, 20),
-                                       FieldMapHome.gridPoint('C', 9)
+                                       FieldMapHome.gridPoint('D', 10, -20, -5),
+                                       FieldMapHome.gridPoint('D', 10, 20, -5),
+                                       FieldMapHome.gridPoint('D', 10, 30, 30),
+                                       FieldMapHome.gridPoint('C', 9, 0, 15)
                                     //    FieldMapHome.gridPoint('D', 11, -5, 0),
                                        //FieldMapHome.gridPoint('C', 11, -7, 0),
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, 30), new Rotation2d(Math.PI));
                 break;
 
             case Slalom:
@@ -89,6 +90,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
         }
+
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(maxCentripetal);
 
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
