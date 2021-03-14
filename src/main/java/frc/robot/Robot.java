@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   private AutoCommandInterface m_prevAutoCommand = null;
+  private TrajectoryPlotter m_plotter;
 
   //returns the time since initialization in seconds as a double
   public static double time() {
@@ -52,6 +53,8 @@ public class Robot extends TimedRobot {
 
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
+
+    m_plotter = new TrajectoryPlotter(m_robotContainer.robotDrive.getField2d());
 
     //m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
 
@@ -147,6 +150,10 @@ public class Robot extends TimedRobot {
     if (autoCommandInterface != null && autoCommandInterface != m_prevAutoCommand) {
       m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
       m_prevAutoCommand = autoCommandInterface;
+
+      if (Robot.isSimulation()) {
+        autoCommandInterface.plotTrajectory(m_plotter);
+      }
     }
   }
 
