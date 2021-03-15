@@ -10,10 +10,8 @@ package frc.robot.commands;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+
 import frc.robot.commands.GalacticSearchAuto.Path;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;

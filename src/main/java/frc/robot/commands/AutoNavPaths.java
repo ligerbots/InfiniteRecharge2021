@@ -34,11 +34,12 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose;
+    private List<Translation2d> waypointList = null;    // set to null to suppress warning
+    private Trajectory forwardTrajectory;
 
     public AutoNavPaths(DriveTrain robotDrive, Path autoID, Climber climber) {
         final Rotation2d rotation = Rotation2d.fromDegrees(0.0);
         
-        List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
         // Define these here, but we may override them within the case statement so we can tune each
@@ -97,7 +98,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
 
-        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
+        forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypointList, 
@@ -140,5 +141,10 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
+    }
+
+    public void plotTrajectory(TrajectoryPlotter plotter) {
+        plotter.plotTrajectory(forwardTrajectory);
+        plotter.plotWaypoints(waypointList);
     }
 }
