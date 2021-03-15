@@ -53,26 +53,28 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         switch (autoID) {
             case Barrel:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 5),
-                                       FieldMapHome.gridPoint('D', 6, -5, 0),
-                                       FieldMapHome.gridPoint('E', 5, 0, 5),
-                                       FieldMapHome.gridPoint('D', 4, 5, 0),
-                                       FieldMapHome.gridPoint('C', 5, 0, -5),
-                                       FieldMapHome.gridPoint('C', 8, 0, 5),
+                waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0 , -5),
+                                       FieldMapHome.gridPoint('D', 6, -3, -3),
+                                       FieldMapHome.gridPoint('E', 5, 0, 8),
+                                       FieldMapHome.gridPoint('D', 4, 5, -3),
+                                       FieldMapHome.gridPoint('C', 5, 0, -8),
+                                       FieldMapHome.gridPoint('C', 8, 0, 3),
                                        FieldMapHome.gridPoint('B', 9, -5, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 7, 5, 0),
+                                       FieldMapHome.gridPoint('A', 8, 0, -8),
+                                       FieldMapHome.gridPoint('B', 7, 6, 5),
+                                       FieldMapHome.gridPoint('C', 8, -7, 0),
                                     //    FieldMapHome.gridPoint('D', 9, -15, 0),
                                     //    FieldMapHome.gridPoint('D', 10, -15, 0),
-                                       FieldMapHome.gridPoint('D', 10, -20, -20),
+                                       FieldMapHome.gridPoint('D', 10, -25, -12),
                                        FieldMapHome.gridPoint('D', 10, 20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, 20),
-                                       FieldMapHome.gridPoint('C', 9)
+                                       FieldMapHome.gridPoint('D', 10, 23, 10),
+                                       //FieldMapHome.gridPoint('C', 10),
+                                       FieldMapHome.gridPoint('C', 9, -15, -7)
                                     //    FieldMapHome.gridPoint('D', 11, -5, 0),
                                        //FieldMapHome.gridPoint('C', 11, -7, 0),
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2,-15,-7), new Rotation2d(Math.PI));
                 break;
 
             case Slalom:
