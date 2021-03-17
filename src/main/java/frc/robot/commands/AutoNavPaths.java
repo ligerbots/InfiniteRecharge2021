@@ -34,11 +34,12 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose;
+    private List<Translation2d> waypointList = null;    // set to null to suppress warning
+    private Trajectory forwardTrajectory;
 
     public AutoNavPaths(DriveTrain robotDrive, Path autoID, Climber climber) {
         final Rotation2d rotation = Rotation2d.fromDegrees(0.0);
         
-        List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
         // Define these here, but we may override them within the case statement so we can tune each
@@ -52,40 +53,42 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         switch (autoID) {
             case Barrel:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 5),
-                                       FieldMapHome.gridPoint('D', 6, -5, 0),
-                                       FieldMapHome.gridPoint('E', 5, 0, 5),
-                                       FieldMapHome.gridPoint('D', 4, 5, 0),
-                                       FieldMapHome.gridPoint('C', 5, 0, -5),
-                                       FieldMapHome.gridPoint('C', 8, 0, 5),
+                waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0 , -5),
+                                       FieldMapHome.gridPoint('D', 6, -3, -3),
+                                       FieldMapHome.gridPoint('E', 5, 0, 8),
+                                       FieldMapHome.gridPoint('D', 4, 5, -3),
+                                       FieldMapHome.gridPoint('C', 5, 0, -8),
+                                       FieldMapHome.gridPoint('C', 8, 0, 3),
                                        FieldMapHome.gridPoint('B', 9, -5, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 7, 5, 0),
+                                       FieldMapHome.gridPoint('A', 8, 0, -8),
+                                       FieldMapHome.gridPoint('B', 7, 6, 5),
+                                       FieldMapHome.gridPoint('C', 8, -7, 0),
                                     //    FieldMapHome.gridPoint('D', 9, -15, 0),
                                     //    FieldMapHome.gridPoint('D', 10, -15, 0),
-                                       FieldMapHome.gridPoint('D', 10, -20, -20),
+                                       FieldMapHome.gridPoint('D', 10, -25, -12),
                                        FieldMapHome.gridPoint('D', 10, 20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, 20),
-                                       FieldMapHome.gridPoint('C', 9)
+                                       FieldMapHome.gridPoint('D', 10, 23, 10),
+                                       //FieldMapHome.gridPoint('C', 10),
+                                       FieldMapHome.gridPoint('C', 9, -15, -5)
                                     //    FieldMapHome.gridPoint('D', 11, -5, 0),
                                        //FieldMapHome.gridPoint('C', 11, -7, 0),
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2,-15,-5), new Rotation2d(Math.PI));
                 break;
 
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
                 waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
-                                       FieldMapHome.gridPoint('C', 8),
-                                       FieldMapHome.gridPoint('D', 9),
-                                       FieldMapHome.gridPoint('E', 10),
-                                       FieldMapHome.gridPoint('D', 11),
-                                       FieldMapHome.gridPoint('C', 10),
-                                       FieldMapHome.gridPoint('E', 8),
-                                       FieldMapHome.gridPoint('E', 7),
-                                       FieldMapHome.gridPoint('E', 4, 7, 0));
+                                       FieldMapHome.gridPoint('C', 8, -5 ,-1),
+                                       FieldMapHome.gridPoint('D', 9,2,-1),
+                                       FieldMapHome.gridPoint('E', 10,0,5),
+                                       FieldMapHome.gridPoint('D', 11, 0 , -3),
+                                       FieldMapHome.gridPoint('C', 10,0,-5),
+                                       FieldMapHome.gridPoint('E', 8, 17, 15),
+                                       FieldMapHome.gridPoint('E', 7,0,-2),
+                                       FieldMapHome.gridPoint('E', 4, 7, 2));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
         }
@@ -97,7 +100,7 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
         /*
-        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
+        forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypointList, 
@@ -148,5 +151,10 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
+    }
+
+    public void plotTrajectory(TrajectoryPlotter plotter) {
+        //plotter.plotTrajectory(forwardTrajectory);
+        //plotter.plotWaypoints(waypointList);
     }
 }

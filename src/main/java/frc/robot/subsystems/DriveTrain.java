@@ -120,6 +120,10 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    public Field2d getField2d() {
+        return fieldSim;
+    }
+    
     public Pose2d getPose () {
         return odometry.getPoseMeters();
     }
