@@ -46,35 +46,40 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // path individually
         double maxSpeed = 1.5;
         double maxAccel = 1.0;
-
+        double maxCentripetal = 1.5;
         // This will make the robot slow down around turns
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
 
         switch (autoID) {
             case Barrel:
+
+                // Set speed and acceleration values
+                maxSpeed = 3.5;
+                maxAccel = 3.0;
+                maxCentripetal = 3.0;
+
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
                 waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0 , -5),
                                        FieldMapHome.gridPoint('D', 6, -3, -3),
-                                       FieldMapHome.gridPoint('E', 5, 0, 8),
-                                       FieldMapHome.gridPoint('D', 4, 5, -3),
-                                       FieldMapHome.gridPoint('C', 5, 0, -8),
-                                       FieldMapHome.gridPoint('C', 8, 0, 3),
-                                       FieldMapHome.gridPoint('B', 9, -5, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, -8),
-                                       FieldMapHome.gridPoint('B', 7, 6, 5),
-                                       FieldMapHome.gridPoint('C', 8, -7, 0),
+                                       FieldMapHome.gridPoint('E', 5, 0, 5),
+                                       FieldMapHome.gridPoint('D', 4, 5, 0),
+                                       FieldMapHome.gridPoint('C', 5, 0, 0),
+                                       FieldMapHome.gridPoint('C', 8, 0, 10),
+                                       FieldMapHome.gridPoint('B', 9, -10, 10),
+                                       FieldMapHome.gridPoint('A', 8, 0, 10),
+                                       FieldMapHome.gridPoint('B', 7, 10, 10),
+                                       FieldMapHome.gridPoint('C', 8, 0, 0),
                                     //    FieldMapHome.gridPoint('D', 9, -15, 0),
                                     //    FieldMapHome.gridPoint('D', 10, -15, 0),
-                                       FieldMapHome.gridPoint('D', 10, -25, -12),
-                                       FieldMapHome.gridPoint('D', 10, 20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 23, 10),
+                                       FieldMapHome.gridPoint('D', 9, 0, 0),
+                                       FieldMapHome.gridPoint('D', 10, 20, -5),
+                                       FieldMapHome.gridPoint('D', 10, 25, 25),
                                        //FieldMapHome.gridPoint('C', 10),
-                                       FieldMapHome.gridPoint('C', 9, -15, -5)
+                                       FieldMapHome.gridPoint('C', 9, -15, 15)
                                     //    FieldMapHome.gridPoint('D', 11, -5, 0),
                                        //FieldMapHome.gridPoint('C', 11, -7, 0),
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2,-15,-5), new Rotation2d(Math.PI));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2,-15,50), new Rotation2d(Math.PI));
                 break;
 
             case Slalom:
@@ -96,6 +101,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
+
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(maxCentripetal);
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
