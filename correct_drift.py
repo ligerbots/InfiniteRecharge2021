@@ -6,6 +6,9 @@ from matplotlib.widgets import Button, CheckButtons
 import math
 from networktables import NetworkTables, NetworkTablesInstance
 import time
+import atexit
+import json
+
 field_width_in=360
 field_height_in=180
 
@@ -60,13 +63,23 @@ class CorrectDrift:
 
         self.path_name_nt.addListener(lambda entry, key, value, param: self.update_field(value), NetworkTablesInstance.NotifyFlags.UPDATE)
 
+        
         self.update_original_points()
-        self.update_modified_points()
         self.update_field(self.path_name_nt.getString(""))
 
         self.update_plot()
+        atexit.register(self.save_modified_points)
         plt.show()
-
+    def save_modified_points(self):
+        with open('path.json', 'w') as f:
+            json.dump(self.points, f)
+        for i in range(len(self.points)):
+            pt = self.points[i]
+            print("Point "+i+":")
+            print("position: "+pt["position"])
+            if "angle" in pt:
+                print("angle: "+pt["angle"])
+            print()
     def update_field(self,path_name):
         self.draw_field(path_name)
         self.update_plot()
@@ -125,10 +138,16 @@ class CorrectDrift:
         return(res)
 
 
-    def update_original_points(self):
+    def update_original_points(self, first=False):
         self.orig_line.set_data(*self.extract_pts(self.original_points_nt).T)
+        if(first):
+            try:
+                with open('path.json') as f:
+                    self.points = json.load(f)
+            except FileNotFoundError:
 
-        self.points = self.extract_pts_and_rot(self.original_points_nt)
+        else:
+            self.points = self.extract_pts_and_rot(self.original_points_nt)
         self.push_modified_points()
         self.update_plot()
 
@@ -381,4 +400,5 @@ class CorrectDrift:
                         self.points[self.drag_pt]["position"]+=delta
                     self.last_mousepos = mpos
                 self.update_plot()
+
 CorrectDrift()
