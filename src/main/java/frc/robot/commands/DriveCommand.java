@@ -19,6 +19,9 @@ public class DriveCommand extends CommandBase {
     this.throttle = throttle;
     this.turn = turn;
     // Use addRequirements() here to declare subsystem dependencies.
+    for(int i=0;i<10;i++){
+      System.out.println("hello");
+    }
   }
 
   // Called when the command is initially scheduled.
