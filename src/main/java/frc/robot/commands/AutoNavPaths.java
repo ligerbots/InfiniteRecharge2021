@@ -56,8 +56,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 maxAccel = 3.2;
                 maxCentripetal = 3.8;
 
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0 , -5),
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12, 0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0, -5),
                                        FieldMapHome.gridPoint('D', 6, -3, -3),
                                        FieldMapHome.gridPoint('E', 5, 0, 5),
                                        FieldMapHome.gridPoint('D', 4, 5, 0),
@@ -78,20 +78,20 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                                        FieldMapHome.gridPoint('C', 5, 0, 20)
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2,-15,30), new Rotation2d(Math.PI-Math.toRadians(5.0)));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, -15, 30), Rotation2d.fromDegrees(175.0));
                 break;
 
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
                 waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
-                                       FieldMapHome.gridPoint('C', 8, -5 ,-1),
-                                       FieldMapHome.gridPoint('D', 9,2,-1),
-                                       FieldMapHome.gridPoint('E', 10,0,5),
-                                       FieldMapHome.gridPoint('D', 11, 0 , -3),
-                                       FieldMapHome.gridPoint('C', 10,0,-5),
+                                       FieldMapHome.gridPoint('C', 8, -5, -1),
+                                       FieldMapHome.gridPoint('D', 9, 2, -1),
+                                       FieldMapHome.gridPoint('E', 10, 0, 5),
+                                       FieldMapHome.gridPoint('D', 11, 0, -3),
+                                       FieldMapHome.gridPoint('C', 10, 0, -5),
                                        FieldMapHome.gridPoint('E', 8, 17, 15),
-                                       FieldMapHome.gridPoint('E', 7,0,-2),
+                                       FieldMapHome.gridPoint('E', 7, 0, -2),
                                        FieldMapHome.gridPoint('E', 4, 7, 2));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
