@@ -35,7 +35,8 @@ public class ShooterCommand extends CommandBase {
 
     ControlMethod currentControlMode;
 
-    public ShooterCommand(Shooter shooter, Carousel carousel,  CarouselCommand carouselCommand) {
+
+    public ShooterCommand(Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
         this.shooter = shooter;
         addRequirements(shooter);
         this.carousel = carousel;
@@ -129,6 +130,8 @@ public class ShooterCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        if (Robot.isSimulation()) return (Robot.time() - startTime) > 2.0;
+
         // end if we have shot all the balls,
         //   or if we have not acquired the vision target in 2 seconds
         // Note: use MAX_BALLS which is 3 for AtHome; a little faster but risks
@@ -136,38 +139,4 @@ public class ShooterCommand extends CommandBase {
         return (carousel.getSlot() - initialCarouselSlot) > Constants.CAROUSEL_MAX_BALLS ||
             (currentControlMode == ControlMethod.ACQUIRING && (Robot.time() - startTime) > 2.0);
     }
-    // Nothing to do in ControlMethod.FIRING
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    shooter.stopAll();
-    shooter.vision.setMode(VisionMode.INTAKE);
-    carousel.spin(0.0);
-    carousel.resetBallCount();
-    carouselCommand.schedule();
-    System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
-    //if (rescheduleDriveCommand) {
-     // driveCommand.schedule();
-    //}
-    SmartDashboard.putString("shooter/Shooting", "Idle");
-    
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-<<<<<<< HEAD
-    if (Robot.isSimulation()) return (Robot.time() - startTime) > 2.0;
-
-    // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
-=======
-    return (carousel.getSlot() - initialCarouselSlot) > Constants.CAROUSEL_MAX_BALLS ||
-      (currentControlMode == ControlMethod.ACQUIRING && Robot.time() - startTime > 2.0);
->>>>>>> minor bug fixes
-  }
-=======
->>>>>>> Formatting cleanups, some extra comments.
 }

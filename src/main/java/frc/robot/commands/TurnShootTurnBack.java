@@ -29,7 +29,7 @@ public class TurnShootTurnBack extends SequentialCommandGroup {
         // This is faster than trying to be too accurate.
         // For turning back, keep the accuracy tight (1 degree).
         addCommands(new FaceShootingTarget(driveTrain, 3.0, null, shooter),
-                    new ShooterCommand(shooter, carousel, driveTrain, carouselCommand, false),
+                    new ShooterCommand(shooter, carousel, carouselCommand),
                     new TurnToHeading(driveTrain, targetHeading, 1.0));
     }
 
