@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -31,7 +33,12 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
-
+    private Trajectory backTrajectory1;
+    private Trajectory backTrajectory2;
+    private Trajectory forwardTrajectory1;
+    private Trajectory forwardTrajectory2;
+    private ArrayList<Translation2d> waypointList = new ArrayList<Translation2d>();
+    
     public BounceAuto(DriveTrain robotDrive, Climber climber) {
 
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
@@ -57,56 +64,67 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                     .addConstraint(centripetalAccelerationConstraint)
                     .setReversed(true);
       
-        Trajectory backTrajectory1 = TrajectoryGenerator.generateTrajectory(
+        List<Translation2d> waypoints = List.of( 
+            FieldMapHome.gridPoint('C', 2, 20, 15)
+        );
+        backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
-                List.of( 
-                    FieldMapHome.gridPoint('C', 2, 20, 15)
-                ),
+                waypoints,
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 configBackward);
+        waypointList.addAll(waypoints);
 
-        Trajectory forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
+        waypoints = List.of(
+            FieldMapHome.gridPoint('C', 4, -20, 0),
+            FieldMapHome.gridPoint('E', 5, 5, 0)
+        );
+        forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
 
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
-                List.of(
-                    FieldMapHome.gridPoint('C', 4, -20, 0),
-                    FieldMapHome.gridPoint('E', 5, 5, 0)
-                ) ,
+                waypoints,
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 configForward);
+        waypointList.add(forwardTrajectory1.getInitialPose().getTranslation());
+        waypointList.addAll(waypoints);
 
-        Trajectory backTrajectory2 = TrajectoryGenerator.generateTrajectory(
+        waypoints = List.of(
+            FieldMapHome.gridPoint('D', 7, -27, 0),
+            FieldMapHome.gridPoint('E', 7, 0, 5),
+            FieldMapHome.gridPoint('E', 8, 0, 5),
+            FieldMapHome.gridPoint('D', 9, -3, 0)
+        );  
+        backTrajectory2 = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
-                List.of(
-                        FieldMapHome.gridPoint('D', 7, -27, 0),
-                        FieldMapHome.gridPoint('E', 7, 0, 5),
-                        FieldMapHome.gridPoint('E', 8, 0, 5),
-                        FieldMapHome.gridPoint('D', 9, -3, 0)
-                ),
+                waypoints,
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
                 configBackward);
-
-        Trajectory forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
+        waypointList.add(backTrajectory2.getInitialPose().getTranslation());
+        waypointList.addAll(waypoints);
+        
+        waypoints = List.of(
+            FieldMapHome.gridPoint('B', 10, -20, -20)
+        );
+        forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
-                List.of(
-                        FieldMapHome.gridPoint('B', 10, -20, -20)
-                ),
+                waypoints,
                 new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
                 configForward);
-                  
+        waypointList.add(forwardTrajectory2.getInitialPose().getTranslation());
+        waypointList.addAll(waypoints);
+                          
         System.out.println("DEBUG: Bounce path");
         System.out.print("DEBUG: maxSpeed = " + maxSpeed + " maxAcceleration = " + maxAccel + " ");
         double pathTime = backTrajectory1.getTotalTimeSeconds() + backTrajectory2.getTotalTimeSeconds()
             + forwardTrajectory1.getTotalTimeSeconds() + forwardTrajectory2.getTotalTimeSeconds();
         System.out.println("Path time = " + pathTime);
-        if (Robot.isSimulation()) {
-            TrajectoryWriter writer = new TrajectoryWriter("Bounce");
-            writer.WriteTrajectory(backTrajectory1);
-            writer.WriteTrajectory(forwardTrajectory1);
-            writer.WriteTrajectory(backTrajectory2);
-            writer.WriteTrajectory(forwardTrajectory2);
-        }
+        // if (Robot.isSimulation()) {
+        //     TrajectoryWriter writer = new TrajectoryWriter("Bounce");
+        //     writer.WriteTrajectory(backTrajectory1);
+        //     writer.WriteTrajectory(forwardTrajectory1);
+        //     writer.WriteTrajectory(backTrajectory2);
+        //     writer.WriteTrajectory(forwardTrajectory2);
+        // }
 
         RamseteCommand ramseteBackward1 = new RamseteCommand(
             backTrajectory1,
@@ -179,5 +197,14 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
+    }
+
+    public void plotTrajectory(TrajectoryPlotter plotter) {
+        plotter.plotTrajectory(0, backTrajectory1);
+        plotter.plotTrajectory(1, forwardTrajectory1);
+        plotter.plotTrajectory(2, backTrajectory2);
+        plotter.plotTrajectory(3, forwardTrajectory2);
+
+        plotter.plotWaypoints(waypointList);
     }
 }

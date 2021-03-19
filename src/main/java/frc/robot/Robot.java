@@ -152,6 +152,7 @@ public class Robot extends TimedRobot {
       m_prevAutoCommand = autoCommandInterface;
 
       if (Robot.isSimulation()) {
+        m_plotter.clear();
         autoCommandInterface.plotTrajectory(m_plotter);
       }
     }

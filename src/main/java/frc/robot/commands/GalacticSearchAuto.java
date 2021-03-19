@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -36,6 +35,8 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
     private Pose2d initialPose;
+    private Trajectory backTrajectory;
+    private List<Translation2d> waypointList = null;    // set to null to suppress warning
 
     public GalacticSearchAuto(DriveTrain robotDrive, Carousel carousel, Intake intake, Path autoID, Climber climber) {
         final Rotation2d rotation180 = Rotation2d.fromDegrees(180.0);
@@ -45,7 +46,6 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         CarouselCommand carouselCommand = new CarouselCommand(carousel);
         IntakeCommand intakeCommand = new IntakeCommand(intake, Constants.INTAKE_SPEED);
 
-        List<Translation2d> waypointList = null;    // set to null to suppress warning
         Pose2d endPose = null;
 
         // Define these here, but we may override them within the case statement so we can tune each
@@ -74,17 +74,17 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             case BlueA:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 45.0/2, 0), rotation180);
                 waypointList = List.of(FieldMapHome.gridPoint('E', 6, -15, 0),
-                                       FieldMapHome.gridPoint('B', 7, 0, -15),
-                                       FieldMapHome.gridPoint('C', 9, 0, 10));
+                                       FieldMapHome.gridPoint('B', 7, 0, -15));
+                                       //FieldMapHome.gridPoint('C', 9, 0, 10));
                 endPose =  new Pose2d(FieldMapHome.gridPoint('C', 11), rotation180);
                 break;
 
             case BlueB:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 45.0/2, 0), rotation180);
                 waypointList = List.of(FieldMapHome.gridPoint('D', 6, 0, 10),
-                                       FieldMapHome.gridPoint('B', 8, 0, -5),
-                                       FieldMapHome.gridPoint('D', 10, 0, 10));
-                endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11, 0, -10), Rotation2d.fromDegrees(135));
+                                       FieldMapHome.gridPoint('B', 8, 0, -10));
+                                       // FieldMapHome.gridPoint('D', 10, 0, 10));
+                endPose =  new Pose2d(FieldMapHome.gridPoint('D', 11, 0, -15), Rotation2d.fromDegrees(135));
                 break;
         }
 
@@ -95,7 +95,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         TrajectoryConfig configBackward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(true);
 
-        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
+        backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypointList, 
@@ -108,11 +108,11 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + backTrajectory.getTotalTimeSeconds());
-        if ( Robot.isSimulation() ) {
-            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
-            writer.WriteTrajectory(backTrajectory);
-            writer.WriteWaypoints(initialPose, waypointList, endPose);
-        }
+        // if ( Robot.isSimulation() ) {
+        //     TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+        //     writer.WriteTrajectory(backTrajectory);
+        //     writer.WriteWaypoints(initialPose, waypointList, endPose);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
@@ -128,19 +128,19 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
             robotDrive::tankDriveVolts,
             robotDrive
         );
-        if(autoID == Path.RedA|| autoID == Path.RedB){
+
+        if (autoID == Path.RedA|| autoID == Path.RedB) {
             addCommands(
-                // We need to start both the carousel command and the intake command in parallel
-                // with the ramseteBackward command.
+                // We need to deploy the intake before starting to drive, because the first
+                //  ball is too close.
                 carouselCommand.alongWith(intakeCommand, 
                                           // At the end of the remsete trajectory, stop the motors.
                                           new SequentialCommandGroup(new DeployIntake(climber),ramseteBackward)
                                           .andThen(() -> robotDrive.tankDriveVolts(0, 0)))
             );
-        }else{
+        } else {
             addCommands(
-                // We need to start both the carousel command and the intake command in parallel
-                // with the ramseteBackward command.
+                // Deploy the intake as we start driving. Saves time.
                 carouselCommand.alongWith(intakeCommand, 
                                         // At the end of the remsete trajectory, stop the motors.
                                         new ParallelCommandGroup(new DeployIntake(climber),ramseteBackward)
@@ -152,5 +152,10 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
     // Allows the system to get the initial pose of this command
     public Pose2d getInitialPose() {
         return initialPose;
+    }
+
+    public void plotTrajectory(TrajectoryPlotter plotter) {
+        plotter.plotTrajectory(backTrajectory);
+        plotter.plotWaypoints(waypointList);
     }
 }
