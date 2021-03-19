@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 

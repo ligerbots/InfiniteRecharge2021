@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
@@ -80,7 +80,6 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             FieldMapHome.gridPoint('E', 5, 5, 0)
         );
         forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
-
                 new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
                 waypoints,
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
@@ -103,12 +102,12 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         waypointList.addAll(waypoints);
         
         waypoints = List.of(
-            FieldMapHome.gridPoint('B', 10, -20, -20)
+            //FieldMapHome.gridPoint('B', 10, -20, -20)
         );
         forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
                 waypoints,
-                new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
+                new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
                 configForward);
         waypointList.add(forwardTrajectory2.getInitialPose().getTranslation());
         waypointList.addAll(waypoints);
