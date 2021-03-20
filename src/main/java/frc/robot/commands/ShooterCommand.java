@@ -96,7 +96,7 @@ public class ShooterCommand extends CommandBase {
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
     System.out.println("Initial Angle Offset: " + angleError);
-    shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
+    // shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -117,6 +117,7 @@ public class ShooterCommand extends CommandBase {
         // We found the target. Set the turret angle based on the vision system before
         // we spin up the shooter
         angleError = shooter.vision.getRobotAngle();
+        // angleError = 0.0;
         shooter.setTurretAdjusted(angleError);
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
         shooter.prepareShooter(distance);   
