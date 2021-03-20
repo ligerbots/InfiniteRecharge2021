@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,11 +14,13 @@ public class DriveCommand extends CommandBase {
   DriveTrain driveTrain;
   DoubleSupplier throttle;
   DoubleSupplier turn;
+  BooleanSupplier driveSwitch;
 
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
+  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn, BooleanSupplier driveSwitch) {
     this.driveTrain = driveTrain;
     this.throttle = throttle;
     this.turn = turn;
+    this.driveSwitch = driveSwitch;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,7 +34,7 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     // Use squared inputs
     // Might want to change that for competition
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), true);
+    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), true, driveSwitch.getAsBoolean());
   }
 
   // Called once the command ends or is interrupted.

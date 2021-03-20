@@ -95,7 +95,7 @@ public class FaceShootingTarget extends CommandBase {
     System.out.format("FaceShooter finished: currentHeading = %3.1f targetHeading = %3.2f%n",
         robotDrive.getHeading(), headingTarget);
 
-    robotDrive.allDrive(0, 0, false);
+    robotDrive.tankDriveVolts(0, 0);
     if (driveCommand != null) driveCommand.schedule();
   }
 

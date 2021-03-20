@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.FieldMapHome;
-import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
@@ -46,47 +45,54 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         // path individually
         double maxSpeed = 1.5;
         double maxAccel = 1.0;
-
+        double maxCentripetal = 1.5;
         // This will make the robot slow down around turns
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
 
         switch (autoID) {
             case Barrel:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12.0, 0.0), rotation);
-                waypointList = List.of(FieldMapHome.gridPoint('C', 5),
-                                       FieldMapHome.gridPoint('D', 6, -5, 0),
+
+                // Set speed and acceleration values
+                maxSpeed = 6.5;
+                maxAccel = 3.2;
+                maxCentripetal = 3.8;
+
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 12, 0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('C', 5, 0, -5),
+                                       FieldMapHome.gridPoint('D', 6, -3, -3),
                                        FieldMapHome.gridPoint('E', 5, 0, 5),
                                        FieldMapHome.gridPoint('D', 4, 5, 0),
-                                       FieldMapHome.gridPoint('C', 5, 0, -5),
-                                       FieldMapHome.gridPoint('C', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 9, -5, 0),
-                                       FieldMapHome.gridPoint('A', 8, 0, 5),
-                                       FieldMapHome.gridPoint('B', 7, 5, 0),
+                                       FieldMapHome.gridPoint('C', 5, 0, 0),
+                                       FieldMapHome.gridPoint('C', 8, 0, 10),
+                                       FieldMapHome.gridPoint('B', 9, -5, 10),
+                                       FieldMapHome.gridPoint('A', 8, 0, 0),
+                                       FieldMapHome.gridPoint('B', 7, 5, 10),
+                                       FieldMapHome.gridPoint('C', 8, 0, -10),
                                     //    FieldMapHome.gridPoint('D', 9, -15, 0),
                                     //    FieldMapHome.gridPoint('D', 10, -15, 0),
-                                       FieldMapHome.gridPoint('D', 10, -20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, -20),
-                                       FieldMapHome.gridPoint('D', 10, 20, 20),
-                                       FieldMapHome.gridPoint('C', 9)
+                                       FieldMapHome.gridPoint('D', 9, 0, -5),
+                                       FieldMapHome.gridPoint('D', 10, 10, -5),
+                                       FieldMapHome.gridPoint('D', 10, 15, 25),
+                                       //FieldMapHome.gridPoint('C', 10),
+                                       FieldMapHome.gridPoint('C', 9, -15, 10),
                                     //    FieldMapHome.gridPoint('D', 11, -5, 0),
-                                       //FieldMapHome.gridPoint('C', 11, -7, 0),
+                                       FieldMapHome.gridPoint('C', 5, 0, 20)
                                     //    FieldMapHome.gridPoint('C', 10, 0, -5)
                                        );
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), new Rotation2d(Math.PI));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, -15, 30), Rotation2d.fromDegrees(175.0));
                 break;
 
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
                 waypointList = List.of(
                                        FieldMapHome.gridPoint('C', 4),
-                                       FieldMapHome.gridPoint('C', 8),
-                                       FieldMapHome.gridPoint('D', 9),
-                                       FieldMapHome.gridPoint('E', 10),
-                                       FieldMapHome.gridPoint('D', 11),
-                                       FieldMapHome.gridPoint('C', 10),
-                                       FieldMapHome.gridPoint('E', 8),
-                                       FieldMapHome.gridPoint('E', 7),
-                                       FieldMapHome.gridPoint('E', 4, 7, 0));
+                                       FieldMapHome.gridPoint('C', 8, -5, -1),
+                                       FieldMapHome.gridPoint('D', 9, 2, -1),
+                                       FieldMapHome.gridPoint('E', 10, 0, 5),
+                                       FieldMapHome.gridPoint('D', 11, 0, -3),
+                                       FieldMapHome.gridPoint('C', 10, 0, -5),
+                                       FieldMapHome.gridPoint('E', 8, 17, 15),
+                                       FieldMapHome.gridPoint('E', 7, 0, -2),
+                                       FieldMapHome.gridPoint('E', 4, 7, 2));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
                 break;
         }
@@ -94,6 +100,8 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
+
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(maxCentripetal);
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).addConstraint(centripetalAccelerationConstraint).setReversed(false);
@@ -111,11 +119,11 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
         //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
         // }
         System.out.println("Path time = " + forwardTrajectory.getTotalTimeSeconds());
-        if (Robot.isSimulation()) {
-            TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
-            writer.WriteTrajectory(forwardTrajectory);
-            writer.WriteWaypoints(initialPose, waypointList, endPose);
-        }
+        // if (Robot.isSimulation()) {
+        //     TrajectoryWriter writer = new TrajectoryWriter(autoID.name());
+        //     writer.WriteTrajectory(forwardTrajectory);
+        //     writer.WriteWaypoints(initialPose, waypointList, endPose);
+        // }
 
         RamseteCommand ramseteForward = new RamseteCommand(
             forwardTrajectory,

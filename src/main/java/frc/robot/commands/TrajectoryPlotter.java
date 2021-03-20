@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class TrajectoryPlotter {
     private Field2d m_field2d;
+    private int m_maxTrajectory = 0;
+    private int m_maxWaypoints = 0;
 
     public TrajectoryPlotter(Field2d field) {
         m_field2d = field;
@@ -23,16 +25,40 @@ public class TrajectoryPlotter {
     public void clear() {
         // Seems to be the only way to clear the lists
         m_field2d.getObject("trajectory").setPoses(Collections.<Pose2d>emptyList());
+        for (int i = 1; i <= m_maxTrajectory; i++)
+            m_field2d.getObject("trajectory" + i).setPoses(Collections.<Pose2d>emptyList());
         m_field2d.getObject("waypoints").setPoses(Collections.<Pose2d>emptyList());
-    }
+        for (int i = 1; i <= m_maxWaypoints; i++)
+            m_field2d.getObject("waypoints" + i).setPoses(Collections.<Pose2d>emptyList());
+}
 
     public void plotTrajectory(Trajectory trajectory) {
-        m_field2d.getObject("trajectory")
+        plotTrajectory(0, trajectory);
+    }
+
+    public void plotTrajectory(int index, Trajectory trajectory) {
+        String indexStr = "";
+        if (index > 0) {
+            indexStr = String.valueOf(index);
+            m_maxTrajectory = Math.max(m_maxTrajectory, index);
+        }
+
+        m_field2d.getObject("trajectory" + indexStr)
                 .setPoses(trajectory.getStates().stream()
                 .map(state -> state.poseMeters).collect(Collectors.toList()));
     }
 
     public void plotWaypoints(List<Translation2d> waypoints) {
+        plotWaypoints(0, waypoints);
+    }
+
+    public void plotWaypoints(int index, List<Translation2d> waypoints) {
+        String indexStr = "";
+        if (index > 0) {
+            indexStr = String.valueOf(index);
+            m_maxWaypoints = Math.max(m_maxWaypoints, index);
+        }
+
         final Rotation2d rot = Rotation2d.fromDegrees(0);
 
         List<Pose2d> poses = new ArrayList<Pose2d>();
@@ -40,6 +66,6 @@ public class TrajectoryPlotter {
             poses.add(new Pose2d(t, rot));
         }
 
-        m_field2d.getObject("waypoints").setPoses(poses);
+        m_field2d.getObject("waypoints" + indexStr).setPoses(poses);
     }
 }
