@@ -97,8 +97,6 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 break;
         }
 
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(maxCentripetal);
-
         TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
