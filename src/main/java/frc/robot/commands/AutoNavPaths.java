@@ -84,20 +84,20 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
 
-                maxSpeed = 4.5;
-                maxAccel = 3.0;
+                maxSpeed = 5.0;
+                maxAccel = 2.75;
                 maxCentripetal = 3.5;
 
                 waypointList = List.of(
-                                       FieldMapHome.gridPoint('C', 4, -5, 0),
-                                       FieldMapHome.gridPoint('C', 8, -5, 10),
-                                       FieldMapHome.gridPoint('D', 9, 2, 10),
-                                       FieldMapHome.gridPoint('E', 10, 0,15),
-                                       FieldMapHome.gridPoint('D', 11, 0, 15),
-                                       FieldMapHome.gridPoint('C', 10, 0, 0),
+                                       FieldMapHome.gridPoint('C', 4, -15, 0),
+                                       FieldMapHome.gridPoint('C', 8, -5, 5),
+                                       FieldMapHome.gridPoint('D', 9, 2, 5),
+                                       FieldMapHome.gridPoint('E', 10, 0, 10),
+                                       FieldMapHome.gridPoint('D', 11, -5, 10),
+                                       FieldMapHome.gridPoint('C', 10, 0, -5),
                                        FieldMapHome.gridPoint('E', 8, 17, 15),
                                        FieldMapHome.gridPoint('E', 7, 0, 10),
-                                       FieldMapHome.gridPoint('E', 4, 7, 20));
+                                       FieldMapHome.gridPoint('E', 4, -5, 20));
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, 25), Rotation2d.fromDegrees(135.0));
                 break;
         }
