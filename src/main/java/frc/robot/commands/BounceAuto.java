@@ -32,7 +32,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
     
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1), rotation180);
+    private Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 0, 2), rotation180);
     private Trajectory backTrajectory1;
     private Trajectory backTrajectory2;
     private Trajectory forwardTrajectory1;
@@ -48,10 +48,10 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             Constants.kDriveKinematics, 10);
 
 
-        double maxSpeed = 3.0;
+        double maxSpeed = 3.5;
         double maxAccel = 3.0;
 
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2);
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(2.5);
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics)
@@ -65,22 +65,22 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
                     .setReversed(true);
       
         List<Translation2d> waypoints = List.of( 
-            FieldMapHome.gridPoint('C', 2, 20, 15)
+            FieldMapHome.gridPoint('C', 2, 15, 15)
         );
         backTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 initialPose,
                 waypoints,
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, -5, -40.0/2), rotation270),
                 configBackward);
         waypointList.addAll(waypoints);
 
         waypoints = List.of(
             FieldMapHome.gridPoint('C', 4, -20, 0),
-            FieldMapHome.gridPoint('E', 5, 5, 0)
+            FieldMapHome.gridPoint('E', 5, 0, 5)
         );
         forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(FieldMapHome.gridPoint('A', 3, 0, -45.0/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 3, -5, -40.0/2), rotation270),
                 waypoints,
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 configForward);
@@ -89,14 +89,14 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
         waypoints = List.of(
             FieldMapHome.gridPoint('D', 7, -27, 0),
-            FieldMapHome.gridPoint('E', 7, 0, 5),
-            FieldMapHome.gridPoint('E', 8, 0, 5),
-            FieldMapHome.gridPoint('D', 9, -3, 0)
+            FieldMapHome.gridPoint('E', 7, 0, 10),
+            FieldMapHome.gridPoint('E', 8, 0, 10),
+            FieldMapHome.gridPoint('D', 9, -5, 0)
         );  
         backTrajectory2 = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(FieldMapHome.gridPoint('A', 6, 0, -10), rotation90),
                 waypoints,
-                new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 9, 0, -20.0/2), rotation270),
                 configBackward);
         waypointList.add(backTrajectory2.getInitialPose().getTranslation());
         waypointList.addAll(waypoints);
@@ -105,9 +105,9 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             //FieldMapHome.gridPoint('B', 10, -20, -20)
         );
         forwardTrajectory2 = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -35.0/2), rotation270),
+                new Pose2d(FieldMapHome.gridPoint('A', 9, 5, -27.0/2), rotation270),
                 waypoints,
-                new Pose2d(FieldMapHome.gridPoint('C', 11), new Rotation2d(0)),
+                new Pose2d(FieldMapHome.gridPoint('C', 11, 0, 10), new Rotation2d(0)),
                 configForward);
         waypointList.add(forwardTrajectory2.getInitialPose().getTranslation());
         waypointList.addAll(waypoints);
