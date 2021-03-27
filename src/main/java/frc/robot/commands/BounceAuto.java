@@ -49,7 +49,7 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
 
         double maxSpeed = 3.5;
-        double maxAccel = 3.0;
+        double maxAccel = 3.4;
 
         TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(3.0);
 
@@ -89,8 +89,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
         waypoints = List.of(
             // FieldMapHome.gridPoint('D', 7, -27, 0),
-            FieldMapHome.gridPoint('E', 7, -10, 17),
-            FieldMapHome.gridPoint('E', 8, 10, 17)
+            FieldMapHome.gridPoint('E', 7, -12, 17),
+            FieldMapHome.gridPoint('E', 8, 12, 17)
             //FieldMapHome.gridPoint('D', 9, -5, 0)
         );  
         backTrajectory2 = TrajectoryGenerator.generateTrajectory(
