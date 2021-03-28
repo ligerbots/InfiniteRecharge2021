@@ -21,6 +21,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 /**
@@ -36,6 +37,7 @@ public class RobotContainer {
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
   public final DriveTrain robotDrive = new DriveTrain();
+  public final DriveSwitch driveSwitch = new DriveSwitch();
 
   XboxController xbox = new XboxController(0);
   Joystick farm = new Joystick(1);
@@ -48,7 +50,7 @@ public class RobotContainer {
   // Not needed for At Home. Silence the warning for now
   // private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
-  public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
+  public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn, driveSwitch);
   public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
   public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
   public final IntakeCommand intakeCommand = new IntakeCommand(intake, Constants.INTAKE_SPEED);
@@ -81,6 +83,13 @@ public class RobotContainer {
       return xbox.getX(Hand.kLeft);
     }
   }
+
+  public class DriveSwitch implements BooleanSupplier{
+    @Override
+    public boolean getAsBoolean() {
+      return xbox.getBButton();
+    }
+  }
   
   public class Shoulder implements DoubleSupplier{
     @Override
@@ -102,8 +111,8 @@ public class RobotContainer {
     JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     xboxX.whenPressed(new DeployIntake(climber));
 
-    JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
+    // JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
+    // xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
 
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));

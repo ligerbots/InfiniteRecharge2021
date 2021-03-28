@@ -61,7 +61,7 @@ public class TurnToHeading extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.allDrive(0, 0, false);
+    driveTrain.tankDriveVolts(0, 0);
     System.out.println("TurnToHeading ended. interrupted = " + interrupted);
   }
 

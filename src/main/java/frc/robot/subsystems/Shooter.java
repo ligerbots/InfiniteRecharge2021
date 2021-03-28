@@ -111,10 +111,10 @@ public class Shooter extends SubsystemBase {
         turretAngleLookup.put(1.0, Constants.TURRET_ANGLE_ZERO_SETTING + 4.0);
         turretAngleLookup.put(2.0, Constants.TURRET_ANGLE_ZERO_SETTING + 7.0);
         turretAngleLookup.put(3.0, Constants.TURRET_ANGLE_ZERO_SETTING + 10.5);
-        turretAngleLookup.put(4.0, Constants.TURRET_ANGLE_ZERO_SETTING + 14.0);
-        turretAngleLookup.put(5.0, Constants.TURRET_ANGLE_ZERO_SETTING + 17.0);
-        turretAngleLookup.put(-5.0, Constants.TURRET_ANGLE_ZERO_SETTING - 18.0);
-        turretAngleLookup.put(-4.0, Constants.TURRET_ANGLE_ZERO_SETTING - 14.0);
+        turretAngleLookup.put(4.0, Constants.TURRET_ANGLE_ZERO_SETTING + 13.0);
+        turretAngleLookup.put(5.0, Constants.TURRET_ANGLE_ZERO_SETTING + 15.0);
+        turretAngleLookup.put(-5.0, Constants.TURRET_ANGLE_ZERO_SETTING - 23.0);
+        turretAngleLookup.put(-4.0, Constants.TURRET_ANGLE_ZERO_SETTING - 18.0);
         turretAngleLookup.put(-3.0, Constants.TURRET_ANGLE_ZERO_SETTING - 11.0);
         turretAngleLookup.put(-2.0, Constants.TURRET_ANGLE_ZERO_SETTING - 6.0);
         turretAngleLookup.put(-1.0, Constants.TURRET_ANGLE_ZERO_SETTING - 4.0);
@@ -134,6 +134,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("shooter/Hood_Adjustment", hoodAdjustment);
         SmartDashboard.putNumber("shooter/RPM_Adjustment", rpmAdjustment);
         SmartDashboard.putNumber("shooter/Output_Voltage", motor2.getAppliedOutput());
+        SmartDashboard.putNumber("shooter/turretAngleRaw", turretServo.getAngle());
     }
 
     public double getVoltage() {
@@ -265,6 +266,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setTurretAdjusted(double adjustedAngle) {
+        SmartDashboard.putNumber("shooter/turretAngle", adjustedAngle);
         if (adjustedAngle > 5) {
             adjustedAngle = 5;
         }
@@ -282,7 +284,7 @@ public class Shooter extends SubsystemBase {
             double result = floorEntry.getValue() + ratio * (ceilingEntry.getValue() - floorEntry.getValue());
 
             setTurret(result);
-            System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
+            // System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
             System.out.println("Turret Adjustment not successful      " + adjustedAngle);

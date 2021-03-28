@@ -120,6 +120,10 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    public Field2d getField2d() {
+        return fieldSim;
+    }
+    
     public Pose2d getPose () {
         return odometry.getPoseMeters();
     }
@@ -152,7 +156,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getRightSpeed() {
-        return rightMotors.get();
+        return -rightMotors.get();
     }
 
     public double getLeftSpeed() {
@@ -218,15 +222,25 @@ public class DriveTrain extends SubsystemBase {
       fieldSim.setRobotPose(getPose());
     }
 
-    public void allDrive(double throttle, double rotate, boolean squaredInputs) {
+    public void allDrive(double throttle, double rotate, boolean squaredInputs, boolean driveSwitch) {
         if (squaredInputs) {
-            if (Math.abs(throttle) < 0.1)
+            if (Math.abs(throttle) < 0.05) {
                 throttle = 0;
-            if (Math.abs(rotate) < 0.1) 
+            } 
+            else {
+                throttle = Math.signum(throttle) * throttle * throttle;
+            }
+            if (Math.abs(rotate) < 0.05) {
                 rotate = 0;
+            } else {
+                rotate = Math.signum(rotate) * rotate * rotate;
+            }
         }
-        // differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
-        differentialDrive.curvatureDrive(throttle, -rotate, false);
+        // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
+        // if (driveSwitch) {  
+        //     differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+        // } else {
+        differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
     }
 
     // Raw access to arcade drive (use only for auto routines)
