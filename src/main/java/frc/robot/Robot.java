@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
+import frc.robot.subsystems.Vision.VisionMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -99,7 +100,7 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision, m_robotContainer.climber));
     chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.shooter,
          m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.intake, m_robotContainer.climber));
-
+    m_robotContainer.vision.setMode(VisionMode.GALACTIC_SEARCH_PATH_CHOOSER);
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 

@@ -72,7 +72,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 break;
 
             case BlueA:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 45.0/2, 0), rotation180);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 2, 20, 0), rotation180);
                 waypointList = List.of(FieldMapHome.gridPoint('E', 6, -15, 0),
                                        FieldMapHome.gridPoint('B', 7, 0, -15));
                                        //FieldMapHome.gridPoint('C', 9, 0, 10));
@@ -80,7 +80,7 @@ public class GalacticSearchAuto extends SequentialCommandGroup implements AutoCo
                 break;
 
             case BlueB:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 45.0/2, 0), rotation180);
+                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 2, 20.0, 0), rotation180);
                 waypointList = List.of(FieldMapHome.gridPoint('D', 6, 0, 10),
                                        FieldMapHome.gridPoint('B', 8, 0, -10));
                                        // FieldMapHome.gridPoint('D', 10, 0, 10));
