@@ -78,11 +78,11 @@ public class PowerPort extends SequentialCommandGroup implements AutoCommandInte
         // drives back to get balls and then forward to shoot 5 times
         for (int i = 0; i < 5; i++) {
             addCommands(
-                ramsetebackward,
+                createRamseteCommand(initialPose, reintroductionPose, configBackward, robotDrive),
                 new HardStop(robotDrive),
                 new WaitForFullCarousel(carousel),
 
-                ramseteforward,
+                createRamseteCommand(reintroductionPose, initialPose, configForward, robotDrive),
                 new HardStop(robotDrive),
                 new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
             );
