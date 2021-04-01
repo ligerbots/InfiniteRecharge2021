@@ -42,7 +42,7 @@ public final class Constants {
     
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
-    public static final double CAROUSEL_SHOOTER_SPEED = 0.6; // This is just percent output
+    public static final double CAROUSEL_SHOOTER_SPEED = 0.5; // This is just percent output
     public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
     public static final int CAROUSEL_MAX_BALLS = 3;
 
@@ -51,7 +51,7 @@ public final class Constants {
 
     // SPARKMAX for the intake motor (Intake)
     public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
-    public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_SPEED = 0.3;
     // Intake Color Sensor
 
     public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor

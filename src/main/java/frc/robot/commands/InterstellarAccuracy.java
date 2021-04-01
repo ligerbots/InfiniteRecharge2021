@@ -36,10 +36,10 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 11, -10, yOffset), rotation180);
+    private final Pose2d reintroductionPose = new Pose2d(FieldMapHome.gridPoint('C', 10, 0, yOffset), rotation180);
 
     // Center of robot is 69" from wall
-    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 0, yOffset), rotation180);
+    private final Pose2d initialPose = new Pose2d(FieldMapHome.gridPoint('C', 2, 7, yOffset), rotation180);
     
     public InterstellarAccuracy(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand, Intake intake, Climber climber) {
         SmartDashboard.putBoolean("Interstellar", false);
@@ -49,7 +49,7 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         IntakeCommand intakeCommand4 = new IntakeCommand(intake, Constants.INTAKE_SPEED);
 
         double maxSpeed = 1.5;
-        double maxAccel = 1.0;
+        double maxAccel = 2.0;
 
         // This will make the robot slow down around turns. Probably not necessary for this Auto, but can't hurt.
         TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(1.5);
@@ -82,28 +82,32 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
                         new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
             ramsete1backward,
             new HardStop(robotDrive),
-            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand1),
+            // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand1),
+            new WaitForFullCarousel(carousel),
 
             ramsete2forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete2backward,
             new HardStop(robotDrive),
-            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand2),
+            // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand2),
+            new WaitForFullCarousel(carousel),
 
             ramsete3forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete3backward,
             new HardStop(robotDrive),
-            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand3),
+            // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand3),
+            new WaitForFullCarousel(carousel),
 
             ramsete4forward,
             new HardStop(robotDrive),
             new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete4backward,
             new HardStop(robotDrive),
-            new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand4),
+            // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand4),
+            new WaitForFullCarousel(carousel),
 
             ramsete1forward2,
             new HardStop(robotDrive),
