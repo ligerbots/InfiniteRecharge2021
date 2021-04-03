@@ -11,12 +11,14 @@ public class ShooterPIDTuner {
     }
 
     public void spinUpTune(){
-        shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 1e-5);
+        // shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 1e-5);
+        shooter.calibratePID(0.0, 0.0, 0.0, 6.6774 * 1e-5);
     }
 
     public void HoldTune(){
-        getPIDFromDashBoard();
-        setPID();
+        // getPIDFromDashBoard();
+        shooter.calibratePID(0.0, 0.0, 0.0, 6.6774 * 1e-5);
+        // setPID();
     }
 
     public void getPIDFromDashBoard(){

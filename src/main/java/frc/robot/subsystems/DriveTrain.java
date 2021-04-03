@@ -269,10 +269,10 @@ public class DriveTrain extends SubsystemBase {
             turnSpeed = 0.1;//0.13;
         }
         else if (absErr > 5.0) {
-            turnSpeed = 0.08;//0.1; //0.07;
+            turnSpeed = 0.1; //0.07;
         }
         else {
-            turnSpeed = 0.08;//0.1; //0.065;
+            turnSpeed = 0.1; //0.065;
         }
 
         return turnSpeed * Math.signum(angleError);

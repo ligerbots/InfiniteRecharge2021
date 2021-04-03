@@ -120,7 +120,7 @@ public class Vision extends SubsystemBase {
     public boolean getStatus() {
         double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
         // 1 = success, but it comes as a float, so test with a greater-than
-        return visionData[1] > 0.1;
+        return visionData[1] > 0.1 && visionData[3] > 0.1;
     }
     
     public double getDistance() {

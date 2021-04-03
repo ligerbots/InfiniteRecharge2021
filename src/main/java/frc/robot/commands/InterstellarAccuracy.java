@@ -78,8 +78,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
         RamseteCommand ramsete1forward2 = createRamseteCommand(reintroductionPose, new Pose2d(FieldMapHome.gridPoint('C', 6, 0, yOffset), rotation180), configForward, robotDrive);
 
         addCommands(
-            new ParallelCommandGroup(new DeployIntake(climber),
-                        new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)),
+            new DeployIntake(climber),
+            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
             ramsete1backward,
             new HardStop(robotDrive),
             // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand1),

@@ -93,15 +93,21 @@ public class Shooter extends SubsystemBase {
             // System.err.println("Using original hard-coded table instead");
 
             // always have an entry at 0 so that it has a chance of working at short distances
-            distanceLookUp.put(0.0, new Double[] {5500.0, 115.0});
-            distanceLookUp.put(50.0, new Double[] {5500.0, 115.0});
-            distanceLookUp.put(74.0, new Double[] {5500.0, 100.0});
-            distanceLookUp.put(123.6, new Double[] {6000.0, 80.0});
-            // distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
-            distanceLookUp.put(174.9, new Double[] {7500.0, 65.0});
-            distanceLookUp.put(227.0, new Double[] {8000.0, 60.0});
-            distanceLookUp.put(235.2, new Double[] {8500.0, 53.0});            
-            distanceLookUp.put(253.4, new Double[] {8500.0, 52.0});
+            distanceLookUp.put(0.0, new Double[] {5500.0, 103.0});
+            distanceLookUp.put(50.0, new Double[] {5500.0, 103.0});
+            distanceLookUp.put(94.0, new Double[] {5500.0, 103.0});
+            distanceLookUp.put(95.0, new Double[] {5500.0, 87.0});
+            distanceLookUp.put(110.0, new Double[] {5500.0, 87.0});
+            distanceLookUp.put(134.0, new Double[] {5500.0, 87.0});
+            // distanceLookUp.put(17.1, new Double[] {5500.0, 80.0});
+            distanceLookUp.put(135.0, new Double[] {7500.0, 65.0});
+            distanceLookUp.put(170.0, new Double[] {7500.0, 65.0});
+            distanceLookUp.put(205.0, new Double[] {7500.0, 65.0});
+            // distanceLookUp.put(227.0, new Double[] {8000.0, 60.0});
+            distanceLookUp.put(206.0, new Double[] {8500.0, 54.0});            
+            distanceLookUp.put(230.0, new Double[] {8500.0, 54.0});            
+            distanceLookUp.put(255.0, new Double[] {8500.0, 54.0});            
+            // distanceLookUp.put(253.4, new Double[] {8500.0, 52.0});
             distanceLookUp.put(318.1, new Double[] {9000.0, 50.0});
         // }
       
@@ -128,7 +134,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("shooter/RPM", getSpeed());
+        SmartDashboard.putNumber("shooter/RPM", Math.max(-500,Math.min(500,getSpeed()-7500.0)));
         SmartDashboard.putNumber("shooter/current", motor2.getOutputCurrent());
         SmartDashboard.putNumber("shooter/distance", vision.getDistance());
         SmartDashboard.putNumber("shooter/Hood_Adjustment", hoodAdjustment);
@@ -251,6 +257,7 @@ public class Shooter extends SubsystemBase {
 
     public void stopAll() {
         setShooterRpm(0.0);
+        motor2.setVoltage(0.0);
         flup.set(0);
         setHood(160);
         SmartDashboard.putString("shooter/Status", "Idle");

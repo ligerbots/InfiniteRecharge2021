@@ -86,6 +86,7 @@ public class FaceShootingTarget extends CommandBase {
       System.out.format("FaceShooter acquired: heading = %3.1f visionAngle = %3.1f targetHeading = %3.2f%n",
                         startAngle, visionAngle, headingTarget);
       targetAcquired = true;
+      SmartDashboard.putNumber("Vision/angle", visionAngle);
     }
   }
 

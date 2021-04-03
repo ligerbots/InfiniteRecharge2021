@@ -10,43 +10,45 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision.VisionMode;
 
-public class ShooterCommand extends CommandBase {
-  /**
-   * Creates a new ShooterCommand.
-   */
+public class ShooterOneCommand extends CommandBase {
+    /**
+     * Creates a new ShooterCommand.
+     */
 
-  double waitTime;
-  double startTime;
+    double waitTime;
+    double startTime;
 
-  Shooter shooter;
-  Carousel carousel;
-  DriveTrain robotDrive;
-  ShooterPIDTuner pidTuner;
-  double shooterTargetSpeed;
+    Shooter shooter;
+    Carousel carousel;
+    DriveTrain robotDrive;
+    ShooterPIDTuner pidTuner;
+    double shooterTargetSpeed;
 
-  boolean startShooting;
+    boolean startShooting;
 
-  CarouselCommand carouselCommand;
-  //DriveCommand driveCommand;
+    CarouselCommand carouselCommand;
+    // DriveCommand driveCommand;
 
-  int initialCarouselTicks;
+    int initialCarouselTicks;
 
-  double stableRPMTime;
-  boolean startedTimerFlag;
-  boolean foundTarget;
-  boolean setPid;
- 
-  public enum ControlMethod {
-    ACQUIRING, // Acquiring vision target
-    SPIN_UP, // PIDF to desired RPM
-    HOLD_WHEN_READY, // calculate average kF
-    HOLD, // switch to pure kF control
-  }
+    double stableRPMTime;
+    boolean startedTimerFlag;
+    boolean foundTarget;
+    boolean setPid;
 
-  ControlMethod currentControlMode;
-  boolean rescheduleDriveCommand;
+    public enum ControlMethod {
+        ACQUIRING, // Acquiring vision target
+        SPIN_UP, // PIDF to desired RPM
+        HOLD_WHEN_READY, // calculate average kF
+        HOLD, // switch to pure kF control
+    }
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime,*/ CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
+    ControlMethod currentControlMode;
+    boolean rescheduleDriveCommand;
+
+    public ShooterOneCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive,
+            /* double waitTime, */ CarouselCommand carouselCommand, CarouselOneCommand carouselOneCommand,
+            /* DriveCommand driveCommand, */ boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     addRequirements(shooter);
     this.carousel = carousel;
@@ -118,9 +120,6 @@ public class ShooterCommand extends CommandBase {
         // We found the target. Set the turret angle based on the vision system before
         // we spin up the shooter
         angleError = shooter.vision.getRobotAngle();
-        if (distance > 200) {
-          angleError -= 1.0;
-        }
         // angleError = 0.0;
         shooter.setTurretAdjusted(angleError);
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
@@ -134,7 +133,7 @@ public class ShooterCommand extends CommandBase {
 
       if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         if (startedTimerFlag) {
-          if (Robot.time() - stableRPMTime > 0.5) {
+          if (Robot.time() - stableRPMTime > 0.2) {
             currentControlMode = ControlMethod.HOLD;
           }
         } else {
@@ -147,9 +146,9 @@ public class ShooterCommand extends CommandBase {
       }
     }
     else if (currentControlMode == ControlMethod.HOLD) {
-      // if(setPid){
-      //   pidTuner.HoldTune();
-      // }
+      if(setPid){
+        pidTuner.HoldTune();
+      }
       setPid = false;
     }
 
@@ -159,6 +158,7 @@ public class ShooterCommand extends CommandBase {
 
     // !carousel.backwards will need to be removed when the shooter is re-written
     if (speedOnTarget && hoodOnTarget && !carousel.backwards)
+
         rapidFire();
 
   }
@@ -186,7 +186,7 @@ public class ShooterCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Robot.isSimulation()) return (Robot.time() - startTime) > 3.0;
+    if (Robot.isSimulation()) return (Robot.time() - startTime) > 2.0;
 
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
     return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
