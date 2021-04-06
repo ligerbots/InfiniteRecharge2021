@@ -35,6 +35,8 @@ public class FaceShootingTarget extends CommandBase {
 
   double startTime;
 
+  int finishCounter;
+
   public FaceShootingTarget(DriveTrain robotDrive, double acceptableError, DriveCommand driveCommand, Shooter shooter) {
     this.robotDrive = robotDrive;
     this.acceptableError = acceptableError;
@@ -57,6 +59,7 @@ public class FaceShootingTarget extends CommandBase {
     oldCheck = false;
     startTime = Robot.time();
     //headingError = 100000;
+    finishCounter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,6 +85,9 @@ public class FaceShootingTarget extends CommandBase {
     {
       double startAngle = robotDrive.getHeading();
       double visionAngle = shooter.vision.getRobotAngle();
+      if (shooter.vision.getDistance() <95) {
+        visionAngle += 1.0;
+      }
       headingTarget = startAngle - visionAngle;
       System.out.format("FaceShooter acquired: heading = %3.1f visionAngle = %3.1f targetHeading = %3.2f%n",
                         startAngle, visionAngle, headingTarget);
@@ -103,7 +109,13 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(headingError) < acceptableError && check) 
-        || (!targetAcquired && (Robot.time() - startTime) > 0.5);
+    // return (Math.abs(headingError) < acceptableError && check) 
+    //     || (!targetAcquired && (Robot.time() - startTime) > 0.5);
+    if ((Math.abs(headingError) < acceptableError && check) 
+        || (!targetAcquired && (Robot.time() - startTime) > 0.5)) {
+          robotDrive.tankDriveVolts(0, 0);
+          finishCounter ++;
+        }
+        return finishCounter >5;
   }
 }

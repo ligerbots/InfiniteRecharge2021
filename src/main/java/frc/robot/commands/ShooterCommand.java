@@ -124,6 +124,7 @@ public class ShooterCommand extends CommandBase {
           angleError += 1.0;
         }
         // angleError = 0.0;
+        SmartDashboard.putNumber("ShooterCmd/angleError", angleError);
         shooter.setTurretAdjusted(angleError);
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
         shooter.prepareShooter(distance);   

@@ -87,7 +87,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
             ramsete2forward,
             new HardStop(robotDrive),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            // new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete2backward,
             new HardStop(robotDrive),
             // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand2),
@@ -95,7 +96,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
             ramsete3forward,
             new HardStop(robotDrive),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            // new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete3backward,
             new HardStop(robotDrive),
             // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand3),
@@ -103,7 +105,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
             ramsete4forward,
             new HardStop(robotDrive),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            // new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180),
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false),
             ramsete4backward,
             new HardStop(robotDrive),
             // new ParallelRaceGroup(new WaitForFullCarousel(carousel), intakeCommand4),
@@ -111,7 +114,8 @@ public class InterstellarAccuracy extends SequentialCommandGroup implements Auto
 
             ramsete1forward2,
             new HardStop(robotDrive),
-            new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
+            new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, false)
+            // new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, null, 180)
         );
     }
 
