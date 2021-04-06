@@ -64,8 +64,8 @@ public class ShooterCommand extends CommandBase {
 
   public void rapidFire() {
     shooter.shoot();
-    // carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
-    carousel.spin(Constants.CAROUSEL_GS_SHOOTER_SPEED);
+    carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    // carousel.spin(Constants.CAROUSEL_GS_SHOOTER_SPEED);
   }
 
   // Called when the command is initially scheduled.
@@ -120,6 +120,8 @@ public class ShooterCommand extends CommandBase {
         angleError = shooter.vision.getRobotAngle();
         if (distance > 200) {
           angleError -= 1.0;
+        } else if (distance <95) {
+          angleError += 1.0;
         }
         // angleError = 0.0;
         shooter.setTurretAdjusted(angleError);
