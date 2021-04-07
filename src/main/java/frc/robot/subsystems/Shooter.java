@@ -96,12 +96,12 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(0.0, new Double[] {5500.0, 103.0});
             distanceLookUp.put(50.0, new Double[] {5500.0, 103.0});
             distanceLookUp.put(94.0, new Double[] {5500.0, 103.0});
-            distanceLookUp.put(95.0, new Double[] {5500.0, 87.0});
-            distanceLookUp.put(110.0, new Double[] {5500.0, 87.0});
-            distanceLookUp.put(134.0, new Double[] {5500.0, 87.0});
-            // distanceLookUp.put(95.0, new Double[] {7500.0, 80.0});
-            // distanceLookUp.put(110.0, new Double[] {7500.0, 80.0});
-            // distanceLookUp.put(134.0, new Double[] {7500.0, 80.0});
+            // distanceLookUp.put(95.0, new Double[] {5500.0, 87.0});
+            // distanceLookUp.put(110.0, new Double[] {5500.0, 87.0});
+            // distanceLookUp.put(134.0, new Double[] {5500.0, 87.0});
+            distanceLookUp.put(95.0, new Double[] {5500.0, 83.0});
+            distanceLookUp.put(110.0, new Double[] {5500.0, 83.0});
+            distanceLookUp.put(134.0, new Double[] {5500.0, 83.0});
             // distanceLookUp.put(17.1, new Double[] {5500.0, 80.0});
             distanceLookUp.put(135.0, new Double[] {7500.0, 65.0});
             distanceLookUp.put(170.0, new Double[] {7500.0, 65.0});
@@ -137,7 +137,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("shooter/RPM", Math.max(-500,Math.min(500,getSpeed()-7500.0)));
+        // SmartDashboard.putNumber("shooter/RPM", Math.max(-500,Math.min(500,getSpeed()-7500.0)));
+        SmartDashboard.putNumber("shooter/RPM", getSpeed());
         SmartDashboard.putNumber("shooter/current", motor2.getOutputCurrent());
         SmartDashboard.putNumber("shooter/distance", vision.getDistance());
         SmartDashboard.putNumber("shooter/Hood_Adjustment", hoodAdjustment);

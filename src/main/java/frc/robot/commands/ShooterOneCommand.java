@@ -132,6 +132,13 @@ public class ShooterOneCommand extends CommandBase {
             // we spin up the shooter
             angleError = shooter.vision.getRobotAngle();
             // angleError = 0.0;
+            if (distance > 200) {
+              angleError -= 1.0;
+            } else if (distance <95) {
+              angleError += 1.0;
+            }
+            // angleError = 0.0;
+            SmartDashboard.putNumber("ShooterCmd/angleError", angleError);
             shooter.setTurretAdjusted(angleError);
             shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);
             shooter.prepareShooter(distance);
