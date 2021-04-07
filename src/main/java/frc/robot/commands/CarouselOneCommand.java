@@ -28,9 +28,6 @@ public class CarouselOneCommand extends CommandBase {
 
   }
 
-  private State state;
-  private double currentSlot;
-
   public CarouselOneCommand(Carousel carousel) {
     this.carousel = carousel;
     addRequirements(carousel);
@@ -40,7 +37,6 @@ public class CarouselOneCommand extends CommandBase {
   @Override
   public void initialize() {
     // save the current slot
-    currentSlot = carousel.getSlot();
     targetSlot = Math.round(carousel.getSlot()) + 1.0 - earlySlotStopDelta;
     // check the carousel is on the center of a slot
   }
