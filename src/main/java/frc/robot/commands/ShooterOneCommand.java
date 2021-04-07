@@ -148,6 +148,8 @@ public class ShooterOneCommand extends CommandBase {
           if (startedTimerFlag) {
             if (Robot.time() - stableRPMTime > 1.0) {
               currentControlMode = ControlMethod.HOLD;
+              // HOLD restarts its own timer
+              startedTimerFlag = false;
               System.out.println("Shooter HOLD");
             }
           } else {
@@ -173,8 +175,10 @@ public class ShooterOneCommand extends CommandBase {
         if (shooter.speedOnTarget(shooterTargetSpeed, 5)) {
           // If shooter is at speed, start timer
           System.out.println("Shooter waiting");
-          stableRPMTime = Robot.time();
-          startedTimerFlag = true;
+          if (! startedTimerFlag) {
+            stableRPMTime = Robot.time();
+            startedTimerFlag = true;
+          }
         } else {
           // Need to restart timer
           startedTimerFlag = false;
@@ -208,7 +212,8 @@ public class ShooterOneCommand extends CommandBase {
         }
         break;
 
-        default: break;
+      default:
+        break;
     }
   }
   // if (shooter.speedOnTarget(shooter.calculateShooterSpeed(visionInfo[1]), 1) &&
@@ -220,8 +225,8 @@ public class ShooterOneCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.vision.setMode(VisionMode.INTAKE);
     carousel.spin(0.0);
+    shooter.vision.setMode(VisionMode.INTAKE);
     carousel.resetBallCount();
     carouselCommand.schedule();
     System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
@@ -240,14 +245,7 @@ public class ShooterOneCommand extends CommandBase {
 
     // TODO: this should just check to see if the carousel has rotated enough
     // CAROUSEL_FIFTH_ROTATION_TICKS intervals or we never found the target
-    return (carousel.getTicks() - initialCarouselTicks) < -Constants.CAROUSEL_MAX_BALLS
-        * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (currentControlMode == ControlMethod.ACQUIRING && Robot.time() - startTime > 2.0);
-    /* ((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0; */
-    // if (waitTime == 0.0) {
-    // return false;
-    // }
-    // else {
-    // return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
-    // }
+    return (carousel.getTicks() - initialCarouselTicks) < -Constants.CAROUSEL_MAX_BALLS * Constants.CAROUSEL_FIFTH_ROTATION_TICKS
+        || (currentControlMode == ControlMethod.ACQUIRING && Robot.time() - startTime > 2.0);
   }
 }
