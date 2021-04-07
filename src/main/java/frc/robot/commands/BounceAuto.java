@@ -48,10 +48,10 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
             Constants.kDriveKinematics, 10);
 
 
-        double maxSpeed = 3.5;
+        double maxSpeed = 3.7;
         double maxAccel = 3.4;
 
-        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(3.0);
+        TrajectoryConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(3.2);
 
         TrajectoryConfig configForward = new TrajectoryConfig(maxSpeed, maxAccel)
                 .setKinematics(Constants.kDriveKinematics)
@@ -76,8 +76,9 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
         waypointList.addAll(waypoints);
 
         waypoints = List.of(
-            FieldMapHome.gridPoint('C', 4, -20, 0),
-            FieldMapHome.gridPoint('E', 5, 0, 5)
+            FieldMapHome.gridPoint('C', 4, -22, 0),
+            FieldMapHome.gridPoint('E', 5, -23, 15),
+            FieldMapHome.gridPoint('E', 5, 20, 15)
         );
         forwardTrajectory1 = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(FieldMapHome.gridPoint('A', 3, -5, -40.0/2), rotation270),
@@ -89,8 +90,8 @@ public class BounceAuto extends SequentialCommandGroup implements AutoCommandInt
 
         waypoints = List.of(
             // FieldMapHome.gridPoint('D', 7, -27, 0),
-            FieldMapHome.gridPoint('E', 7, -12, 17),
-            FieldMapHome.gridPoint('E', 8, 12, 17)
+            FieldMapHome.gridPoint('E', 7, -15, 17),
+            FieldMapHome.gridPoint('E', 8, 15, 17)
             //FieldMapHome.gridPoint('D', 9, -5, 0)
         );  
         backTrajectory2 = TrajectoryGenerator.generateTrajectory(
