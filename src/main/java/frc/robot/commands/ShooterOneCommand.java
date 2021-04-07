@@ -118,7 +118,8 @@ public class ShooterOneCommand extends CommandBase {
 
   @Override
   public void execute() {
-
+    SmartDashboard.putString("shooter/ShootOneCmd", currentControlMode.toString());
+    
     switch (currentControlMode) {
       case ACQUIRING:
         if (!foundTarget) {
