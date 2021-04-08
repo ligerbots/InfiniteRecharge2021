@@ -66,9 +66,6 @@ public class PowerPort extends SequentialCommandGroup implements AutoCommandInte
             .addConstraint(centripetalAccelerationConstraint)
             .setReversed(true);
 
-        RamseteCommand ramsetebackward = createRamseteCommand(initialPose, reintroductionPose, configBackward, robotDrive);
-        RamseteCommand ramseteforward = createRamseteCommand(reintroductionPose, initialPose, configForward, robotDrive); 
-
         // robot must start with the intake up so it must be lowered before shooting
         addCommands(
             new ParallelCommandGroup(new DeployIntake(climber)),
