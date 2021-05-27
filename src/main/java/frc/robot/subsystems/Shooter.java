@@ -180,7 +180,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterRpm(double rpm) {
-        System.out.println("Shooter RPM SET!!!!!");
+        System.out.println("Shooter RPM SET!!!!! " + rpm);
         // for the shooter to run the right direction, rpm values passed to setReference must be negative
         // passing the negative absolute value causes the passed value to always be negative, 
         // while allowing the function argument to be positive or negative  
@@ -189,23 +189,23 @@ public class Shooter extends SubsystemBase {
     }
 
     public double calculateShooterSpeed(double distance) {
-        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
-        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
-        if (floorEntry != null && ceilingEntry != null) {
+        // Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        // Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        // if (floorEntry != null && ceilingEntry != null) {
 
-            // Charles' calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double rpmAdjustment = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+        //     // Charles' calculation
+        //     double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+        //     double rpmAdjustment = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
 
-            System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
-                ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), rpmAdjustment);
-            return rpmAdjustment;
-        }
-        else {
-            System.out.println("Shooter: floorEntry or ceilingEntry was null");
-            // Typical speed. Not sure this will work for much, but it won't break anything.
-            return 4000;
-        }
+        //     System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
+        //         ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), rpmAdjustment);
+        //     return rpmAdjustment;
+        // }
+        // else {
+        //     System.out.println("Shooter: floorEntry or ceilingEntry was null");
+        //     // Typical speed. Not sure this will work for much, but it won't break anything.
+            return 4500.0;
+        //}
     }
 
     public double calculateShooterHood(double distance) {

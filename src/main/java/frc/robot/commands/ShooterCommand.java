@@ -63,6 +63,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   public void rapidFire() {
+    System.out.println("starting shooter");
     shooter.shoot();
     carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
   }
@@ -97,6 +98,9 @@ public class ShooterCommand extends CommandBase {
     startedTimerFlag = false;
     System.out.println("Initial Angle Offset: " + angleError);
     // shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
+    // always shoot
+    // foundTarget = true;
+    // currentControlMode = ControlMethod.SPIN_UP;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -109,8 +113,10 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (!foundTarget) {
-      distance = shooter.vision.getDistance();
+    System.out.println("foundTarget = " + foundTarget);
+    // if (!foundTarget) {
+      // distance = shooter.vision.getDistance();
+      distance = 100.0;
       if (distance != 0.0) {
         foundTarget = true;
         currentControlMode = ControlMethod.SPIN_UP;
@@ -122,7 +128,7 @@ public class ShooterCommand extends CommandBase {
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
         shooter.prepareShooter(distance);   
       }   
-    }
+    // }
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
