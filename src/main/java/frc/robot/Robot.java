@@ -65,40 +65,13 @@ public class Robot extends TimedRobot {
     */ 
 
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
-    /*
-    chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
 
-
-    chosenAuto.addObject("EightBallAuto", new EightBallAuto(
-      m_robotContainer.robotDrive,
-      m_robotContainer.shooter,
-      m_robotContainer.intake,
-      m_robotContainer.climber,
-      m_robotContainer.carousel,
-      m_robotContainer.driveCommand,
-      m_robotContainer.carouselCommand));
-
-    chosenAuto.addObject("ShootAndDrive", new ShootAndDriveAuto(
-        m_robotContainer.robotDrive,
-        m_robotContainer.shooter,
-        m_robotContainer.intake,
-        m_robotContainer.climber,
-        m_robotContainer.carousel,
-        m_robotContainer.driveCommand,
-        m_robotContainer.carouselCommand));
-    */
 
     chosenAuto.setDefaultOption("None", null);
-    chosenAuto.addOption("RedAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedA, m_robotContainer.climber));
-    chosenAuto.addOption("RedBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.RedB, m_robotContainer.climber));
-    chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueA, m_robotContainer.climber));
-    chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueB, m_robotContainer.climber));
-    chosenAuto.addOption("Barrel", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Barrel, m_robotContainer.climber));
-    chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Slalom, m_robotContainer.climber));
-    chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.climber));
-    chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision, m_robotContainer.climber));
-    chosenAuto.addOption("InterstellarAccuracy", new InterstellarAccuracy(m_robotContainer.robotDrive, m_robotContainer.shooter,
-         m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.intake, m_robotContainer.climber));
+    chosenAuto.addOption("EightBallAuto", 
+        (AutoCommandInterface) new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
+            m_robotContainer.intake, m_robotContainer.deployIntake, m_robotContainer.carousel,
+            m_robotContainer.driveCommand, m_robotContainer.carouselCommand));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

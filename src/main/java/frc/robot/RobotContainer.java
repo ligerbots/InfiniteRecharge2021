@@ -47,9 +47,9 @@ public class RobotContainer {
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter(vision);
 
-  // Not needed for At Home. Silence the warning for now
-  // private final Shoulder shoulder = new Shoulder();
+  
   public final Climber climber = new Climber(robotDrive);
+  final DeployIntake deployIntake = new DeployIntake(climber);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn, driveSwitch);
   public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
   public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
@@ -111,8 +111,8 @@ public class RobotContainer {
     JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     xboxX.whenPressed(new DeployIntake(climber));
 
-    // JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    // xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
+    JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
+    xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
 
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
