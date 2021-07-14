@@ -93,9 +93,7 @@ public class Shooter extends SubsystemBase {
             // System.err.println("Using original hard-coded table instead");
 
             // always have an entry at 0 so that it has a chance of working at short distances
-            distanceLookUp.put(0.0, new Double[] {5500.0, 115.0});
             distanceLookUp.put(50.0, new Double[] {5500.0, 115.0});
-            distanceLookUp.put(74.0, new Double[] {5500.0, 100.0});
             distanceLookUp.put(123.6, new Double[] {6000.0, 80.0});
             // distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
             distanceLookUp.put(174.9, new Double[] {7500.0, 65.0});
