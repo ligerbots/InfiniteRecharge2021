@@ -11,10 +11,14 @@ import frc.robot.subsystems.DriveTrain;
 
 public class MoveForward extends CommandBase {
   private DriveTrain driveTrain;
+  private DriveCommand driveCommand;
   private Pose2d start;
 
+  // distance that must be travelled in meters
+  private double distance = 2.0;
+
   /** Creates a new MoveForward. */
-  public MoveForward(DriveTrain driveTrain) {
+  public MoveForward(DriveTrain driveTrain, DriveCommand driveCommand) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     addRequirements(driveTrain);
@@ -39,12 +43,17 @@ public class MoveForward extends CommandBase {
   public void end(boolean interrupted) {
     // stops the robot
     driveTrain.tankDriveVolts(0.0, 0.0);
+    driveCommand.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // will return true if the robot has traveled 2 meters horizontally
-    return driveTrain.getPose().getX() >= start.getX() + 2;
+    // will return true if the robot has traveled 2 meters. This method uses the pythagorean theorem to find the distance
+    return Math.sqrt(
+            Math.pow(Math.abs(driveTrain.getPose().getX() - start.getX()), 2) + 
+            Math.pow(Math.abs(driveTrain.getPose().getY() - start.getY()), 2))  
+          >= distance;
   } 
 }
+
