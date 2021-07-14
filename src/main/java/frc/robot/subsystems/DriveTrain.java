@@ -224,23 +224,13 @@ public class DriveTrain extends SubsystemBase {
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs, boolean driveSwitch) {
         if (squaredInputs) {
-            if (Math.abs(throttle) < 0.05) {
+            if (Math.abs(throttle) < 0.1)
                 throttle = 0;
-            } 
-            else {
-                throttle = Math.signum(throttle) * throttle * throttle;
-            }
-            if (Math.abs(rotate) < 0.05) {
+            if (Math.abs(rotate) < 0.1) 
                 rotate = 0;
-            } else {
-                rotate = Math.signum(rotate) * rotate * rotate;
-            }
         }
-        // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
-        // if (driveSwitch) {  
-        //     differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
-        // } else {
-        differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
+        
+        differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
     }
 
     // Raw access to arcade drive (use only for auto routines)
