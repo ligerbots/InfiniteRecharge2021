@@ -17,7 +17,8 @@ public class MoveForward extends CommandBase {
   // distance that must be travelled in meters
   private double distance = 2.0;
 
-  /** Creates a new MoveForward. */
+  /** Creates a new MoveForward. 
+ * @param carouselCommand*/
   public MoveForward(DriveTrain driveTrain, DriveCommand driveCommand) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
