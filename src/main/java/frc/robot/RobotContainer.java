@@ -73,14 +73,14 @@ public class RobotContainer {
     @Override
     public double getAsDouble() {
       //return xbox.getY(Hand.kLeft);
-      return xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);// use trigger for throttle
+      return xbox.getY(Hand.kLeft);// use left joystick for throttle
     }
   }
 
   public class Turn implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kLeft);
+      return xbox.getX(Hand.kRight);// use right joystick for turn
     }
   }
 
