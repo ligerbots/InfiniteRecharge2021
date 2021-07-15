@@ -56,24 +56,27 @@ public class Robot extends TimedRobot {
 
     m_plotter = new TrajectoryPlotter(m_robotContainer.robotDrive.getField2d());
 
-    //SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    //SmartDashboard.putNumber("tableUpdateRate", 0.1); 
-    
-    chosenAuto.setDefaultOption("ShootandDrive", 
-        (AutoCommandInterface) new ShootAndDriveAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
-            m_robotContainer.intake, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.driveCommand,
+    // SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification
+    // e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()),
+    // EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+    // SmartDashboard.putNumber("tableUpdateRate", 0.1);
+
+    chosenAuto.setDefaultOption("ShootandDrive",
+        new ShootAndDriveAuto(m_robotContainer.robotDrive, m_robotContainer.shooter, m_robotContainer.intake,
+            m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.driveCommand,
             m_robotContainer.carouselCommand));
 
-    chosenAuto.addOption("MoveFowardAuto", (AutoCommandInterface) 
-      new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addOption("MoveFowardAuto",
+        new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
 
-    //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
-       // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
+    // chosenAuto.addOption("DriveForward", (AutoCommandInterface) new
+    // DriveForwardAuto(m_robotContainer.robotDrive,
+    // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
 
-    chosenAuto.addOption("EightBallAuto", 
-        (AutoCommandInterface) new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
-            m_robotContainer.intake, m_robotContainer.deployIntake, m_robotContainer.carousel,
-            m_robotContainer.driveCommand, m_robotContainer.carouselCommand));
+    chosenAuto.addOption("EightBallAuto",
+        new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter, m_robotContainer.intake,
+            m_robotContainer.deployIntake, m_robotContainer.carousel, m_robotContainer.driveCommand,
+            m_robotContainer.carouselCommand));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

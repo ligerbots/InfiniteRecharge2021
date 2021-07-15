@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -23,19 +22,19 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class EightBallAuto extends SequentialCommandGroup{
-  /**
-   * Add your docs here.
-   */
-  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, DeployIntake deployIntake, Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand) {
+public class EightBallAuto extends SequentialCommandGroup implements AutoCommandInterface {
+  Pose2d m_initialPose;
+
+  public EightBallAuto( DriveTrain robotDrive, Shooter shooter, Intake intake, DeployIntake deployIntake, 
+                        Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand )
+  {
     driveCommand.cancel();
     intake.run(0.4);
-    IntakeCommand intakeCommand = new IntakeCommand(intake, 0.5);
+    // IntakeCommand intakeCommand = new IntakeCommand(intake, 0.5);
     TurnAndShoot shoot1 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
     TurnAndShoot shoot2 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
    
@@ -87,9 +86,14 @@ public class EightBallAuto extends SequentialCommandGroup{
     );
 
 
-    addCommands(deployIntake.alongWith(shoot1), new EBInitialTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), ramseteCommand.andThen(() -> robotDrive.tankDriveVolts(0, 0)), shoot2);
-
+    addCommands(
+        deployIntake.alongWith(shoot1), 
+        new EBInitialTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), 
+        ramseteCommand.andThen(() -> robotDrive.tankDriveVolts(0, 0)), 
+        shoot2 );
   }
 
-
+  public Pose2d getInitialPose() {
+    return m_initialPose;
+  }
 }

@@ -43,7 +43,8 @@ public class MoveForward extends CommandBase {
   public void end(boolean interrupted) {
     // stops the robot
     driveTrain.tankDriveVolts(0.0, 0.0);
-    driveCommand.schedule();
+    if (driveCommand != null)
+      driveCommand.schedule();
   }
 
   // Returns true when the command should end.

@@ -7,7 +7,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.FieldMap;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -17,7 +19,7 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootAndDriveAuto extends SequentialCommandGroup {
+public class ShootAndDriveAuto extends SequentialCommandGroup implements AutoCommandInterface {
   /**
    * Creates a new ShootAndDriveAuto.
    */
@@ -29,5 +31,9 @@ public class ShootAndDriveAuto extends SequentialCommandGroup {
     addCommands(deployIntake.alongWith(shoot1), new MoveForward(robotDrive, driveCommand));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());super();
+  }
+
+  public Pose2d getInitialPose() {
+    return FieldMap.startPosition[0];
   }
 }
