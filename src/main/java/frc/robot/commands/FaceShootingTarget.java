@@ -78,7 +78,7 @@ public class FaceShootingTarget extends CommandBase {
 
       oldOldCheck = Math.abs(headingError) < acceptableError;
     }
-    else if (shooter.vision.getStatus())
+    else if (shooter.vision.getStatus() && shooter.vision.getDistance() > 1.0)
     {
       double startAngle = robotDrive.getHeading();
       double visionAngle = shooter.vision.getRobotAngle();
