@@ -56,27 +56,19 @@ public class Robot extends TimedRobot {
 
     m_plotter = new TrajectoryPlotter(m_robotContainer.robotDrive.getField2d());
 
-    //m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
-
-    SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
-    SmartDashboard.putNumber("tableUpdateRate", 0.1); 
-    /*creates a smartdashboard value for the time that it takes the network table to refresh its 
-    values in seconds, which is 100 milliseconds or 0.1 seconds
-    */ 
-
-    // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
-
+    //SmartDashboard.getEntry("tableUpdateRate").addListener((EntryNotification e)->NetworkTableInstance.getDefault().setUpdateRate(e.value.getDouble()), EntryListenerFlags.kUpdate|EntryListenerFlags.kNew);
+    //SmartDashboard.putNumber("tableUpdateRate", 0.1); 
     
     chosenAuto.setDefaultOption("ShootandDrive", 
         (AutoCommandInterface) new ShootAndDriveAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
             m_robotContainer.intake, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.driveCommand,
             m_robotContainer.carouselCommand));
 
-    chosenAuto.addOption("MoveFoward", (AutoCommandInterface) 
-      new MoveForward(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
+    chosenAuto.addOption("MoveFowardAuto", (AutoCommandInterface) 
+      new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
 
-    chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
-        m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
+    //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
+       // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
 
     chosenAuto.addOption("EightBallAuto", 
         (AutoCommandInterface) new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
@@ -154,7 +146,7 @@ public class Robot extends TimedRobot {
     // Maintain a SD value to know if the robot is enabled
     SmartDashboard.putBoolean("Enabled", true);
     // For At Home Skills, we want to know when the auto starts, so flush for fast response.
-    NetworkTableInstance.getDefault().flush();
+    //NetworkTableInstance.getDefault().flush();
 
     if (RobotBase.isSimulation()) {
       m_robotContainer.robotDrive.setRobotFromFieldPose();
@@ -208,25 +200,17 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    System.out.println("teleopInit");
+    //System.out.println("teleopInit");
 
     // Reset the winch encoder
     m_robotContainer.climber.resetWinchEncoder();
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
 
-    //SmartDashboard.putData(m_robotContainer.testFlup);
-
     m_robotContainer.driveCommand.schedule();
-    //m_robotContainer.testFlup.schedule();
-    //m_robotContainer.shooter.testSpin();
     m_robotContainer.carouselCommand.schedule();
 
     // Cancel the IntakeCommand so it only runs on the bumper buttons
     m_robotContainer.intakeCommand.cancel();
-    //m_robotContainer.testFlup.schedule();
-    //m_robotContainer.testIntake.schedule();
-    //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
-    //aaa.schedule();
   }
 
   /**
