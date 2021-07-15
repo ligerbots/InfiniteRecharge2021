@@ -19,7 +19,7 @@ import frc.robot.Constants;
 public class Climber extends SubsystemBase {
     double currentShoulderAngle;
     double requestedShoulderAngle;
-
+    boolean shoulderMovingDown = false;
     public final CANSparkMax shoulder; // declare new motor
     public final CANSparkMax winch; // declare new motor
     public DutyCycleEncoder shoulderEncoder;
@@ -75,6 +75,31 @@ public class Climber extends SubsystemBase {
        return shoulderEncoder.get();
    }
 
+   public void moveShoulder(final double angle) {
+    // This just sets parameters to be used in the periodic() method.
+    // Moving the shoulder to the correct angle will be done in the periodic() method
+
+    requestedShoulderAngle = angle;
+
+    // Limit max requested height
+    if (requestedShoulderAngle > Constants.SHOULDER_MAX_HEIGHT) {
+        requestedShoulderAngle = Constants.SHOULDER_MAX_HEIGHT;
+    }
+
+    // Limit min requested heght
+    if (requestedShoulderAngle < Constants.SHOULDER_MIN_HEIGHT) {
+        requestedShoulderAngle = Constants.SHOULDER_MIN_HEIGHT;
+    }
+
+    if (requestedShoulderAngle > currentShoulderAngle) {
+        shoulderMovingDown = false;
+    }
+    else {
+        shoulderMovingDown = true;
+    }
+    SmartDashboard.putBoolean("Moving Down", shoulderMovingDown);
+    SmartDashboard.putNumber("Shoulder Requested Angle", requestedShoulderAngle);
+}
 
    public boolean shoulderBelowHeight(double degrees){
     // SHOULDER_MIN_HEIGHT is reference. Divide degrees by 360 to get encoder value

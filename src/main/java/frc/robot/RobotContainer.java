@@ -106,13 +106,10 @@ public class RobotContainer {
     }
 
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
-    xboxA.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, true));
-
-    JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
-    xboxX.whenPressed(new DeployIntake(climber));
-
-    JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
+    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand));
+    
+    //JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+    //xboxX.whenPressed(new DeployIntake(climber));
 
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
@@ -126,13 +123,29 @@ public class RobotContainer {
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
+    JoystickButton farm4 = new JoystickButton(farm, 4);
+    farm4.whenPressed(new ClimberCommand1(climber));
+
+    JoystickButton farm5 = new JoystickButton (farm, 5);
+    farm5.whenPressed(new ClimberCommand2(climber));
+
+    
+    JoystickButton farm11 = new JoystickButton(farm, 11);
+    farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
+
+    JoystickButton farm20 = new JoystickButton(farm, 20);
+    farm20.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.GOALFINDER));
+
+    JoystickButton farm21 = new JoystickButton(farm, 21);
+    farm21.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
+    
     // JoystickButton farm1 = new JoystickButton(farm, 1);
     // JoystickButton farm2 = new JoystickButton(farm, 2);
     // JoystickButton farm4 = new JoystickButton(farm, 4);
     // JoystickButton farm5 = new JoystickButton (farm, 5);
     // JoystickButton farm6 = new JoystickButton(farm, 6);
     // JoystickButton farm7 = new JoystickButton(farm, 7);
-    // JoystickButton farm11 = new JoystickButton(farm, 11);
+    
     // JoystickButton farm14 = new JoystickButton(farm, 14);
     // JoystickButton farm16 = new JoystickButton(farm, 16);
     // JoystickButton farm21 = new JoystickButton(farm, 21);

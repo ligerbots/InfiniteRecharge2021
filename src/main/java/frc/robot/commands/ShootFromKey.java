@@ -8,48 +8,60 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Shooter;
 
-public class DriveForwardAuto extends CommandBase {
+public class ShootFromKey extends CommandBase {
   /**
-   * Creates a new DriveForwardAuto.
+   * Creates a new ShootFromKey.
    */
-  DriveTrain robotDrive;
-  long startTime;
+  Shooter shooter;
+  Carousel carousel;
   CarouselCommand carouselCommand;
-  DriveCommand driveCommand;
+ 
+  int initialCarouselTicks;
 
-  public DriveForwardAuto(DriveTrain robotDrive, CarouselCommand carouselCommand, DriveCommand driveCommand) {
-    this.robotDrive = robotDrive;
+  public ShootFromKey(Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
+    this.shooter = shooter;
+    this.carousel = carousel;
     this.carouselCommand = carouselCommand;
-    this.driveCommand = driveCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startTime = System.nanoTime();
-    driveCommand.cancel();
+      
+    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+    carouselCommand.cancel();
+    initialCarouselTicks = carousel.getTicks();
+    shooter.setHood(150);
+    shooter.setShooterRpm(3700.0);
+    shooter.setTurretAdjusted(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotDrive.allDrive(0.5, 0, false, false);
+    if (shooter.getSpeed() > 3650) {
+      carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+      shooter.shoot();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    robotDrive.allDrive(0, 0, false, interrupted);
+    shooter.stopAll();
+    carousel.spin(0.0);
+    carousel.resetBallCount();
     carouselCommand.schedule();
-    driveCommand.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 0.65;
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   }
 }

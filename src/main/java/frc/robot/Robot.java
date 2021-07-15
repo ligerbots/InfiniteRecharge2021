@@ -67,7 +67,9 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
 
 
-    chosenAuto.setDefaultOption("None", null);
+    chosenAuto.setDefaultOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
+        m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
+
     chosenAuto.addOption("EightBallAuto", 
         (AutoCommandInterface) new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
             m_robotContainer.intake, m_robotContainer.deployIntake, m_robotContainer.carousel,
