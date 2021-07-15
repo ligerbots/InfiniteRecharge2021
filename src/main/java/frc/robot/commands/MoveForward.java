@@ -29,7 +29,7 @@ public class MoveForward extends CommandBase {
   public void initialize() {
     // takes note of where the robot started and then drives forward
     start = driveTrain.getPose();
-    driveTrain.tankDriveVolts(12.0, 12.0);
+    driveTrain.allDrive(0.5, 0.0, false, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
