@@ -15,27 +15,30 @@ public class MoveForward extends CommandBase {
   private Pose2d start;
 
   // distance that must be travelled in meters
-  private double distance = 2.0;
+  private double distance = 1.0;
 
   /** Creates a new MoveForward. */
   public MoveForward(DriveTrain driveTrain, DriveCommand driveCommand) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
+    this.driveCommand = driveCommand;
     addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (driveCommand != null)
+      driveCommand.cancel();
+
     // takes note of where the robot started and then drives forward
     start = driveTrain.getPose();
-    driveTrain.allDrive(0.5, 0.0, false, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // nothing to do while the robot is moving
+    driveTrain.allDrive(0.5, 0.0, false, false);
   }
 
   // Called once the command ends or is interrupted.
