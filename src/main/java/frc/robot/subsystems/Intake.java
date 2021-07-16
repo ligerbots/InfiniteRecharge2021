@@ -16,9 +16,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.simulation.SparkMaxWrapper;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax intakeMotor;
+    SparkMaxWrapper intakeMotor;
 
     private ColorSensorV3 colorSensor;
     private ColorMatch colorMatch = new ColorMatch();
@@ -33,7 +34,7 @@ public class Intake extends SubsystemBase {
     }
 
     public Intake() {
-        intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID , MotorType.kBrushless);
+        intakeMotor = new SparkMaxWrapper(Constants.INTAKE_MOTOR_CAN_ID , MotorType.kBrushless);
         intakeMotor.setIdleMode(IdleMode.kBrake);
         
         //colorSensor = new ColorSensorV3(null);
