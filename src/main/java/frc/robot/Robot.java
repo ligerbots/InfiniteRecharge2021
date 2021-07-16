@@ -67,10 +67,11 @@ public class Robot extends TimedRobot {
     //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
        // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
 
-    chosenAuto.addOption("EightBallAuto", 
-        new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
-            m_robotContainer.intake, m_robotContainer.deployIntake, m_robotContainer.carousel,
-            m_robotContainer.driveCommand, m_robotContainer.carouselCommand));
+    // Disable for now, until it is fixed and tested
+    // chosenAuto.addOption("EightBallAuto", 
+    //     new EightBallAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
+    //         m_robotContainer.intake, m_robotContainer.deployIntake, m_robotContainer.carousel,
+    //         m_robotContainer.driveCommand, m_robotContainer.carouselCommand));
 
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
