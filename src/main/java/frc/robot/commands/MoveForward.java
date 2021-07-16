@@ -55,8 +55,8 @@ public class MoveForward extends CommandBase {
   public boolean isFinished() {
     // will return true if the robot has traveled 2 meters. This method uses the pythagorean theorem to find the distance
     return Math.sqrt(
-            Math.pow(Math.abs(driveTrain.getPose().getX() - start.getX()), 2) + 
-            Math.pow(Math.abs(driveTrain.getPose().getY() - start.getY()), 2))  
+            Math.pow(driveTrain.getPose().getX() - start.getX(), 2) + 
+            Math.pow(driveTrain.getPose().getY() - start.getY(), 2))  
           >= distance;
   } 
 }
