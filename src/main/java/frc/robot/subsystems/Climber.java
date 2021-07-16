@@ -50,6 +50,7 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic(){
+        currentShoulderAngle = shoulderEncoder.get();
         SmartDashboard.putNumber("Shoulder Ticks", shoulderEncoder.get());
 
         if (!autoLevel) {
