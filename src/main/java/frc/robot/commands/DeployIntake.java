@@ -62,6 +62,7 @@ public class DeployIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    climber.switchDeployed();
     return climber.getShoulderPosition() <= Constants.SHOULDER_MIN_VELOCITY_HEIGHT
         || Robot.time() - startTime > 2.0;
   }
