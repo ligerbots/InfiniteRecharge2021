@@ -57,12 +57,13 @@ public class DeployIntake extends CommandBase {
   public void end(boolean interrupted) {
       climber.shoulder.setVoltage(0.0);
       climber.shoulder.setIdleMode(IdleMode.kCoast);
+      climber.switchDeployed();
       System.out.println("DeployIntake ended. interrupted = " + interrupted);
   }
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    climber.switchDeployed();
     return climber.getShoulderPosition() <= Constants.SHOULDER_MIN_VELOCITY_HEIGHT
         || Robot.time() - startTime > 2.0;
   }
