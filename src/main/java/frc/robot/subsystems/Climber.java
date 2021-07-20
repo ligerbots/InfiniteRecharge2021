@@ -42,6 +42,10 @@ public class Climber extends SubsystemBase {
         winchEncoder = new CANEncoder(winch);
 
         this.driveTrain = driveTrain;
+
+        // create these early
+        SmartDashboard.putBoolean("Climber/Moving Down", shoulderMovingDown);
+        SmartDashboard.putNumber("Climber/Shoulder Requested Angle", requestedShoulderAngle);
     }
 
     @Override

@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(123.6, new Double[] {6000.0, 80.0});
             // distanceLookUp.put(137.1, new Double[] {5500.0, 80.0});
             distanceLookUp.put(174.9, new Double[] {7500.0, 65.0});
-            distanceLookUp.put(227.0, new Double[] {8000.0, 60.0});
+            distanceLookUp.put(227.0, new Double[] {8000.0, 58.0});
             distanceLookUp.put(235.2, new Double[] {8500.0, 55.0});            
             distanceLookUp.put(253.4, new Double[] {8500.0, 60.0});
             distanceLookUp.put(318.1, new Double[] {9000.0, 60.0});

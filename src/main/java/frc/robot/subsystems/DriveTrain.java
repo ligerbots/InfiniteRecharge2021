@@ -256,13 +256,13 @@ public class DriveTrain extends SubsystemBase {
             turnSpeed = 0.2; //0.4;
         }
         else if (absErr > 10.0) {
-            turnSpeed = 0.13;
+            turnSpeed = 0.15;
         }
         else if (absErr > 5.0) {
-            turnSpeed = 0.1; //0.07;
+            turnSpeed = 0.15; //0.07;
         }
         else {
-            turnSpeed = 0.1; //0.065;
+            turnSpeed = 0.15; //0.065;
         }
 
         return turnSpeed * Math.signum(angleError);

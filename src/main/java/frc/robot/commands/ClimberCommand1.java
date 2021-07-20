@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
@@ -18,7 +19,7 @@ public class ClimberCommand1 extends CommandBase {
   Climber climber;
 
   enum ClimbingPhase {
-    RAISE_SHOULDER1, RAISE_WINCH, RAISE_SHOULDER2
+    RAISE_SHOULDER1, RAISE_WINCH, RAISE_SHOULDER2, FINISHED
   }
 
   ClimbingPhase currentPhase;
@@ -26,6 +27,8 @@ public class ClimberCommand1 extends CommandBase {
   public ClimberCommand1(Climber climber) {
     this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
+    SmartDashboard.putString("ClimberCmd1 Phase", "none");
+    SmartDashboard.putNumber("ClimberCmd1 Winch", 0);
   }
 
   // Called when the command is initially scheduled.
@@ -37,10 +40,12 @@ public class ClimberCommand1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(currentPhase);
+    SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
+    SmartDashboard.putNumber("ClimberCmd1 Winch", climber.getWinchPosition());
+
     switch (currentPhase) {
       case RAISE_SHOULDER1:
-        climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER + 0.05);
+        climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_RAISE1 + 0.05);
         if (climber.shoulderOnTarget()) {
           currentPhase = ClimbingPhase.RAISE_WINCH;
         }
@@ -48,13 +53,16 @@ public class ClimberCommand1 extends CommandBase {
         break;
       case RAISE_WINCH:
         climber.moveWinch(Constants.WINCH_MAX_HEIGHT_TICK_COUNT);
-        if (Math.abs(climber.getWinchPosition() - Constants.WINCH_MAX_HEIGHT_TICK_COUNT) < 10) {
+        if (climber.getWinchPosition() >= Constants.WINCH_MAX_HEIGHT_TICK_COUNT - 10.0) {
           currentPhase = ClimbingPhase.RAISE_SHOULDER2;
+          SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
         }
         System.out.println(" " + climber.getWinchPosition());
         break;
       case RAISE_SHOULDER2:
         climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_MAX_CLIMB);
+        currentPhase = ClimbingPhase.FINISHED;
+        SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
         break;
       default: 
         break;
@@ -70,6 +78,6 @@ public class ClimberCommand1 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return currentPhase == ClimbingPhase.RAISE_SHOULDER2;
+    return currentPhase == ClimbingPhase.FINISHED;
   }
 }
