@@ -102,10 +102,8 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Robot.time() - startTime < 3.0){
       return (Math.abs(headingError) < acceptableError && check) 
-        || (!targetAcquired && (Robot.time() - startTime) > 0.5);
-    }
-    else return true;
+        || (!targetAcquired && (Robot.time() - startTime) > 0.5) 
+        || Robot.time() - startTime > 3.0;
   }
 }
