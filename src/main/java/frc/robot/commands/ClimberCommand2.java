@@ -18,7 +18,7 @@ public class ClimberCommand2 extends CommandBase {
   Climber climber;
 
   enum ClimbingPhase {
-    LOWER_WINCH, AUTO_LEVEL
+    LOWER_WINCH, AUTO_LEVEL, FINISHED
   }
 
   ClimbingPhase currentPhase;
@@ -38,15 +38,22 @@ public class ClimberCommand2 extends CommandBase {
   @Override
   public void execute() {
     System.out.println(currentPhase + "    " + climber.getWinchPosition());
+    
     switch (currentPhase) {
       case LOWER_WINCH:
-          climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200);
-          if (Math.abs(climber.getWinchPosition() - (Constants.WINCH_CLIMB_HEIGHT - 200)) < 10) {
-            currentPhase = ClimbingPhase.AUTO_LEVEL;
-          }
-        case AUTO_LEVEL:
-          climber.autoLevel(true);
-          break;
+        climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200.0);
+        if (climber.getWinchPosition() < Constants.WINCH_CLIMB_HEIGHT - 190.0) {
+          currentPhase = ClimbingPhase.AUTO_LEVEL;
+        }
+        // Note: falls through
+
+      case AUTO_LEVEL:
+        climber.autoLevel(true);
+        currentPhase = ClimbingPhase.FINISHED;
+        break;
+
+      case FINISHED:
+        break;
     }
   }
 
@@ -58,6 +65,6 @@ public class ClimberCommand2 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return currentPhase == ClimbingPhase.AUTO_LEVEL;
+    return currentPhase == ClimbingPhase.FINISHED;
   }
 }

@@ -55,8 +55,8 @@ public class Climber extends SubsystemBase {
         final double currentWinchPosition = winchEncoder.getPosition();
         SmartDashboard.putNumber("Climber/Winch Position", currentWinchPosition);
         
-        if (deployed = true){
-
+        if (deployed) 
+        {
             if (!autoLevel) {
                 if (!shoulderMovingDown) {
                     // move up

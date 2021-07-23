@@ -40,7 +40,6 @@ public class ClimberCommand1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
     SmartDashboard.putNumber("ClimberCmd1 Winch", climber.getWinchPosition());
 
     switch (currentPhase) {
@@ -51,23 +50,25 @@ public class ClimberCommand1 extends CommandBase {
         }
         System.out.println("Shoulder Position: " + climber.getShoulderPosition());
         break;
+
       case RAISE_WINCH:
         climber.moveWinch(Constants.WINCH_MAX_HEIGHT_TICK_COUNT);
         if (climber.getWinchPosition() >= Constants.WINCH_MAX_HEIGHT_TICK_COUNT - 10.0) {
           currentPhase = ClimbingPhase.RAISE_SHOULDER2;
-          SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
         }
         System.out.println(" " + climber.getWinchPosition());
         break;
+
       case RAISE_SHOULDER2:
         climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_MAX_CLIMB);
         currentPhase = ClimbingPhase.FINISHED;
-        SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
         break;
-      default: 
+
+      case FINISHED: 
         break;
     }
 
+    SmartDashboard.putString("ClimberCmd1 Phase", currentPhase.toString());
   }
 
   // Called once the command ends or is interrupted.
