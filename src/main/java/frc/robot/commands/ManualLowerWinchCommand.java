@@ -17,7 +17,7 @@ public class ManualLowerWinchCommand extends CommandBase {
     
     @Override
     public void execute() {
-    climber.moveWinch(5);
+    climber.moveWinch(initialWinchPosition - 15);
     }
 
     // Called once the command ends or is interrupted.
@@ -29,6 +29,6 @@ public class ManualLowerWinchCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-    return (climber.getWinchPosition() == initialWinchPosition-5);
+    return (Math.abs(climber.getWinchPosition() + 15 - initialWinchPosition ) < 1 ); //check for margin of error
     } 
 }
