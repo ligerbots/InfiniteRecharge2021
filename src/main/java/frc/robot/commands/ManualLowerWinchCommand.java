@@ -17,13 +17,12 @@ public class ManualLowerWinchCommand extends CommandBase {
     
     @Override
     public void execute() {
-    climber.moveWinch(initialWinchPosition - 15);
+        climber.moveWinch(initialWinchPosition - 15);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        return;
     }
 
     // Returns true when the command should end.
