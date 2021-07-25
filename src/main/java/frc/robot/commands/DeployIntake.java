@@ -31,7 +31,6 @@ public class DeployIntake extends CommandBase {
     started = false;
     climber.shoulder.setIdleMode(IdleMode.kBrake);
     startTime = Robot.time();
-    climber.switchDeployed();
   }
 
   @Override
@@ -59,6 +58,7 @@ public class DeployIntake extends CommandBase {
       climber.shoulder.setVoltage(0.0);
       climber.shoulder.setIdleMode(IdleMode.kCoast);
       System.out.println("DeployIntake ended. interrupted = " + interrupted);
+      climber.switchDeployed();
   }
   
   // Returns true when the command should end.

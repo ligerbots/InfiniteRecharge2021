@@ -46,6 +46,7 @@ public class Climber extends SubsystemBase {
         // create these early
         SmartDashboard.putBoolean("Climber/Moving Down", shoulderMovingDown);
         SmartDashboard.putNumber("Climber/Shoulder Requested Angle", requestedShoulderAngle);
+        SmartDashboard.putBoolean("Deployed", deployed);
     }
 
     @Override
@@ -54,6 +55,7 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putNumber("Climber/Shoulder Ticks", currentShoulderAngle);
         final double currentWinchPosition = winchEncoder.getPosition();
         SmartDashboard.putNumber("Climber/Winch Position", currentWinchPosition);
+        deployed = SmartDashboard.getBoolean("Deployed", false);
         
         if (deployed) 
         {
