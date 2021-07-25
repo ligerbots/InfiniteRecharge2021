@@ -39,7 +39,7 @@ public class Climber extends SubsystemBase {
         
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);// set to break when the motor is speed 0
-        winchEncoder = new CANEncoder(winch);
+        winchEncoder = winch.getEncoder();
 
         this.driveTrain = driveTrain;
 
@@ -89,16 +89,8 @@ public class Climber extends SubsystemBase {
                             shoulder.setIdleMode(IdleMode.kBrake);
                         }
                         else {
-                            // Now we get clever. We have to only allow it to fall at the SHOULDER_RATE_DOWN
-                            if (lastShoulderAngle - currentShoulderAngle > Constants.SHOULDER_RATE_DOWN * 0.02) {
-                                // It's going too fast so we need to slow it down
-                                shoulder.setIdleMode(IdleMode.kBrake);
-                            }
-                            else {
-                                // Let it coast for a while
-                                shoulder.setIdleMode(IdleMode.kCoast);
-                                shoulder.setVoltage(0.0);
-                            }
+                            // Move the shoulder down slowly
+                            shoulder.setVoltage(Constants.SHOULDER_SPEED_DOWN_SLOW);
                         }
                     }
                 }

@@ -16,10 +16,6 @@ public class DeployIntake extends CommandBase {
   boolean started;
   double startTime;
 
-  final static double unhookIntakeSpeed = 4.0;
-  final static double lowerIntakeFastSpeed = -3.0;
-  final static double lowerIntakeSlowSpeed = -0.3;
-
   public DeployIntake(Climber climber){
     this.climber = climber;
   }
@@ -38,7 +34,7 @@ public class DeployIntake extends CommandBase {
   public void execute() {
     // raise the shoulder a little so that the intake can unhook at the start of the match
     if (!started) {    // .589 = angle with leg
-      climber.shoulder.setVoltage(unhookIntakeSpeed);
+      climber.shoulder.setVoltage(Constants.SHOULDER_SPEED_UP);
       // set started to true so that we don't raise the shoulder again.
       if (climber.shoulderEncoder.get() > Constants.SHOULDER_RELEASE_HEIGHT) started = true;
     }
@@ -46,10 +42,10 @@ public class DeployIntake extends CommandBase {
     // slowly lower the shoulder
     else {
       if ( !climber.shoulderBelowHeight(15.0) ) {
-        climber.shoulder.setVoltage(lowerIntakeFastSpeed);
+        climber.shoulder.setVoltage(Constants.SHOULDER_SPEED_DOWN_FAST);
       }
       else {
-        climber.shoulder.setVoltage(lowerIntakeSlowSpeed);
+        climber.shoulder.setVoltage(Constants.SHOULDER_SPEED_DOWN_SLOW);
       }
     }
   }
