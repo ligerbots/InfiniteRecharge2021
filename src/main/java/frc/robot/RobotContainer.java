@@ -133,10 +133,10 @@ public class RobotContainer {
     JoystickButton farm11 = new JoystickButton(farm, 11);
     farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
-    JoystickButton farm20 = new JoystickButton(farm, 20);
-    farm20.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.GOALFINDER));
+    JoystickButton farm20 = new JoystickButton(farm, 12);
+    farm20.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.SHOOTER));
 
-    JoystickButton farm21 = new JoystickButton(farm, 21);
+    JoystickButton farm21 = new JoystickButton(farm, 16);
     farm21.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
     
     // JoystickButton farm1 = new JoystickButton(farm, 1);

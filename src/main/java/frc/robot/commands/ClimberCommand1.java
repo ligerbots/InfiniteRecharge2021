@@ -35,6 +35,7 @@ public class ClimberCommand1 extends CommandBase {
   @Override
   public void initialize() {
     currentPhase = ClimbingPhase.RAISE_SHOULDER1;
+    climber.switchDeployed();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

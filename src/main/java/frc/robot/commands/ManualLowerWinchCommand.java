@@ -11,12 +11,13 @@ public class ManualLowerWinchCommand extends CommandBase {
     }
 
     public void initialize() {
-        climber.moveWinch(climber.getWinchPosition() - 15);
-        climber.moveShoulder(climber.getShoulderPosition() - 0.05);
+        climber.moveWinch(climber.getWinchPosition() + 50);
+        // climber.moveShoulder(climber.getShoulderPosition() - 0.05);
     }
     
     @Override
     public void execute() {
+        
     }
 
     // Called once the command ends or is interrupted.
