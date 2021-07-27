@@ -97,7 +97,7 @@ public final class Constants {
 
     public static final double SHOULDER_RATE_DOWN = 40.0/360.0 * 12;
     // NOTE: This has to be negative to keep the robot level during climb
-    public static final double SHOULDER_SPEED_LEVEL = -5.5;
+    public static final double SHOULDER_SPEED_LEVEL = -4.0;   // -5.5;
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 5.0;
 
