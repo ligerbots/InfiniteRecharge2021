@@ -41,6 +41,8 @@ public class ClimberCommand2 extends CommandBase {
     
     switch (currentPhase) {
       case LOWER_WINCH:
+      // Move shoulder down so hook goes down straighter as we lower the winch.
+        climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_RAISE1);
         climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200.0);
         if (climber.getWinchPosition() < Constants.WINCH_CLIMB_HEIGHT - 190.0) {
           currentPhase = ClimbingPhase.AUTO_LEVEL;
