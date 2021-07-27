@@ -57,10 +57,10 @@ public class Shooter extends SubsystemBase {
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = new CANEncoder(motor2);
+        shooterEncoder = motor2.getEncoder();
         shooterEncoder.setVelocityConversionFactor(2.666);
 
-        pidController = new CANPIDController(motor2);
+        pidController = motor2.getPIDController();
         pidController.setFeedbackDevice(shooterEncoder);
 
         // We want motor2 to be master and motor1 and 3 follow the speed of motor2
