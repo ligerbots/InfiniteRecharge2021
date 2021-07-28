@@ -17,58 +17,71 @@ public class ClimberCommand2 extends CommandBase {
    */
   Climber climber;
 
-  enum ClimbingPhase {
-    LOWER_WINCH, AUTO_LEVEL, FINISHED
-  }
+  // enum ClimbingPhase {
+  //   LOWER_WINCH, AUTO_LEVEL, FINISHED
+  // }
 
-  ClimbingPhase currentPhase;
+  // ClimbingPhase currentPhase;
 
   public ClimberCommand2(Climber climber) {
     this.climber = climber;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    currentPhase = ClimbingPhase.LOWER_WINCH;
-  }
+  // // Called when the command is initially scheduled.
+  // @Override
+  // public void initialize() {
+  //   currentPhase = ClimbingPhase.LOWER_WINCH;
+  // }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // // Called every time the scheduler runs while the command is scheduled.
+  // @Override
+  // public void execute() {
+  //   System.out.println(currentPhase + "    " + climber.getWinchPosition());
+    
+  //   // NOTE: (Paul Rensing, July 28, 2021)  This is not really a "state machine".
+  //   //  Because the switch for LOWER_WINCH falls through, we *always* turn on autoLevel.
+  //   //  The only thing is we stop checking the winch once it is done.
+  //   switch (currentPhase) {
+  //     case LOWER_WINCH:
+  //       // Move shoulder down so hook goes down straighter as we lower the winch.
+  //       // Not needed when no RAISE_SHOULDER2 ?
+  //       // climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_RAISE1);
+
+  //       climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT);
+
+  //       This test is incorrect; winch ticks always increases.
+  //       if (climber.getWinchPosition() < Constants.WINCH_CLIMB_HEIGHT - 10.0) {
+  //         currentPhase = ClimbingPhase.AUTO_LEVEL;
+  //       }
+  //       // Note: falls through
+
+  //     case AUTO_LEVEL:
+  //       climber.autoLevel(true);
+  //       currentPhase = ClimbingPhase.FINISHED;
+  //       break;
+
+  //     case FINISHED:
+  //       break;
+  //   }
+  // }
+
   @Override
   public void execute() {
-    System.out.println(currentPhase + "    " + climber.getWinchPosition());
-    
-    switch (currentPhase) {
-      case LOWER_WINCH:
-        // Move shoulder down so hook goes down straighter as we lower the winch.
-        // Not needed when no RAISE_SHOULDER2 ?
-        // climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_RAISE1);
-
-        climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200.0);
-        if (climber.getWinchPosition() < Constants.WINCH_CLIMB_HEIGHT - 190.0) {
-          currentPhase = ClimbingPhase.AUTO_LEVEL;
-        }
-        // Note: falls through
-
-      case AUTO_LEVEL:
-        climber.autoLevel(true);
-        currentPhase = ClimbingPhase.FINISHED;
-        break;
-
-      case FINISHED:
-        break;
-    }
+    // Set the desired winch ticks position and turn on autolevel.
+    // The code in Climber.periodic does the rest.
+    climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT);
+    climber.autoLevel(true);
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+  // // Called once the command ends or is interrupted.
+  // @Override
+  // public void end(boolean interrupted) {
+  // }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return currentPhase == ClimbingPhase.FINISHED;
+    return true;
+    // return currentPhase == ClimbingPhase.FINISHED;
   }
 }
