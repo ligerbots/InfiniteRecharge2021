@@ -55,7 +55,9 @@ public class ClimberCommand1 extends CommandBase {
       case RAISE_WINCH:
         climber.moveWinch(Constants.WINCH_MAX_HEIGHT_TICK_COUNT);
         if (climber.getWinchPosition() >= Constants.WINCH_MAX_HEIGHT_TICK_COUNT - 10.0) {
-          currentPhase = ClimbingPhase.RAISE_SHOULDER2;
+          // currentPhase = ClimbingPhase.RAISE_SHOULDER2;
+          // From March 2020, do not actually raise the shoulder
+          currentPhase = ClimbingPhase.FINISHED;
         }
         System.out.println(" " + climber.getWinchPosition());
         break;
