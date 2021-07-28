@@ -11,6 +11,7 @@ public class ManualLowerWinchCommand extends CommandBase {
     }
 
     public void initialize() {
+        // note: the winch position always increases
         climber.moveWinch(climber.getWinchPosition() + 50);
         // climber.moveShoulder(climber.getShoulderPosition() - 0.05);
     }
