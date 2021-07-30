@@ -40,7 +40,8 @@ public class Climber extends SubsystemBase {
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);// set to break when the motor is speed 0
         winchEncoder = winch.getEncoder();
-
+        winchEncoder.setPosition(0);
+        
         this.driveTrain = driveTrain;
 
         // create these early

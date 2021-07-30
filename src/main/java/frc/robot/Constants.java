@@ -110,7 +110,7 @@ public final class Constants {
     public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 665;
     // public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
     // public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
-    public static final double WINCH_CLIMB_HEIGHT = 1062;
+    public static final double WINCH_CLIMB_HEIGHT = 1162;
 
     // xbox button mapimng 
     public static final int XBOX_A = 1;
