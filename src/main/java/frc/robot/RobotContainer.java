@@ -40,7 +40,7 @@ public class RobotContainer {
   public final DriveSwitch driveSwitch = new DriveSwitch();
 
   XboxController xbox = new XboxController(0);
-  Joystick farm = new Joystick(1);
+  //Joystick farm = new Joystick(1);
 
   public final Vision vision = new Vision(robotDrive);
   public final Intake intake = new Intake();
@@ -123,21 +123,21 @@ public class RobotContainer {
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
-    JoystickButton farm4 = new JoystickButton(farm, 4);
+    JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
     farm4.whenPressed(new ClimberCommand1(climber));
 
-    JoystickButton farm5 = new JoystickButton (farm, 5);
+    JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
     farm5.whenPressed(new ClimberCommand2(climber));
 
     
-    JoystickButton farm11 = new JoystickButton(farm, 11);
-    farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
+    // JoystickButton farm11 = new JoystickButton(farm, 11);
+    // farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
-    JoystickButton farm20 = new JoystickButton(farm, 12);
-    farm20.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.SHOOTER));
+    JoystickButton xBoxStart = new JoystickButton(xbox, Constants.XBOX_START);
+    xBoxStart.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.SHOOTER));
 
-    JoystickButton farm21 = new JoystickButton(farm, 16);
-    farm21.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
+    JoystickButton xBoxBack = new JoystickButton(xbox, Constants.XBOX_BACK);
+    xBoxBack.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
     
     // JoystickButton farm1 = new JoystickButton(farm, 1);
     // JoystickButton farm2 = new JoystickButton(farm, 2);

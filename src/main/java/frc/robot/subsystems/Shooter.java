@@ -75,10 +75,10 @@ public class Shooter extends SubsystemBase {
         // always have an entry at 0 so that it has a chance of working at short distances
         distanceLookUp.put(0.0, new Double[] { 5500.0, 103.0 });
         distanceLookUp.put(50.0, new Double[] { 5500.0, 103.0 });
-        distanceLookUp.put(110.0, new Double[] { 5500.0, 87.0 });
-        distanceLookUp.put(170.0, new Double[] { 7500.0, 65.0 });
-        distanceLookUp.put(230.0, new Double[] { 8500.0, 54.0 });
-        distanceLookUp.put(318.1, new Double[] { 9000.0, 50.0 });
+        distanceLookUp.put(110.0, new Double[] { 6500.0, 87.0 });
+        distanceLookUp.put(170.0, new Double[] { 8500.0, 70.0 });
+        distanceLookUp.put(230.0, new Double[] { 9000.0, 60.0 });
+        distanceLookUp.put(318.1, new Double[] { 9000.0, 55.0 });
         // extra far, to make sure the table work at the long end
         distanceLookUp.put(400.0, new Double[] { 9000.0, 50.0 });
 
