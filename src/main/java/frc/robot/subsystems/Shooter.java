@@ -204,25 +204,26 @@ public class Shooter extends SubsystemBase {
         // else {
         //     System.out.println("Shooter: floorEntry or ceilingEntry was null");
         //     // Typical speed. Not sure this will work for much, but it won't break anything.
-            return 4500.0;
+            return 4000.0;
         //}
     }
 
     public double calculateShooterHood(double distance) {
-        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
-        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        // Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        // Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
 
-        if (floorEntry != null && ceilingEntry != null) {
-            // Charles calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double hoodAdjustment = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
-            System.out.format(" hood %3.0f%n", hoodAdjustment);
+        // if (floorEntry != null && ceilingEntry != null) {
+        //     // Charles calculation
+        //     double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+        //     double hoodAdjustment = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+        //     System.out.format(" hood %3.0f%n", hoodAdjustment);
 
-            return hoodAdjustment;
-        }
-        else {
-            return 60;
-        }
+        //     return hoodAdjustment;
+        // }
+        // else {
+        //     return 60;
+        // }
+        return 120;
     }
 
     public void warmUp() {
@@ -251,6 +252,8 @@ public class Shooter extends SubsystemBase {
 
     public void stopAll() {
         setShooterRpm(0.0);
+        pidController.setIAccum(0);
+        motor2.set(0);
         flup.set(0);
         setHood(160);
         SmartDashboard.putString("shooter/Status", "Idle");

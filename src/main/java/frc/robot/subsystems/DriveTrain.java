@@ -243,9 +243,9 @@ public class DriveTrain extends SubsystemBase {
 
         // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
         // if (driveSwitch) {  
-        //     differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+            differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
         // } else {
-        differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
+        // differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
     }
 
     // Raw access to arcade drive (use only for auto routines)
