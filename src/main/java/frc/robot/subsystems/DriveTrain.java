@@ -236,6 +236,11 @@ public class DriveTrain extends SubsystemBase {
                 rotate = Math.signum(rotate) * rotate * rotate;
             }
         }
+
+        // For Outreach
+        throttle *= 0.5;
+        rotate *= 0.5;
+
         // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
         // if (driveSwitch) {  
         //     differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
