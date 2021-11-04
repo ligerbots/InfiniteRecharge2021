@@ -204,8 +204,11 @@ public class Shooter extends SubsystemBase {
         // else {
         //     System.out.println("Shooter: floorEntry or ceilingEntry was null");
         //     // Typical speed. Not sure this will work for much, but it won't break anything.
-            return 4000.0;
+        //     return 4000.0;
         //}
+
+        double rpm = SmartDashboard.getNumber("Outreach/ShooterRPM", 4000.0);
+        return rpm;
     }
 
     public double calculateShooterHood(double distance) {
@@ -223,7 +226,9 @@ public class Shooter extends SubsystemBase {
         // else {
         //     return 60;
         // }
-        return 120;
+        
+        double hood = SmartDashboard.getNumber("Outreach/Hood", 120.0);
+        return hood;
     }
 
     public void warmUp() {
