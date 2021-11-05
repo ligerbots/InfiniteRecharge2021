@@ -74,6 +74,9 @@ public class Shooter extends SubsystemBase {
         // Reset Smart Dashboard for shooter test
         SmartDashboard.putString("shooter/Status", "Idle");
 
+        SmartDashboard.putNumber("Outreach/ShooterRPM", 4000.0);
+        SmartDashboard.putNumber("Outreach/Hood", 120.0);
+
         // try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
         //     String line;
         //     while ((line = br.readLine()) != null) {
@@ -142,13 +145,13 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setHood(double angle) {
-        System.out.println("hood angle SET!!!!");
         if (angle < 40) {
             angle = 40;
         }
         if (angle > 160) {
             angle = 160;
         }
+        System.out.println("Hood angle set to " + angle);
         hoodServo.setAngle(angle);
     }
 
@@ -180,7 +183,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterRpm(double rpm) {
-        System.out.println("Shooter RPM SET!!!!! " + rpm);
+        System.out.println("Shooter RPM set to " + rpm);
         // for the shooter to run the right direction, rpm values passed to setReference must be negative
         // passing the negative absolute value causes the passed value to always be negative, 
         // while allowing the function argument to be positive or negative  
