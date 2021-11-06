@@ -32,6 +32,8 @@ public class Carousel extends SubsystemBase {
         spinner.setNeutralMode(NeutralMode.Brake);
         carouselEncoder = new Encoder(7, 8);
         backwards = false;
+
+        SmartDashboard.putNumber("Outreach/Carousel", Constants.CAROUSEL_SHOOTER_SPEED);
     }
 
     @Override
@@ -68,9 +70,9 @@ public class Carousel extends SubsystemBase {
         return spinner.getStatorCurrent();
     }
 
-    public void warmUp() {
-        this.spin(Constants.CAROUSEL_SHOOTER_SPEED);
-    }
+    // public void warmUp() {
+    //     this.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    // }
     
     public int getTicks() {
         return carouselEncoder.getRaw();

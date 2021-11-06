@@ -65,7 +65,8 @@ public class ShooterCommand extends CommandBase {
   public void rapidFire() {
     System.out.println("starting shooter");
     shooter.shoot();
-    carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    double carSpeed = SmartDashboard.getNumber("Outreach/Carousel", Constants.CAROUSEL_SHOOTER_SPEED);
+    carousel.spin(carSpeed);
   }
 
   // Called when the command is initially scheduled.
