@@ -48,8 +48,8 @@ public class RobotContainer {
   public final Shooter shooter = new Shooter(vision);
 
   
-  public final Climber climber = new Climber(robotDrive);
-  final DeployIntake deployIntake = new DeployIntake(climber);
+  //public final Climber climber = new Climber(robotDrive);
+  //final DeployIntake deployIntake = new DeployIntake(climber);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn, driveSwitch);
   public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
   public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
@@ -123,11 +123,11 @@ public class RobotContainer {
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
-    JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
-    farm4.whenPressed(new ClimberCommand1(climber));
+    //JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
+    //farm4.whenPressed(new ClimberCommand1(climber));
 
-    JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
-    farm5.whenPressed(new ClimberCommand2(climber));
+    //JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
+    //farm5.whenPressed(new ClimberCommand2(climber));
 
     
     // JoystickButton farm11 = new JoystickButton(farm, 11);

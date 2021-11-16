@@ -46,8 +46,6 @@ public class Robot extends TimedRobot {
     and put our autonomous chooser on the dashboard. */
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
-
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
@@ -58,11 +56,11 @@ public class Robot extends TimedRobot {
     
     chosenAuto.setDefaultOption("ShootandDrive", 
         new ShootAndDriveAuto(m_robotContainer.robotDrive, m_robotContainer.shooter,
-            m_robotContainer.intake, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.driveCommand,
+            m_robotContainer.intake, m_robotContainer.carousel, m_robotContainer.driveCommand,
             m_robotContainer.carouselCommand));
 
     chosenAuto.addOption("MoveFowardAuto",  
-      new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+      new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
 
     //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
        // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
@@ -109,11 +107,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Enabled", false);
 
     if (Robot.isReal()) {
-      m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
-      m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
+      // m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
+      // m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
       // Set motors to coast so it's easier to move the robot.
       m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
-      m_robotContainer.climber.coastWinch();
+      // m_robotContainer.climber.coastWinch();
     }
   }
 
@@ -201,8 +199,8 @@ public class Robot extends TimedRobot {
     //System.out.println("teleopInit");
 
     // Reset the winch encoder
-    m_robotContainer.climber.resetWinchEncoder();
-    m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
+    // m_robotContainer.climber.resetWinchEncoder();
+    // m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
 
     m_robotContainer.driveCommand.schedule();
     m_robotContainer.carouselCommand.schedule();

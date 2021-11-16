@@ -8,10 +8,10 @@ import frc.robot.subsystems.DriveTrain;
 
 public class MoveForwardAuto extends SequentialCommandGroup implements AutoCommandInterface {
 
-    public MoveForwardAuto(DriveTrain driveTrain, DriveCommand driveCommand, Climber climber){
-        DeployIntake deployIntake = new DeployIntake(climber);
+    public MoveForwardAuto(DriveTrain driveTrain, DriveCommand driveCommand/*, Climber climber*/){
+        // DeployIntake deployIntake = new DeployIntake(climber);
     
-        addCommands(deployIntake, new MoveForward(driveTrain, driveCommand));
+        addCommands(new MoveForward(driveTrain, driveCommand));
     }
 
     public Pose2d getInitialPose() {

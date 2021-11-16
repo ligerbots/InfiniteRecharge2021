@@ -23,12 +23,11 @@ public class ShootAndDriveAuto extends SequentialCommandGroup implements AutoCom
   /**
    * Creates a new ShootAndDriveAuto.
    */
-  public ShootAndDriveAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Climber climber, Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand) {
+  public ShootAndDriveAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand) {
 
     TurnAndShoot shoot1 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
-    DeployIntake deployIntake = new DeployIntake(climber);
 
-    addCommands(deployIntake.alongWith(shoot1), new MoveForward(robotDrive, driveCommand));
+    addCommands(shoot1, new MoveForward(robotDrive, driveCommand));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());super();
   }
