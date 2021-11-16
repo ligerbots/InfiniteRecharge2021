@@ -44,12 +44,12 @@ public class Shooter extends SubsystemBase {
         this.vision = vision;
         motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushless);
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushless);
-        motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID, MotorType.kBrushless);
+        // motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID, MotorType.kBrushless);
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
         // Set motors to coast when idle. 
-        Arrays.asList(motor1, motor2, motor3, flup)
+        Arrays.asList(motor1, motor2, flup)
             .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
@@ -63,11 +63,11 @@ public class Shooter extends SubsystemBase {
 
         // We want motor2 to be master and motor1 and 3 follow the speed of motor2
         motor1.follow(motor2, true);
-        motor3.follow(motor2);
+        // motor3.follow(motor2);
 
         motor1.setSmartCurrentLimit(40);
         motor2.setSmartCurrentLimit(40);
-        motor3.setSmartCurrentLimit(40);
+        // motor3.setSmartCurrentLimit(40);
         
         // Reset Smart Dashboard for shooter test
         SmartDashboard.putString("shooter/Status", "Idle");

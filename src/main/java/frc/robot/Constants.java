@@ -60,7 +60,7 @@ public final class Constants {
     public static final int SHOOTER_FLUP_CAN_ID = 8; // Carousel to shooter wheel "FLUP"
     public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
     public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
-    public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
+    // public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to control hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
