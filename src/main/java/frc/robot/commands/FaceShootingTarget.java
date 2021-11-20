@@ -78,7 +78,7 @@ public class FaceShootingTarget extends CommandBase {
 
       oldOldCheck = Math.abs(headingError) < acceptableError;
     }
-    else if (shooter.vision.getStatus())
+    else if (shooter.vision.getStatus() && shooter.vision.getDistance() > 1.0)
     {
       double startAngle = robotDrive.getHeading();
       double visionAngle = shooter.vision.getRobotAngle();
@@ -102,7 +102,8 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(headingError) < acceptableError && check) 
-        || (!targetAcquired && (Robot.time() - startTime) > 0.5);
+      return (Math.abs(headingError) < acceptableError && check) 
+        || (!targetAcquired && (Robot.time() - startTime) > 0.5) 
+        || Robot.time() - startTime > 3.0;
   }
 }

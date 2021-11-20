@@ -44,7 +44,7 @@ public final class Constants {
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.6; // This is just percent output
     public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
-    public static final int CAROUSEL_MAX_BALLS = 3;
+    public static final int CAROUSEL_MAX_BALLS = 5;
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
@@ -60,7 +60,7 @@ public final class Constants {
     public static final int SHOOTER_FLUP_CAN_ID = 8; // Carousel to shooter wheel "FLUP"
     public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
     public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
-    public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
+    // public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to control hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
@@ -86,15 +86,18 @@ public final class Constants {
     public static final double SHOULDER_RELEASE_HEIGHT = 0.592;
     public static final double SHOULDER_START_HEIGHT = 0.589;
     public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25;
-    public static final double SHOULDER_HEIGHT_FOR_RAISE1 = 0.48;
+    public static final double SHOULDER_HEIGHT_FOR_RAISE1 = 0.53;
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56 - 2.0/360.0; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
 
     public static final double SHOULDER_SPEED_UP = 4.0;   // VOLTAGE!!!!!
     public static final double SHOULDER_SPEED_HOLD = 0.3;
+    public static final double SHOULDER_SPEED_DOWN_FAST = -3.0;
+    public static final double SHOULDER_SPEED_DOWN_SLOW = -0.3;
+
     public static final double SHOULDER_RATE_DOWN = 40.0/360.0 * 12;
     // NOTE: This has to be negative to keep the robot level during climb
-    public static final double SHOULDER_SPEED_LEVEL = -5.5;
+    public static final double SHOULDER_SPEED_LEVEL = -4.0;   // -5.5;
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 5.0;
 
@@ -105,9 +108,9 @@ public final class Constants {
     public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
 
     public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 665;
-    public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
-    public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
-    public static final double WINCH_CLIMB_HEIGHT = 1262;
+    // public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
+    // public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
+    public static final double WINCH_CLIMB_HEIGHT = 1162;
 
     // xbox button mapimng 
     public static final int XBOX_A = 1;
