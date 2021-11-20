@@ -72,15 +72,14 @@ public class RobotContainer {
   public class Throttle implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      //return xbox.getY(Hand.kLeft);
-      return xbox.getY(Hand.kLeft);// use left joystick for throttle
+      return xbox.getY(Hand.kLeft); // use left joystick for throttle
     }
   }
 
   public class Turn implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kRight);// use right joystick for turn
+      return xbox.getX(Hand.kRight); // use right joystick for turn
     }
   }
 
@@ -91,13 +90,13 @@ public class RobotContainer {
     }
   }
   
-  public class Shoulder implements DoubleSupplier{
-    @Override
-    public double getAsDouble() {
-      //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
-      return 0.0;
-    }
-  }
+  // public class Shoulder implements DoubleSupplier{
+  //   @Override
+  //   public double getAsDouble() {
+  //     //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+  //     return 0.0;
+  //   }
+  // }
 
   private void configureButtonBindings() {
     if (Robot.isSimulation()) {
@@ -123,13 +122,12 @@ public class RobotContainer {
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
-    //JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
-    //farm4.whenPressed(new ClimberCommand1(climber));
+    // JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
+    // farm4.whenPressed(new ClimberCommand1(climber));
 
-    //JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
-    //farm5.whenPressed(new ClimberCommand2(climber));
+    // JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
+    // farm5.whenPressed(new ClimberCommand2(climber));
 
-    
     // JoystickButton farm11 = new JoystickButton(farm, 11);
     // farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
@@ -150,10 +148,6 @@ public class RobotContainer {
     // JoystickButton farm16 = new JoystickButton(farm, 16);
     // JoystickButton farm21 = new JoystickButton(farm, 21);
   }
-
-  // public boolean APressed () {
-  //   return xboxA.get();
-  // }
 
   /**
    * LigerBots: we don't use this function. 

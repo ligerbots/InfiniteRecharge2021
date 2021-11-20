@@ -27,6 +27,10 @@ public class ClimberCommand2 extends CommandBase {
     this.climber = climber;
   }
 
+  // NOTE: Paul Rensing July 2021
+  //  We don't actually lower the Shoulder in the 2nd phase, because we only raised the shoulder once.
+  //  See simplified command below. This is left for documentation purposes.
+  
   // // Called when the command is initially scheduled.
   // @Override
   // public void initialize() {

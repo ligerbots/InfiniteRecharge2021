@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.FieldMap;
 import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -28,8 +27,6 @@ public class ShootAndDriveAuto extends SequentialCommandGroup implements AutoCom
     TurnAndShoot shoot1 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
 
     addCommands(shoot1, new MoveForward(robotDrive, driveCommand));
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());super();
   }
 
   public Pose2d getInitialPose() {
