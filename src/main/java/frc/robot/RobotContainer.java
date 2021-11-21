@@ -9,14 +9,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.Joystick;
+// import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.*;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
+// import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
@@ -40,16 +40,16 @@ public class RobotContainer {
   public final DriveSwitch driveSwitch = new DriveSwitch();
 
   XboxController xbox = new XboxController(0);
-  Joystick farm = new Joystick(1);
+  //Joystick farm = new Joystick(1);
 
   public final Vision vision = new Vision(robotDrive);
   public final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter(vision);
 
-  // Not needed for At Home. Silence the warning for now
-  // private final Shoulder shoulder = new Shoulder();
-  public final Climber climber = new Climber(robotDrive);
+  
+  //public final Climber climber = new Climber(robotDrive);
+  //final DeployIntake deployIntake = new DeployIntake(climber);
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn, driveSwitch);
   public final PositionRecorder positionRecorder = new PositionRecorder(robotDrive);
   public final CarouselCommand carouselCommand = new CarouselCommand(carousel);
@@ -72,15 +72,14 @@ public class RobotContainer {
   public class Throttle implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getY(Hand.kLeft);
-      // return xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);// use trigger for throttle
+      return xbox.getY(Hand.kLeft); // use left joystick for throttle
     }
   }
 
   public class Turn implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kRight);
+      return xbox.getX(Hand.kRight); // use right joystick for turn
     }
   }
 
@@ -91,13 +90,13 @@ public class RobotContainer {
     }
   }
   
-  public class Shoulder implements DoubleSupplier{
-    @Override
-    public double getAsDouble() {
-      //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
-      return 0.0;
-    }
-  }
+  // public class Shoulder implements DoubleSupplier{
+  //   @Override
+  //   public double getAsDouble() {
+  //     //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+  //     return 0.0;
+  //   }
+  // }
 
   private void configureButtonBindings() {
     if (Robot.isSimulation()) {
@@ -106,13 +105,10 @@ public class RobotContainer {
     }
 
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
-    xboxA.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, carouselCommand, true));
-
-    JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
-    xboxX.whenPressed(new DeployIntake(climber));
-
-    // JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    // xboxB.whenPressed(new TurnShootTurnBack(robotDrive, shooter, carousel, carouselCommand, driveCommand, 180.0));
+    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand));
+    
+    // JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+    // xboxX.whenPressed(new ManualLowerWinchCommand(climber));
 
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
@@ -126,21 +122,32 @@ public class RobotContainer {
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperLeft.whileHeld(new IntakeCommand(intake, -Constants.INTAKE_SPEED));
     
+    // JoystickButton farm4 = new JoystickButton(xbox, Constants.XBOX_X);
+    // farm4.whenPressed(new ClimberCommand1(climber));
+
+    // JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
+    // farm5.whenPressed(new ClimberCommand2(climber));
+
+    // JoystickButton farm11 = new JoystickButton(farm, 11);
+    // farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
+
+    JoystickButton xBoxStart = new JoystickButton(xbox, Constants.XBOX_START);
+    xBoxStart.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.SHOOTER));
+
+    JoystickButton xBoxBack = new JoystickButton(xbox, Constants.XBOX_BACK);
+    xBoxBack.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
+    
     // JoystickButton farm1 = new JoystickButton(farm, 1);
     // JoystickButton farm2 = new JoystickButton(farm, 2);
     // JoystickButton farm4 = new JoystickButton(farm, 4);
     // JoystickButton farm5 = new JoystickButton (farm, 5);
     // JoystickButton farm6 = new JoystickButton(farm, 6);
     // JoystickButton farm7 = new JoystickButton(farm, 7);
-    // JoystickButton farm11 = new JoystickButton(farm, 11);
+    
     // JoystickButton farm14 = new JoystickButton(farm, 14);
     // JoystickButton farm16 = new JoystickButton(farm, 16);
     // JoystickButton farm21 = new JoystickButton(farm, 21);
   }
-
-  // public boolean APressed () {
-  //   return xboxA.get();
-  // }
 
   /**
    * LigerBots: we don't use this function. 

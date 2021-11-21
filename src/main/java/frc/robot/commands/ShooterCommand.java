@@ -46,14 +46,13 @@ public class ShooterCommand extends CommandBase {
   ControlMethod currentControlMode;
   boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, /*double waitTime,*/ CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, CarouselCommand carouselCommand, /*DriveCommand driveCommand,*/ boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     addRequirements(shooter);
     this.carousel = carousel;
     // The following statement will cause the CarouselCommand to be interrupted. This is good.
     // addRequirements(carousel);
     this.robotDrive = robotDrive;
-    // this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
     // System.out.println("Shooter.carouselCommand = " + this.carouselCommand);
     // this.driveCommand = driveCommand;
@@ -166,10 +165,6 @@ public class ShooterCommand extends CommandBase {
 
   }
 
-  // if (shooter.speedOnTarget(shooter.calculateShooterSpeed(visionInfo[1]), 1) && shooter.hoodOnTarget(shooter.calculateShooterHood(visionInfo[1]))) {
-  //   shooter.shoot();
-  // } //The allowed error here matters a lot
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -193,12 +188,5 @@ public class ShooterCommand extends CommandBase {
 
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
     return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && Robot.time() - startTime > 2.0);
-            /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
-    // if (waitTime == 0.0) {
-    //   return false;
-    // }
-    // else {
-    //   return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
-    // }
   }
 }

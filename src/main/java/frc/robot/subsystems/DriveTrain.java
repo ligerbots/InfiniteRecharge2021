@@ -224,28 +224,17 @@ public class DriveTrain extends SubsystemBase {
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs, boolean driveSwitch) {
         if (squaredInputs) {
-            if (Math.abs(throttle) < 0.05) {
+            if (Math.abs(throttle) < 0.1)
                 throttle = 0;
-            } 
-            else {
-                throttle = Math.signum(throttle) * throttle * throttle;
-            }
-            if (Math.abs(rotate) < 0.05) {
+            if (Math.abs(rotate) < 0.1) 
                 rotate = 0;
-            } else {
-                rotate = Math.signum(rotate) * rotate * rotate;
-            }
         }
 
         // For Outreach
         throttle *= 0.5;
         rotate *= 0.5;
 
-        // SmartDashboard.putBoolean("DriveSwitch", driveSwitch);
-        // if (driveSwitch) {  
-            differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
-        // } else {
-        // differentialDrive.curvatureDrive(throttle, -rotate, driveSwitch);
+        differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
     }
 
     // Raw access to arcade drive (use only for auto routines)
@@ -271,13 +260,13 @@ public class DriveTrain extends SubsystemBase {
             turnSpeed = 0.2; //0.4;
         }
         else if (absErr > 10.0) {
-            turnSpeed = 0.13;
+            turnSpeed = 0.15;
         }
         else if (absErr > 5.0) {
             turnSpeed = 0.1; //0.07;
         }
         else {
-            turnSpeed = 0.1; //0.065;
+            turnSpeed = 0.065; //0.065;
         }
 
         return turnSpeed * Math.signum(angleError);
