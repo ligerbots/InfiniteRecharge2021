@@ -27,7 +27,7 @@ import frc.robot.subsystems.DriveTrain;
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
 
     public enum Path{
-        Barrel, Slalom;
+        Barrel, Slalom, Albert;
     }
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
@@ -81,6 +81,24 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
                 endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, -15, 30), Rotation2d.fromDegrees(175.0));
                 break;
 
+            case Albert:
+
+                // Set speed and acceleration values
+                maxSpeed = 6.5;
+                maxAccel = 3.2;
+                maxCentripetal = 3.8;
+
+                initialPose = new Pose2d(FieldMapHome.gridPoint('D', 1, 5, 0), rotation);
+                waypointList = List.of(FieldMapHome.gridPoint('C',1),
+                                        FieldMapHome.gridPoint('C',3, -3,-3),
+                                        FieldMapHome.gridPoint('B',2,3,0)
+                                        
+                                       );
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2, -15, 30), Rotation2d.fromDegrees(150.0));
+                break;
+
+
+                
             case Slalom:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
                 waypointList = List.of(
