@@ -27,7 +27,7 @@ import frc.robot.subsystems.DriveTrain;
 public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandInterface {
 
     public enum Path{
-        Barrel, Slalom, Albert;
+        Barrel, Aidan, Albert;
     }
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
@@ -99,19 +99,19 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
 
 
                 
-            case Slalom:
-                initialPose = new Pose2d(FieldMapHome.gridPoint('E', 1, 5, 0), rotation);
+            case Aidan:
+                initialPose = new Pose2d(FieldMapHome.gridPoint('C', 3, 0, 0), rotation);
                 waypointList = List.of(
-                                       FieldMapHome.gridPoint('C', 4),
-                                       FieldMapHome.gridPoint('C', 8, -5, -1),
-                                       FieldMapHome.gridPoint('D', 9, 2, -1),
-                                       FieldMapHome.gridPoint('E', 10, 0, 5),
-                                       FieldMapHome.gridPoint('D', 11, 0, -3),
-                                       FieldMapHome.gridPoint('C', 10, 0, -5),
-                                       FieldMapHome.gridPoint('E', 8, 17, 15),
-                                       FieldMapHome.gridPoint('E', 7, 0, -2),
-                                       FieldMapHome.gridPoint('E', 4, 7, 2));
-                endPose = new Pose2d(FieldMapHome.gridPoint('C', 2), Rotation2d.fromDegrees(135.0));
+                                       FieldMapHome.gridPoint('D', 3),
+                                       FieldMapHome.gridPoint('E', 4, 0, 0),
+                                       FieldMapHome.gridPoint('D', 5, 0, 0),
+                                       FieldMapHome.gridPoint('C', 6, 0, 0),
+                                       FieldMapHome.gridPoint('A', 4, 0, 0),
+                                       FieldMapHome.gridPoint('B', 3, 0, 0),
+                                       FieldMapHome.gridPoint('C', 3, 0, 0),
+                                       FieldMapHome.gridPoint('D', 3, 0, 0),
+                                       FieldMapHome.gridPoint('C', 5, 0, 0));
+                endPose = new Pose2d(FieldMapHome.gridPoint('D', 3), Rotation2d.fromDegrees(135.0));
                 break;
         }
 

@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     chosenAuto.addOption("BlueAAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueA, m_robotContainer.climber));
     chosenAuto.addOption("BlueBAuto", new GalacticSearchAuto(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, GalacticSearchAuto.Path.BlueB, m_robotContainer.climber));
     chosenAuto.addOption("Barrel", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Barrel, m_robotContainer.climber));
-    chosenAuto.addOption("Slalom", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Slalom, m_robotContainer.climber));
+    chosenAuto.addOption("Aidan", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Aidan, m_robotContainer.climber));
     chosenAuto.addOption("Albert", new AutoNavPaths(m_robotContainer.robotDrive, AutoNavPaths.Path.Albert, m_robotContainer.climber));
     chosenAuto.addOption("Bounce", new BounceAuto(m_robotContainer.robotDrive, m_robotContainer.climber));
     chosenAuto.addOption("VisionPath", new GalacticSearchAutoSelector(m_robotContainer.robotDrive, m_robotContainer.carousel, m_robotContainer.intake, m_robotContainer.vision, m_robotContainer.climber));
