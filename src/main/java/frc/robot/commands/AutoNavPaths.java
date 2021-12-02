@@ -102,16 +102,16 @@ public class AutoNavPaths extends SequentialCommandGroup implements AutoCommandI
             case Aidan:
                 initialPose = new Pose2d(FieldMapHome.gridPoint('C', 3, 0, 0), rotation);
                 waypointList = List.of(
-                                       FieldMapHome.gridPoint('D', 3),
-                                       FieldMapHome.gridPoint('E', 4, 0, 0),
-                                       FieldMapHome.gridPoint('D', 5, 0, 0),
-                                       FieldMapHome.gridPoint('C', 6, 0, 0),
-                                       FieldMapHome.gridPoint('A', 4, 0, 0),
-                                       FieldMapHome.gridPoint('B', 3, 0, 0),
+                                       FieldMapHome.gridPoint('B', 2, 0, 0),
+                                       FieldMapHome.gridPoint('C', 1, 0, 0),
+                                       FieldMapHome.gridPoint('D', 2, 0, 0),
                                        FieldMapHome.gridPoint('C', 3, 0, 0),
-                                       FieldMapHome.gridPoint('D', 3, 0, 0),
-                                       FieldMapHome.gridPoint('C', 5, 0, 0));
-                endPose = new Pose2d(FieldMapHome.gridPoint('D', 3), Rotation2d.fromDegrees(135.0));
+                                       FieldMapHome.gridPoint('B', 2, 0, 0),
+                                       FieldMapHome.gridPoint('C', 1, 0, 0),
+                                       FieldMapHome.gridPoint('D', 2, 0, 0),
+                                       FieldMapHome.gridPoint('C', 3, 0, 0),
+                                       FieldMapHome.gridPoint('B', 2, 0, 0));
+                endPose = new Pose2d(FieldMapHome.gridPoint('C', 1, 0, 0), Rotation2d.fromDegrees(135.0));
                 break;
         }
 
