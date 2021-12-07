@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -61,6 +62,9 @@ public class Robot extends TimedRobot {
 
     chosenAuto.addOption("MoveFowardAuto",  
       new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
+
+    chosenAuto.addOption("TurnToVision",  
+    new TurnToVision(m_robotContainer.vision, m_robotContainer.robotDrive, Rotation2d.fromDegrees(0)));
 
     //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
        // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
