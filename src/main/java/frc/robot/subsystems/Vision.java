@@ -19,6 +19,7 @@ public class Vision extends SubsystemBase {
         BALLFINDER,
         HOPPERFINDER,
         GALACTIC_SEARCH_PATH_CHOOSER,
+        FACEFINDER,
     }
 
     private static final double[] EMPTY_TARGET_INFO = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -131,6 +132,11 @@ public class Vision extends SubsystemBase {
     public double getRobotAngle() {
         double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
         return Math.toDegrees(visionData[4]);
+    }
+
+    public double getTurnDirection() {
+        double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
+        return (visionData[3]);
     }
 
 

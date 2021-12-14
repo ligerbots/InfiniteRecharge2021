@@ -6,46 +6,42 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Vision.VisionMode;
 
 public class TurnToVision extends CommandBase implements AutoCommandInterface {
     Vision vision;
     DriveTrain driveTrain;
-    Rotation2d targetDirection;
     Rotation2d currentDirection;
     Rotation2d deltaDirection;
 
-    public TurnToVision(Vision vision, DriveTrain driveTrain, Rotation2d targetDirection) {
+    public TurnToVision(Vision vision, DriveTrain driveTrain) {
         this.vision = vision;
         this.driveTrain = driveTrain;
-        this.targetDirection = targetDirection;
     }
 
     @Override
     public void initialize() {
-        currentDirection = Rotation2d.fromDegrees(driveTrain.getHeading());
-        deltaDirection = this.targetDirection.plus(currentDirection.unaryMinus());
+        vision.setLedRing(true);
+        vision.setMode(VisionMode.FACEFINDER);
     }
 
     @Override
     public void execute() {
-        currentDirection = Rotation2d.fromDegrees(driveTrain.getHeading());
-        deltaDirection = this.targetDirection.plus(currentDirection.unaryMinus());
-        if (deltaDirection.getSin() > 0) {
-            driveTrain.arcadeDrive(0, -0.1);
-        } else {
-            driveTrain.arcadeDrive(0, 0.1);
-        }
+            driveTrain.arcadeDrive(0, vision.getTurnDirection()*0.1);
+
 
     }
 
     @Override
     public void end(boolean interrupted) {
+        vision.setLedRing(false);
         driveTrain.arcadeDrive(0, 0);
+        vision.setMode(VisionMode.SHOOTER);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(deltaDirection.getSin()) < .05 && deltaDirection.getCos()>0;
+        return false;
     }
 
     @Override

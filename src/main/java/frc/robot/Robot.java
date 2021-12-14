@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
       new MoveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.driveCommand));
 
     chosenAuto.addOption("TurnToVision",  
-    new TurnToVision(m_robotContainer.vision, m_robotContainer.robotDrive, Rotation2d.fromDegrees(0)));
+    new TurnToVision(m_robotContainer.vision, m_robotContainer.robotDrive));
 
     //chosenAuto.addOption("DriveForward", (AutoCommandInterface) new DriveForwardAuto(m_robotContainer.robotDrive,
        // m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
