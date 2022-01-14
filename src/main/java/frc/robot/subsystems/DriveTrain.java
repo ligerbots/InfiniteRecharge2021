@@ -13,9 +13,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.wpiutil.math.Nat;
+import edu.wpi.first.math.Nat;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.FieldMap;
@@ -46,9 +46,9 @@ public class DriveTrain extends SubsystemBase {
     private CANSparkMax rightLeader = new SparkMaxWrapper(Constants.LEADER_RIGHT_CAN_ID, MotorType.kBrushless);
     private CANSparkMax rightFollower = new SparkMaxWrapper(Constants.FOLLOWER_RIGHT_CAN_ID, MotorType.kBrushless);
 
-    private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftLeader, leftFollower);
+    private final MotorControllerGroup leftMotors = new MotorControllerGroup(leftLeader, leftFollower);
 
-    private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
+    private final MotorControllerGroup rightMotors = new MotorControllerGroup(rightLeader, rightFollower);
 
     private DifferentialDrive differentialDrive;
     private DifferentialDriveOdometry odometry;

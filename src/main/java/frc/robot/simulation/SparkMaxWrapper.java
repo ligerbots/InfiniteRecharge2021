@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.wpilibj.RobotController;
 
 public class SparkMaxWrapper extends CANSparkMax {
@@ -19,7 +20,7 @@ public class SparkMaxWrapper extends CANSparkMax {
 
         m_simSparkMax = SimDevice.create("SparkMax",deviceID);
         if (m_simSparkMax != null){
-            m_simSpeed = m_simSparkMax.createDouble("speed", false, 0.0);
+            m_simSpeed = m_simSparkMax.createDouble("speed", Direction.kInput, 0.0);
         }
     }
 

@@ -24,10 +24,10 @@ public class Intake extends SubsystemBase {
     private ColorSensorV3 colorSensor;
     private ColorMatch colorMatch = new ColorMatch();
 
-    private final Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-    private final Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color redTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-    private final Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+    private final Color blueTarget = new Color(0.143, 0.427, 0.429);
+    private final Color greenTarget = new Color(0.197, 0.561, 0.240);
+    private final Color redTarget = new Color(0.561, 0.232, 0.114);
+    private final Color yellowTarget = new Color(0.361, 0.524, 0.113);
 
     public enum OutColor {
         RED, YELLOW, GREEN, BLUE, BAD

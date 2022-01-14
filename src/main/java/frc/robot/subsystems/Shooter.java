@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -29,11 +29,11 @@ public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
     CANSparkMax flup;
-    CANEncoder shooterEncoder;
+    RelativeEncoder shooterEncoder;
     Servo hoodServo, turretServo;
     TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
-    CANPIDController pidController;
+    SparkMaxPIDController pidController;
 
     public Vision vision;
     public int rpmAdjustment = 0;
