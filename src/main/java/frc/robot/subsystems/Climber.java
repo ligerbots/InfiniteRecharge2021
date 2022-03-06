@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -20,7 +20,7 @@ public class Climber extends SubsystemBase {
     public final CANSparkMax shoulder; // declare new motor
     public DutyCycleEncoder shoulderEncoder;
 
-    CANEncoder winchEncoder;
+    RelativeEncoder winchEncoder;
     public final CANSparkMax winch; // declare new motor
 
     private DriveTrain driveTrain;

@@ -8,7 +8,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 // import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -72,14 +71,14 @@ public class RobotContainer {
   public class Throttle implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getY(Hand.kLeft); // use left joystick for throttle
+      return xbox.getLeftY(); // use left joystick for throttle
     }
   }
 
   public class Turn implements DoubleSupplier{
     @Override
     public double getAsDouble() {
-      return xbox.getX(Hand.kRight); // use right joystick for turn
+      return xbox.getRightX(); // use right joystick for turn
     }
   }
 
@@ -93,7 +92,7 @@ public class RobotContainer {
   // public class Shoulder implements DoubleSupplier{
   //   @Override
   //   public double getAsDouble() {
-  //     //return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
+  //     //return xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis();// set shoulder speed 
   //     return 0.0;
   //   }
   // }
@@ -101,7 +100,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     if (Robot.isSimulation()) {
       // for the simulation, silence warnings about missing joysticks
-      DriverStation.getInstance().silenceJoystickConnectionWarning(true);
+      DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
