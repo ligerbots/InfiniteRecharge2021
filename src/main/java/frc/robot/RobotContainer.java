@@ -135,6 +135,10 @@ public class RobotContainer {
 
     JoystickButton xBoxBack = new JoystickButton(xbox, Constants.XBOX_BACK);
     xBoxBack.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
+
+    JoystickButton xBoxB = new JoystickButton(xbox, Constants.XBOX_B);
+    xBoxB.whenPressed(new MoveCarousel(carousel));
+
     
     // JoystickButton farm1 = new JoystickButton(farm, 1);
     // JoystickButton farm2 = new JoystickButton(farm, 2);

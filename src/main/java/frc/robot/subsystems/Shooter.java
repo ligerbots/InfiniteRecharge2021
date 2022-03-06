@@ -42,8 +42,8 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(Vision vision) {
         this.vision = vision;
-        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushless);
-        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushless);
+        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushed);
+        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushed);
         // motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID, MotorType.kBrushless);
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
@@ -138,8 +138,10 @@ public class Shooter extends SubsystemBase {
 
     public void prepareShooter(double distance) {
         // Set the shooter and hood based on the distance
-        setShooterRpm(calculateShooterSpeed(distance));
-        setHood(calculateShooterHood(distance));
+        // setShooterRpm(calculateShooterSpeed(distance));
+        // setHood(calculateShooterHood(distance));
+        motor1.setVoltage(Constants.SHOOTER_OUTREACH_VOLTS);
+        motor2.setVoltage(Constants.SHOOTER_OUTREACH_VOLTS);
     }
 
     // public void setShooterVoltage (double voltage) {
@@ -236,7 +238,9 @@ public class Shooter extends SubsystemBase {
     }
 
     public void stopAll() {
-        setShooterRpm(0.0);
+        //setShooterRpm(0.0);
+        motor1.setVoltage(0.0);
+        motor2.setVoltage(0.0);
         pidController.setIAccum(0);
         motor2.set(0);
         flup.set(0);

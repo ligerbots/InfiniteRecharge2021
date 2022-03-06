@@ -45,6 +45,7 @@ public final class Constants {
     public static final double CAROUSEL_SHOOTER_SPEED = 0.3; // This is just percent output
     public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
     public static final int CAROUSEL_MAX_BALLS = 5;
+    public static final double CAROUSEL_EARLY_SLOT_STOP_DELTA = 1830.0/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
@@ -63,6 +64,8 @@ public final class Constants {
     // public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to control hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
+
+    public static final double SHOOTER_OUTREACH_VOLTS = 6.0;
 
     public static final double TURRET_ANGLE_ZERO_SETTING = 135.0;
 
