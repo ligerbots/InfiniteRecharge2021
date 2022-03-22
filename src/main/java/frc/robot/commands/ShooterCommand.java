@@ -80,7 +80,11 @@ public class ShooterCommand extends CommandBase {
 
     // driveCommand.cancel();
     startTime = Robot.time();
-    shooter.vision.setMode(VisionMode.GOALFINDER);
+    // RapidReact2022 target
+    shooter.vision.setMode(VisionMode.HUBFINDER);
+    // InfiniteRecharge2021 target
+    // shooter.vision.setMode(VisionMode.GOALFINDER);
+
     carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values

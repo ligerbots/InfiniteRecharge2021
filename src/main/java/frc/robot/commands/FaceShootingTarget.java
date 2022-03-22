@@ -48,7 +48,10 @@ public class FaceShootingTarget extends CommandBase {
   public void initialize() {
     if (driveCommand != null) driveCommand.cancel();
 
-    shooter.vision.setMode(Vision.VisionMode.GOALFINDER);
+    // RapidReact2022 target
+    shooter.vision.setMode(Vision.VisionMode.HUBFINDER);
+    // InfiniteRecharge2021 target
+    // shooter.vision.setMode(Vision.VisionMode.GOALFINDER);
 
     //shooter.setTurretAdjusted(Constants.TURRET_ANGLE_ZERO_SETTING);
     targetAcquired = false;

@@ -127,8 +127,8 @@ public class RobotContainer {
     // JoystickButton farm5 = new JoystickButton (xbox, Constants.XBOX_B);
     // farm5.whenPressed(new ClimberCommand2(climber));
 
-    // JoystickButton farm11 = new JoystickButton(farm, 11);
-    // farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
+    JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+    xboxX.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
     JoystickButton xBoxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xBoxStart.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.SHOOTER));
