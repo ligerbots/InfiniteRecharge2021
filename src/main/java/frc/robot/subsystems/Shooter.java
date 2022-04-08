@@ -55,11 +55,11 @@ public class Shooter extends SubsystemBase {
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = motor2.getEncoder();
-        shooterEncoder.setVelocityConversionFactor(2.666);
+        //shooterEncoder = motor2.getEncoder();
+        //shooterEncoder.setVelocityConversionFactor(2.666);
 
-        pidController = motor2.getPIDController();
-        pidController.setFeedbackDevice(shooterEncoder);
+        //pidController = motor2.getPIDController();
+        //pidController.setFeedbackDevice(shooterEncoder);
 
         // We want motor2 to be master and motor1 and 3 follow the speed of motor2
         motor1.follow(motor2, true);
@@ -133,7 +133,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed() {
-        return -shooterEncoder.getVelocity();
+        return 0;
     }
 
     public void prepareShooter(double distance) {
@@ -167,7 +167,7 @@ public class Shooter extends SubsystemBase {
         // passing the negative absolute value causes the passed value to always be negative, 
         // while allowing the function argument to be positive or negative  
         if (rpm < 0) System.out.println("warning: shooter rpm argument should be positive");
-        pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
+        motor2.setVoltage((rpm/9000)*12);
     }
 
     public double calculateShooterSpeed(double distance) {
@@ -228,20 +228,20 @@ public class Shooter extends SubsystemBase {
         return hoodServo.getAngle() > targetAngle - 0.5 && hoodServo.getAngle() < targetAngle + 0.5;
     }
 
-    public void calibratePID(final double p, final double i, final double d, final double f) {
+    /*public void calibratePID(final double p, final double i, final double d, final double f) {
         pidController.setIAccum(0);
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(f);
         pidController.setIZone(1000);
-    }
+    }*/
 
     public void stopAll() {
         //setShooterRpm(0.0);
         motor1.setVoltage(0.0);
         motor2.setVoltage(0.0);
-        pidController.setIAccum(0);
+       // pidController.setIAccum(0);
         motor2.set(0);
         flup.set(0);
         setHood(160);

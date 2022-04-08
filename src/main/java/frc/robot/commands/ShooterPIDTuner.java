@@ -11,7 +11,7 @@ public class ShooterPIDTuner {
     }
 
     public void spinUpTune(){
-        shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 1e-5);
+        //shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 1e-5);
     }
 
     public void HoldTune(){
@@ -27,6 +27,6 @@ public class ShooterPIDTuner {
     }
 
     public void setPID(){
-        shooter.calibratePID(p, i, d, f);
+        //shooter.calibratePID(p, i, d, f);
     }
 }

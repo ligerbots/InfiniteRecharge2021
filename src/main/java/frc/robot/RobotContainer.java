@@ -104,7 +104,7 @@ public class RobotContainer {
     }
 
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
-    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand));
+    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).withTimeout(7));
     
     // JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     // xboxX.whenPressed(new ManualLowerWinchCommand(climber));
