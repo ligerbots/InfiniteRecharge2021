@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
     CANSparkMax flup;
-    RelativeEncoder shooterEncoder;
+    // RelativeEncoder shooterEncoder;
     Servo hoodServo, turretServo;
     TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
@@ -55,11 +55,11 @@ public class Shooter extends SubsystemBase {
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = motor2.getEncoder();
-        shooterEncoder.setVelocityConversionFactor(2.666);
+        // shooterEncoder = motor2.getEncoder();
+        // shooterEncoder.setVelocityConversionFactor(2.666);
 
-        pidController = motor2.getPIDController();
-        pidController.setFeedbackDevice(shooterEncoder);
+        // pidController = motor2.getPIDController();
+        // pidController.setFeedbackDevice(shooterEncoder);
 
         // We want motor2 to be master and motor1 and 3 follow the speed of motor2
         motor1.follow(motor2, true);
@@ -133,7 +133,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed() {
-        return -shooterEncoder.getVelocity();
+        return 1000.0;//-shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(double distance) {
@@ -189,7 +189,7 @@ public class Shooter extends SubsystemBase {
         //     return 4000.0;
         //}
 
-        double rpm = SmartDashboard.getNumber("Outreach/ShooterRPM", 4000.0);
+        double rpm = SmartDashboard.getNumber("Outreach/ShooterRPM", 5000.0);
         return rpm;
     }
 
@@ -209,7 +209,7 @@ public class Shooter extends SubsystemBase {
         //     return 60;
         // }
         
-        double hood = SmartDashboard.getNumber("Outreach/Hood", 120.0);
+        double hood = SmartDashboard.getNumber("Outreach/Hood", 130.0);
         return hood;
     }
 
@@ -220,7 +220,7 @@ public class Shooter extends SubsystemBase {
     public boolean speedOnTarget(final double targetVelocity, final double percentAllowedError) {
         final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
         final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
-        return shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
+        return true;//shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
     }
 
     public boolean hoodOnTarget(final double targetAngle) {
@@ -229,12 +229,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void calibratePID(final double p, final double i, final double d, final double f) {
-        pidController.setIAccum(0);
-        pidController.setP(p);
-        pidController.setI(i);
-        pidController.setD(d);
-        pidController.setFF(f);
-        pidController.setIZone(1000);
+        // pidController.setIAccum(0);
+        // pidController.setP(p);
+        // pidController.setI(i);
+        // pidController.setD(d);
+        // pidController.setFF(f);
+        // pidController.setIZone(1000);
     }
 
     public void stopAll() {

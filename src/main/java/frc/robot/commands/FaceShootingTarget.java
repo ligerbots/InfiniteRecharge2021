@@ -104,6 +104,6 @@ public class FaceShootingTarget extends CommandBase {
   public boolean isFinished() {
       return (Math.abs(headingError) < acceptableError && check) 
         || (!targetAcquired && (Robot.time() - startTime) > 0.5) 
-        || Robot.time() - startTime > 3.0;
+        || Robot.time() - startTime > 1.0;
   }
 }

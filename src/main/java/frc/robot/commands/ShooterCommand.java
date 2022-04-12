@@ -83,10 +83,10 @@ public class ShooterCommand extends CommandBase {
     // driveCommand.cancel();
     startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
-    carouselCommand.cancel();
+    //carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
-    pidTuner.spinUpTune();
+    // pidTuner.spinUpTune();
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // store current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -116,7 +116,7 @@ public class ShooterCommand extends CommandBase {
     System.out.println("foundTarget = " + foundTarget);
     // if (!foundTarget) {
       // distance = shooter.vision.getDistance();
-      distance = 100.0;
+      distance = 150.0;
       if (distance != 0.0) {
         foundTarget = true;
         currentControlMode = ControlMethod.SPIN_UP;
@@ -156,7 +156,7 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
+    speedOnTarget = /*(shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || */Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     // !carousel.backwards will need to be removed when the shooter is re-written
@@ -172,7 +172,7 @@ public class ShooterCommand extends CommandBase {
     shooter.vision.setMode(VisionMode.INTAKE);
     carousel.spin(0.0);
     carousel.resetBallCount();
-    carouselCommand.schedule();
+    //carouselCommand.schedule();
     System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();

@@ -235,6 +235,7 @@ public class DriveTrain extends SubsystemBase {
         rotate *= 0.5;
 
         differentialDrive.arcadeDrive(throttle, -rotate, squaredInputs);
+        //differentialDrive.arcadeDrive(rotate, throttle, squaredInputs);
     }
 
     // Raw access to arcade drive (use only for auto routines)

@@ -43,7 +43,7 @@ public final class Constants {
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.3; // This is just percent output
-    public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
+    public static final double CAROUSEL_INTAKE_SPEED = 1.0; // This is just percent output
     public static final int CAROUSEL_MAX_BALLS = 5;
     public static final double CAROUSEL_EARLY_SLOT_STOP_DELTA = 1830.0/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
 
@@ -65,7 +65,7 @@ public final class Constants {
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to control hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
-    public static final double SHOOTER_OUTREACH_VOLTS = 6.0;
+    public static final double SHOOTER_OUTREACH_VOLTS = 4.5;
 
     public static final double TURRET_ANGLE_ZERO_SETTING = 135.0;
 
@@ -108,12 +108,12 @@ public final class Constants {
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
     public static final double WINCH_SPEED_FAST = 10.0; // winch speed for going fast
     public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
-    public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
+    // public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
 
-    public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 665;
-    // public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
-    // public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
-    public static final double WINCH_CLIMB_HEIGHT = 1162;
+    // public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 665;
+    // // public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
+    // // public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
+    // public static final double WINCH_CLIMB_HEIGHT = 1162;
 
     // xbox button mapimng 
     public static final int XBOX_A = 1;

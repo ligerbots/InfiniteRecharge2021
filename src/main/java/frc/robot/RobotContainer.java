@@ -110,7 +110,7 @@ public class RobotContainer {
     // xboxX.whenPressed(new ManualLowerWinchCommand(climber));
 
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
-    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
+    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true).withTimeout(12.0));
     
     // JoystickButton xbox7 = new JoystickButton(xbox, Constants.XBOX_BACK);
     // JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
@@ -137,7 +137,8 @@ public class RobotContainer {
     xBoxBack.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
 
     JoystickButton xBoxB = new JoystickButton(xbox, Constants.XBOX_B);
-    xBoxB.whenPressed(new MoveCarousel(carousel));
+    // xBoxB.whenPressed(new MoveCarousel(carousel));
+    xBoxB.whileHeld(new MoveCarousel(carousel));
 
     
     // JoystickButton farm1 = new JoystickButton(farm, 1);
