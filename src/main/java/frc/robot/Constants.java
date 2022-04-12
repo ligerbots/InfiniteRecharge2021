@@ -55,7 +55,7 @@ public final class Constants {
     public static final double INTAKE_SPEED = 0.4;
     // Intake Color Sensor
 
-    public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor
+   // public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor
 
     // Shooter SPARK MAXES
     public static final int SHOOTER_FLUP_CAN_ID = 8; // Carousel to shooter wheel "FLUP"

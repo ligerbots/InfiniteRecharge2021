@@ -133,7 +133,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed() {
-        return 1000.0;//-shooterEncoder.getVelocity();
+        return 0;
     }
 
     public void prepareShooter(double distance) {
@@ -167,7 +167,7 @@ public class Shooter extends SubsystemBase {
         // passing the negative absolute value causes the passed value to always be negative, 
         // while allowing the function argument to be positive or negative  
         if (rpm < 0) System.out.println("warning: shooter rpm argument should be positive");
-        pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
+        motor2.setVoltage((rpm/9000)*12);
     }
 
     public double calculateShooterSpeed(double distance) {
@@ -241,7 +241,7 @@ public class Shooter extends SubsystemBase {
         //setShooterRpm(0.0);
         motor1.setVoltage(0.0);
         motor2.setVoltage(0.0);
-        pidController.setIAccum(0);
+       // pidController.setIAccum(0);
         motor2.set(0);
         flup.set(0);
         setHood(160);
