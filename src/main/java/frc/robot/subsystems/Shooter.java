@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+// import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+// import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -29,11 +29,11 @@ public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
     CANSparkMax flup;
-    CANEncoder shooterEncoder;
+    // RelativeEncoder shooterEncoder;
     Servo hoodServo, turretServo;
     TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
-    CANPIDController pidController;
+    SparkMaxPIDController pidController;
 
     public Vision vision;
     public int rpmAdjustment = 0;
@@ -42,8 +42,8 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(Vision vision) {
         this.vision = vision;
-        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushless);
-        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushless);
+        motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID, MotorType.kBrushed);
+        motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID, MotorType.kBrushed);
         // motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID, MotorType.kBrushless);
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
@@ -55,11 +55,11 @@ public class Shooter extends SubsystemBase {
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = motor2.getEncoder();
-        shooterEncoder.setVelocityConversionFactor(2.666);
+        // shooterEncoder = motor2.getEncoder();
+        // shooterEncoder.setVelocityConversionFactor(2.666);
 
-        pidController = motor2.getPIDController();
-        pidController.setFeedbackDevice(shooterEncoder);
+        // pidController = motor2.getPIDController();
+        // pidController.setFeedbackDevice(shooterEncoder);
 
         // We want motor2 to be master and motor1 and 3 follow the speed of motor2
         motor1.follow(motor2, true);
@@ -71,6 +71,9 @@ public class Shooter extends SubsystemBase {
         
         // Reset Smart Dashboard for shooter test
         SmartDashboard.putString("shooter/Status", "Idle");
+
+        SmartDashboard.putNumber("Outreach/ShooterRPM", 4000.0);
+        SmartDashboard.putNumber("Outreach/Hood", 120.0);
 
         // always have an entry at 0 so that it has a chance of working at short distances
         distanceLookUp.put(0.0, new Double[] { 5500.0, 103.0 });
@@ -119,24 +122,26 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setHood(double angle) {
-        System.out.println("hood angle SET!!!!");
         if (angle < 40) {
             angle = 40;
         }
         if (angle > 160) {
             angle = 160;
         }
+        System.out.println("Hood angle set to " + angle);
         hoodServo.setAngle(angle);
     }
 
     public double getSpeed() {
-        return -shooterEncoder.getVelocity();
+        return 0;
     }
 
     public void prepareShooter(double distance) {
         // Set the shooter and hood based on the distance
-        setShooterRpm(calculateShooterSpeed(distance));
-        setHood(calculateShooterHood(distance));
+        // setShooterRpm(calculateShooterSpeed(distance));
+        // setHood(calculateShooterHood(distance));
+        motor1.setVoltage(Constants.SHOOTER_OUTREACH_VOLTS);
+        motor2.setVoltage(Constants.SHOOTER_OUTREACH_VOLTS);
     }
 
     // public void setShooterVoltage (double voltage) {
@@ -157,49 +162,55 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterRpm(double rpm) {
-        System.out.println("Shooter RPM SET!!!!!");
+        System.out.println("Shooter RPM set to " + rpm);
         // for the shooter to run the right direction, rpm values passed to setReference must be negative
         // passing the negative absolute value causes the passed value to always be negative, 
         // while allowing the function argument to be positive or negative  
         if (rpm < 0) System.out.println("warning: shooter rpm argument should be positive");
-        pidController.setReference(-Math.abs(rpm), ControlType.kVelocity, 0, -0.8);
+        motor2.setVoltage((rpm/9000)*12);
     }
 
     public double calculateShooterSpeed(double distance) {
-        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
-        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
-        if (floorEntry != null && ceilingEntry != null) {
+        // Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        // Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        // if (floorEntry != null && ceilingEntry != null) {
 
-            // Charles' calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double rpmAdjustment = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+        //     // Charles' calculation
+        //     double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+        //     double rpmAdjustment = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
 
-            System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
-                ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), rpmAdjustment);
-            return rpmAdjustment;
-        }
-        else {
-            System.out.println("Shooter: floorEntry or ceilingEntry was null");
-            // Typical speed. Not sure this will work for much, but it won't break anything.
-            return 4000;
-        }
+        //     System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
+        //         ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), rpmAdjustment);
+        //     return rpmAdjustment;
+        // }
+        // else {
+        //     System.out.println("Shooter: floorEntry or ceilingEntry was null");
+        //     // Typical speed. Not sure this will work for much, but it won't break anything.
+        //     return 4000.0;
+        //}
+
+        double rpm = SmartDashboard.getNumber("Outreach/ShooterRPM", 5000.0);
+        return rpm;
     }
 
     public double calculateShooterHood(double distance) {
-        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
-        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        // Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        // Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
 
-        if (floorEntry != null && ceilingEntry != null) {
-            // Charles calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double hoodAdjustment = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
-            System.out.format(" hood %3.0f%n", hoodAdjustment);
+        // if (floorEntry != null && ceilingEntry != null) {
+        //     // Charles calculation
+        //     double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+        //     double hoodAdjustment = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+        //     System.out.format(" hood %3.0f%n", hoodAdjustment);
 
-            return hoodAdjustment;
-        }
-        else {
-            return 60;
-        }
+        //     return hoodAdjustment;
+        // }
+        // else {
+        //     return 60;
+        // }
+        
+        double hood = SmartDashboard.getNumber("Outreach/Hood", 130.0);
+        return hood;
     }
 
     public void warmUp() {
@@ -209,7 +220,7 @@ public class Shooter extends SubsystemBase {
     public boolean speedOnTarget(final double targetVelocity, final double percentAllowedError) {
         final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
         final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
-        return shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
+        return true;//shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
     }
 
     public boolean hoodOnTarget(final double targetAngle) {
@@ -218,16 +229,20 @@ public class Shooter extends SubsystemBase {
     }
 
     public void calibratePID(final double p, final double i, final double d, final double f) {
-        pidController.setIAccum(0);
-        pidController.setP(p);
-        pidController.setI(i);
-        pidController.setD(d);
-        pidController.setFF(f);
-        pidController.setIZone(1000);
+        // pidController.setIAccum(0);
+        // pidController.setP(p);
+        // pidController.setI(i);
+        // pidController.setD(d);
+        // pidController.setFF(f);
+        // pidController.setIZone(1000);
     }
 
     public void stopAll() {
-        setShooterRpm(0.0);
+        //setShooterRpm(0.0);
+        motor1.setVoltage(0.0);
+        motor2.setVoltage(0.0);
+       // pidController.setIAccum(0);
+        motor2.set(0);
         flup.set(0);
         setHood(160);
         SmartDashboard.putString("shooter/Status", "Idle");

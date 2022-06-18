@@ -19,7 +19,7 @@ public class ShootFromKey extends CommandBase {
   Shooter shooter;
   Carousel carousel;
   CarouselCommand carouselCommand;
- 
+  double counter;
   int initialCarouselTicks;
 
   public ShootFromKey(Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
@@ -33,18 +33,22 @@ public class ShootFromKey extends CommandBase {
   @Override
   public void initialize() {
       
-    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+    //shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     carouselCommand.cancel();
     initialCarouselTicks = carousel.getTicks();
-    shooter.setHood(150);
+    shooter.setHood(130);
     shooter.setShooterRpm(4000.0);
     shooter.setTurretAdjusted(0.0);
+    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.getSpeed() > 3650) {
+    //We are doing a "delay" because we can't get the speed from the encoder. 
+    counter++;
+    if (counter > 25) {
+      System.out.println("WE ARE TURNING THE CAROUSEL");
       carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
       shooter.shoot();
     }
@@ -62,6 +66,6 @@ public class ShootFromKey extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+    return false;
   }
 }

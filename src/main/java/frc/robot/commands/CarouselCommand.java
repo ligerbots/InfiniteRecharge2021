@@ -19,7 +19,7 @@ public class CarouselCommand extends CommandBase {
   final double sensorWaitTime = 0.04; // seconds
   //TODO find a better value
   // must be the carousel's overshoot ticks divided by the ticks in one fith of a rotation
-  final double earlySlotStopDelta = 1830.0/Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+  
   
   private static enum State {
     // There are 4 possible states: Rotating,  WaitingForBall, Full, WaitForSensor
@@ -99,7 +99,7 @@ public class CarouselCommand extends CommandBase {
 
   private void moveToNextSlot(){
     // remembers the position of the next slot we are aiming for
-    targetSlot = Math.round(carousel.getSlot()) + 1.0 - earlySlotStopDelta;
+    targetSlot = Math.round(carousel.getSlot()) + 1.0 - Constants.CAROUSEL_EARLY_SLOT_STOP_DELTA;
     carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
     state = State.Rotating;
   }

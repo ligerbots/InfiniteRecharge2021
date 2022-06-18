@@ -203,7 +203,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
 
     m_robotContainer.driveCommand.schedule();
-    m_robotContainer.carouselCommand.schedule();
+    // m_robotContainer.carouselCommand.schedule();
 
     // Cancel the IntakeCommand so it only runs on the bumper buttons
     m_robotContainer.intakeCommand.cancel();

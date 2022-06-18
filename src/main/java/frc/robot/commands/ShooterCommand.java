@@ -62,8 +62,10 @@ public class ShooterCommand extends CommandBase {
   }
 
   public void rapidFire() {
+    System.out.println("starting shooter");
     shooter.shoot();
-    carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    double carSpeed = SmartDashboard.getNumber("Outreach/Carousel", Constants.CAROUSEL_SHOOTER_SPEED);
+    carousel.spin(carSpeed);
   }
 
   // Called when the command is initially scheduled.
@@ -81,10 +83,10 @@ public class ShooterCommand extends CommandBase {
     // driveCommand.cancel();
     startTime = Robot.time();
     shooter.vision.setMode(VisionMode.GOALFINDER);
-    carouselCommand.cancel();
+    //carouselCommand.cancel();
     currentControlMode = ControlMethod.ACQUIRING;
     //starts spinning up the shooter to hard-coded PID values
-    pidTuner.spinUpTune();
+    // pidTuner.spinUpTune();
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // store current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -96,6 +98,9 @@ public class ShooterCommand extends CommandBase {
     startedTimerFlag = false;
     System.out.println("Initial Angle Offset: " + angleError);
     // shooter.setTurretAdjusted(0.0/*-Robot.angleErrorAfterTurn*/);
+    // always shoot
+    // foundTarget = true;
+    // currentControlMode = ControlMethod.SPIN_UP;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -108,8 +113,10 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (!foundTarget) {
-      distance = shooter.vision.getDistance();
+    System.out.println("foundTarget = " + foundTarget);
+    // if (!foundTarget) {
+      // distance = shooter.vision.getDistance();
+      distance = 150.0;
       if (distance != 0.0) {
         foundTarget = true;
         currentControlMode = ControlMethod.SPIN_UP;
@@ -121,7 +128,7 @@ public class ShooterCommand extends CommandBase {
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
         shooter.prepareShooter(distance);   
       }   
-    }
+    // }
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
@@ -149,7 +156,7 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
+    speedOnTarget = /*(shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || */Robot.time() - startTime > 3.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = Robot.time() - startTime > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     // !carousel.backwards will need to be removed when the shooter is re-written
@@ -165,7 +172,7 @@ public class ShooterCommand extends CommandBase {
     shooter.vision.setMode(VisionMode.INTAKE);
     carousel.spin(0.0);
     carousel.resetBallCount();
-    carouselCommand.schedule();
+    //carouselCommand.schedule();
     System.out.println("Shooter: carouselCommand scheduled" + carouselCommand);
     //if (rescheduleDriveCommand) {
      // driveCommand.schedule();
